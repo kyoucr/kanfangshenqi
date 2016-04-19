@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res/com.xinwei.kanfangshenqi">
+
+    <RelativeLayout
+        android:id="@+id/rltTop"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/achievement_top_height" >
+
+        <RelativeLayout
+            style="@style/layout"
+            android:layout_centerInParent="true" >
+
+            <com.xinwei.kanfangshenqi.view.CircleImageViewWithBorder
+                android:id="@+id/photo"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:circle_border_color="#0D000000"
+                app:circle_border_width="@dimen/img_head_border"
+                android:layout_centerHorizontal="true" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/photo"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/margin_normal" >
+
+                <ImageView
+                    android:id="@+id/imgSex"
+                    style="@style/item"
+                    android:layout_gravity="center_vertical" />
+
+                <TextView
+                    android:id="@+id/txtNickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:maxWidth="@dimen/max_nickname_width"
+                    android:singleLine="true"
+                    android:textColor="@color/txt_color_black"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        style="@style/match"
+        android:layout_below="@id/rltTop"
+        android:background="@drawable/black_cover_bg"
+        android:orientation="vertical" >
+
+        <!-- <LinearLayout
+            style="@style/layout"
+            android:layout_marginLeft="29dp"
+            android:layout_marginRight="29dp"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                style="@style/item"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical"
+                android:visibility="invisible" >
+
+                <TextView
+                    style="@style/item"
+                    android:layout_gravity="center_vertical|right"
+                    android:text="26"
+                    android:textColor="#ede3e2"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/item"
+                    android:layout_gravity="center_vertical|right"
+                    android:text="01月"
+                    android:textColor="#ede3e2"
+                    android:textSize="@dimen/txt_little_normal" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imgFirstLine"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/img_achievement_cutline_margin"
+                android:layout_marginRight="@dimen/img_achievement_cutline_margin"
+                android:background="@android:color/white"
+                android:minHeight="@dimen/min_img_achievement_cutline_height"
+                android:visibility="gone" />
+        </LinearLayout> -->
+
+        <ListView
+            android:id="@+id/lViAchievement"
+            style="@style/list_view"
+            android:divider="@null" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:titlebar="http://schemas.android.com/apk/res/com.bluemobi.hhkd"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_normal"
+        android:layout_marginRight="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_marginBottom="@dimen/margin_normal"
+        android:background="@drawable/bg_edt"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/suggestionfeedback_help_feedback"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/suggestionfeedback_edittext_height"
+            android:background="@android:color/transparent"
+            android:gravity="top"
+            android:padding="10dp"
+            android:maxLength="140"
+            android:hint="@string/suggestionfeedback_editText"
+            android:textColorHint="@color/text_gray_input"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/suggestionfeedback_tv_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="还可输入140字"
+            android:paddingRight="10dp"
+            android:paddingBottom="10dp"
+            android:textColorHint="@color/text_gray_input"
+            android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>

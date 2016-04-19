@@ -1,0 +1,166 @@
+package com.xinwei.kanfangshenqi.activity;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gson.Gson;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.lidroid.xutils.view.annotation.ViewInject;
+import com.lidroid.xutils.view.annotation.event.OnItemClick;
+import com.xinwei.kanfangshenqi.BaseActivity;
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.adapter.WonderfulActivityAdp;
+import com.xinwei.kanfangshenqi.common.Const;
+import com.xinwei.kanfangshenqi.model.WonderfulActivity;
+import com.xinwei.kanfangshenqi.model.WonderfulActivityList;
+import com.xinwei.kanfangshenqi.request.HttpRequest;
+import com.xinwei.kanfangshenqi.request.HttpRequest.RequestListener;
+import com.xinwei.kanfangshenqi.util.Utils;
+import com.xinwei.kanfangshenqi.util.ValidatorUtil;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+
+/**
+ *******************
+ * 精彩活动
+ * 
+ * @author cn
+ *
+ *******************
+ */
+public class WonderfulActivityActivity extends BaseActivity implements OnRefreshListener2 {
+	@ViewInject(R.id.lViActivity)
+	private PullToRefreshListView lViActivity;
+	private Integer beginPage = 1;
+	private WonderfulActivityAdp adp;
+	private List<WonderfulActivity> dataList = new ArrayList<WonderfulActivity>();
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		addChildView(R.layout.activity_wonderful_activity);
+	}
+
+	@Override
+	public void onChildViewLoaded() {
+		setLeftTitle(R.string.tab_bar_ic_faxian);
+		setTitleTxt(getString(R.string.title_wonderful_activity));
+		setEmptyPage(R.drawable.ic_wonderful_empty, R.string.hint_wonderful_activity_empty);
+		lViActivity.setOnRefreshListener(this);
+		onReloadData();
+
+	}
+
+	@OnItemClick(R.id.lViActivity)
+	public void toDetailInfo(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		try {
+			WonderfulActivity wonderfulActivity = (WonderfulActivity) arg0.getAdapter().getItem(arg2);
+			Bundle data = new Bundle();
+			data.putString(Const.WEB_TITLE_KEY, wonderfulActivity.getActivityTitle());
+			data.putString(Const.WEB_LEFT_TITLE_KEY, getString(R.string.title_wonderful_activity));
+			data.putString(Const.WEB_URL_KEY, wonderfulActivity.getActivityUrl());
+			Utils.moveTo(this, WebActivity.class, false, data);
+		} catch (Exception e) {
+		}
+	}
+
+	@Override
+	public void onReloadData() {
+		showBar();
+		HttpRequest.get(activity, Const.URL_EXERCISES + beginPage.toString(), getRequestTag(), null, null,
+				new RequestListener() {
+
+					@Override
+					public void onSuccess(String url, String responseResult) {
+						isShowContent(true);
+						WonderfulActivityList wonderfulActivityList = new Gson().fromJson(responseResult,
+								WonderfulActivityList.class);
+						Utils.judgePullRefreshStatus(lViActivity, beginPage, wonderfulActivityList.getPageCount());
+						dataList = wonderfulActivityList.getDataList();
+						if (ValidatorUtil.isValidList(dataList)) {
+							adp = new WonderfulActivityAdp(activity, dataList);
+							lViActivity.setAdapter(adp);
+						} else {
+							isShowEmpty(true);
+						}
+					}
+
+					@Override
+					public void onFailure(String url, String errorInfo) {
+						isShowError(true);
+					}
+
+					@Override
+					public void onError(String url, String responseResult) {
+						isShowError(true);
+					}
+				});
+	}
+
+	@Override
+	public String getRequestTag() {
+		return WonderfulActivityActivity.class.getSimpleName();
+	}
+
+
+	@Override
+	public void onPullDownToRefresh(PullToRefreshBase refreshView, int mBeginPage) {
+		HttpRequest.get(activity, Const.URL_EXERCISES + beginPage.toString(), getRequestTag(), null, null,
+				new RequestListener() {
+
+					@Override
+					public void onSuccess(String url, String responseResult) {
+						WonderfulActivityList wonderfulActivityList = new Gson().fromJson(responseResult,
+								WonderfulActivityList.class);
+						Utils.judgePullRefreshStatus(lViActivity, beginPage, wonderfulActivityList.getPageCount());
+						dataList = wonderfulActivityList.getDataList();
+						if (ValidatorUtil.isValidList(dataList)) {
+							adp = new WonderfulActivityAdp(activity, dataList);
+							lViActivity.setAdapter(adp);
+						} else {
+							isShowEmpty(true);
+						}
+					}
+
+					@Override
+					public void onFailure(String url, String errorInfo) {
+						lViActivity.onRefreshComplete(false);
+					}
+
+					@Override
+					public void onError(String url, String responseResult) {
+						lViActivity.onRefreshComplete(false);
+					}
+				});		
+	}
+
+	@Override
+	public void onPullUpToLoad(PullToRefreshBase refreshView, final int mNextPage) {
+		HttpRequest.get(activity, Const.URL_EXERCISES + String.valueOf(mNextPage), getRequestTag(), null, null,
+				new RequestListener() {
+
+					@Override
+					public void onSuccess(String url, String responseResult) {
+						WonderfulActivityList wonderfulActivityList = new Gson().fromJson(responseResult,
+								WonderfulActivityList.class);
+						Utils.judgePullRefreshStatus(lViActivity, mNextPage, wonderfulActivityList.getPageCount());
+						dataList.addAll(wonderfulActivityList.getDataList());
+						adp.notifyDataSetChanged();
+					}
+
+					@Override
+					public void onFailure(String url, String errorInfo) {
+						lViActivity.onRefreshComplete(false);
+					}
+
+					@Override
+					public void onError(String url, String responseResult) {
+						lViActivity.onRefreshComplete(false);
+					}
+				});		
+	}
+}

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/lltTop"
+        style="@style/layout"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:orientation="vertical" >
+
+        <View style="@style/cut_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            android:background="@android:color/white"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin_normal"
+                android:gravity="center_vertical"
+                android:text="@string/txt_phone_number"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/txt_size_big" />
+
+            <TextView
+                android:id="@+id/txtPhone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textColor="@color/light_gray"
+                android:textSize="@dimen/txt_size_big" />
+        </LinearLayout>
+
+        <View style="@style/cut_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            android:background="@android:color/white"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin_normal"
+                android:gravity="center_vertical"
+                android:text="@string/txt_money"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/txt_size_big" />
+
+            <EditText
+                android:id="@+id/edtTxtMoney"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:textColor="@android:color/black"
+                android:textColorHint="@color/light_gray"
+                android:textSize="@dimen/txt_size_big" />
+        </LinearLayout>
+
+        <View style="@style/cut_line" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/title_height"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:gravity="center_vertical"
+            android:text="@string/txt_min_pick_cash"
+            android:textColor="@color/light_gray"
+            android:textSize="@dimen/txt_size_normal" />
+
+        <View style="@style/cut_line" />
+
+        <RelativeLayout
+            android:id="@+id/rltZhiFuBao"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            android:background="@android:color/white"
+            android:clickable="true" >
+
+            <ImageView
+                android:id="@+id/imgIconZhiFuBao"
+                style="@style/img_ctrl_item"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ic_zhifubao_logo" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/imgCheckZhiFuBao"
+                android:layout_toRightOf="@id/imgIconZhiFuBao"
+                android:gravity="left|center_vertical"
+                android:text="@string/txt_zhifubao"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/txt_size_big" />
+
+            <ImageView
+                android:id="@+id/imgCheckZhiFuBao"
+                android:layout_width="@dimen/img_ok_size"
+                android:layout_height="@dimen/img_ok_size"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/margin_normal"
+                android:background="@drawable/ic_ok"
+                android:visibility="invisible" />
+        </RelativeLayout>
+        <View style="@style/cut_line" />
+    </LinearLayout>
+
+</RelativeLayout>

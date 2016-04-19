@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#303030" xmlns:app="http://schemas.android.com/apk/res/com.xinwei.kanfangshenqi">
+	<com.xinwei.kanfangshenqi.view.ExtendedViewPager 
+	    android:id="@+id/viewPager"
+        style="@style/match"  />
+
+    <TextView
+        android:id="@+id/txtIndex"
+        style="@style/item"
+        android:textSize="@dimen/txt_size_normal"
+        android:textColor="@color/light_gray"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/margin_huge" />
+<!--     <com.xinwei.kanfangshenqi.view.AnimPoint
+        android:id="@+id/animPoint"
+        style="@style/layout"
+        app:point_color="@color/light_gray"
+        app:point_bg_color="@color/light_gray"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/margin_huge" /> -->
+
+</RelativeLayout>

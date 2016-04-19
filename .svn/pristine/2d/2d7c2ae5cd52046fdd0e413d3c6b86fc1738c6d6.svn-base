@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rltBase"
+    android:background="@color/bg_all" >
+
+    <RelativeLayout
+        android:id="@+id/rltTitle"
+        android:layout_width="match_parent"
+        android:background="@color/title_color_white"
+        android:layout_height="@dimen/title_height" >
+
+        <RelativeLayout
+            android:id="@+id/rltLeft"
+            style="@style/match"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/txtTitle" >
+
+            <ImageButton
+                android:id="@+id/btnLeft"
+                style="@style/item"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/margin_normal"
+                android:background="@null"
+                android:src="@drawable/back_button" />
+
+            <TextView
+                android:id="@+id/txtLeft"
+                style="@style/item"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_small"
+                android:layout_toRightOf="@id/btnLeft"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/orange"
+                android:textSize="@dimen/txt_size_title" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/txtTitle"
+            style="@style/item"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textColor="@color/txt_color_black"
+            android:textSize="@dimen/txt_size_title" />
+        
+        <TextView
+            android:id="@+id/txtRight"
+            style="@style/item"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:textColor="@color/orange"
+            android:textSize="@dimen/txt_size_big" />
+
+        <ImageView
+            android:id="@+id/imgTitleCutLine"
+            style="@style/cut_line"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rltContent"
+        style="@style/match"
+        android:layout_below="@id/rltTitle" />
+
+    <RelativeLayout
+        android:id="@+id/rltError"
+        style="@style/match"
+        android:visibility="gone"
+        android:layout_below="@id/rltTitle" >
+
+
+            <ImageView
+                android:layout_width="@dimen/item_img_retry_width"
+                android:layout_height="@dimen/item_img_retry_height"
+                android:layout_centerHorizontal="true"
+                android:layout_above="@+id/txtError"
+                android:src="@drawable/ic_error" />
+
+            <TextView
+                style="@style/item"
+                android:id="@+id/txtError"
+                android:gravity="center"
+                android:layout_above="@+id/btnCtrl"
+                android:text="@string/hint_no_net"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/light_gray"
+                android:textSize="@dimen/txt_size_normal" />
+
+            <Button
+                android:id="@+id/btnCtrl"
+                android:layout_centerInParent="true"
+                android:layout_width="@dimen/item_btn_click_retry_width"
+                android:layout_height="@dimen/item_btn_click_retry_height"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:background="@drawable/btn_bottom"
+                android:text="@string/txt_click_retry"
+                android:textColor="@color/orange"
+                android:textSize="@dimen/txt_size_normal" />
+            
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rltEmpty"
+        style="@style/match"
+        android:layout_below="@id/rltTitle"
+        android:visibility="gone" >
+
+
+            <ImageView
+                android:id="@+id/imgEmpty"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/margin_normal"
+                android:layout_above="@+id/txtEmpty"
+                style="@style/item" />
+
+            <TextView
+                android:id="@+id/txtEmpty"
+                style="@style/item"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:textColor="@color/light_gray"
+                android:textSize="@dimen/txt_size_normal" />
+            
+    </RelativeLayout>
+	<RelativeLayout android:id="@+id/rltCustom"
+        style="@style/match"
+        android:layout_below="@id/rltTitle"
+        android:visibility="gone"/>
+</RelativeLayout>

@@ -1,0 +1,89 @@
+package com.xinwei.kanfangshenqi.adapter;
+
+import java.util.List;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.model.AchievementList.Achievement;
+import com.xinwei.kanfangshenqi.util.ImageLoaderUtil;
+import com.xinwei.kanfangshenqi.util.TextViewWriterUtil;
+import com.xinwei.kanfangshenqi.util.ValidatorUtil;
+
+/**
+ ********************
+ * 个人成就列表适配器
+ * 
+ * @author cn
+ ********************
+ */
+public class AchievementAdp extends BaseAbsAdp {
+	private Context context;
+	private List<Achievement> achievementList;
+
+	public AchievementAdp(Context context, List<Achievement> achievementList) {
+		this.context = context;
+		this.achievementList = achievementList;
+	}
+
+	@Override
+	public List<?> onGetListData() {
+		return achievementList;
+	}
+
+	@Override
+	public View onGetView(int position, View view) {
+		ViewHolder viewHolder;
+		if (view == null) {
+			view = LayoutInflater.from(context).inflate(R.layout.adp_achievement, null);
+			viewHolder = new ViewHolder();
+			viewHolder.txtDate = (TextView) view.findViewById(R.id.txtDate);
+			viewHolder.txtMonth = (TextView) view.findViewById(R.id.txtMonth);
+			viewHolder.txtDesc = (TextView) view.findViewById(R.id.txtDesc);
+			viewHolder.imgShow = (ImageView) view.findViewById(R.id.imgShow);
+			viewHolder.lltFirstLine = (LinearLayout) view.findViewById(R.id.lltFirstLine);
+			view.setTag(viewHolder);
+		} else {
+			viewHolder = (ViewHolder) view.getTag();
+		}
+		Achievement achievement = achievementList.get(position);
+		switch (position) {
+		case 0:
+			viewHolder.lltFirstLine.setVisibility(View.VISIBLE);
+			break;
+		default:
+			viewHolder.lltFirstLine.setVisibility(View.GONE);
+			break;
+		}
+		if (achievement != null) {
+			TextViewWriterUtil.writeValue(viewHolder.txtDate, achievement.getDate());
+			TextViewWriterUtil.writeValue(viewHolder.txtMonth, achievement.getMonth());
+			if (ValidatorUtil.isValidString(achievement.getBuildingName())) {
+				TextViewWriterUtil.writeValue(viewHolder.txtDesc,
+						achievement.getAction() + "：" + achievement.getBuildingName());
+			} else {
+				TextViewWriterUtil.writeValue(viewHolder.txtDesc, achievement.getAction());
+			}
+			if (ValidatorUtil.isValidString(achievement.getBanner())) {
+				ImageLoaderUtil.getInstance().bindImg(viewHolder.imgShow, achievement.getSmallBanner());
+				viewHolder.imgShow.setVisibility(View.VISIBLE);
+			} else
+				viewHolder.imgShow.setVisibility(View.GONE);
+
+		}
+		return view;
+	}
+
+	class ViewHolder {
+		TextView txtDate;
+		TextView txtMonth;
+		TextView txtDesc;
+		ImageView imgShow;
+		LinearLayout lltFirstLine;
+	}
+}

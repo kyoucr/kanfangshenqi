@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="text_gray_input">#c7c7c7</color>
+	<color name="txt_gray_nine">#999999</color>
+    <color name="txt_gray">#666666</color>
+    <color name="white">#ffffff</color>
+    <color name="white_tweenty_percent">#33ffffff</color>
+    <color name="content_title">#0E2F5E</color>
+    <color name="TextColorWhite">#FFFFFFFF</color>
+    <color name="content">#666563</color>
+    <color name="order_page_content">#353537</color>
+    <color name="line">#E3E0DB</color>
+    <color name="listview_pressed">#D9E9DE</color>
+    <color name="express_line">#A9B2BC</color>
+    <color name="transparent">#00000000</color>
+    <color name="btn_blue">#9AD6F8</color>
+    <color name="default_font_color">#ADAEB3</color>
+    <color name="blue_border">#92D5F5</color>
+    <color name="btn_blue_normal">#92D5F5</color>
+    <color name="btn_blue_pressed">#566473</color>
+    <color name="sign_color_press">#9AD6F8</color>
+    <color name="sign_color_normal">#ADAEB3</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="result_view">#b0000000</color>
+    <color name="viewfinder_frame">#ff000000</color>
+    <color name="viewfinder_laser">#EEEE00</color>
+    <color name="possible_result_points">#c0ffff00</color>
+    <color name="default_list_pressed">#D8D8D8</color>
+    <color name="query_express">#576474</color>
+    <color name="query_black">#000000</color>
+    <color name="text_btn_blue">#B7DAF0</color>
+    <color name="radio_btn">#9AD6F8</color>
+    <color name="null_data">#576474</color>
+    
+    <color name="orange">#ff441f</color>
+    <color name="black">#000000</color>
+    
+    <color name="btntextcolor">#ff1E90FF</color><!--dialog中按钮字体颜色 -->
+    <color name="dialog_btn_press">#EAEAEA</color>
+    
+    <color name="btn_orange_normal">#ff7c62</color>
+    <color name="btn_orange_pressed">#f7b696</color>
+    
+     <color name="main_divider_line">#E4E4E4</color>
+     <color name="userinfo_bottom_press">#666666</color>
+     <!-- 发现 -->
+     <color name="bg_all">#FAFAFA</color>
+     <color name="light_gray">#A5A4A4</color>
+     <color name="divider_light_gray">#E1E1E1</color>
+     <color name="title_cut_line">#D9D9D9</color>
+     
+     <color name="txt_color_black">#222222</color>
+     <color name="title_color_white">#FAFAFA</color>
+     <color name="half_transparent">#90000000</color>
+     <color name="light_half_transparent">#30000000</color>
+     <!-- switch_btn -->
+     <color name="thumb_color_on">#FF441F</color>
+     <color name="thumb_color_off">#DBDBDB</color>
+     <!-- 看房圈 -->
+     <color name="head_border">#6A6F7A</color>
+     <!-- 搜索缺省文字 -->
+     <color name="serach_null_show_text">#737373</color>
+     <color name="txt_blue">#4c8fe3</color>
+     <color name="bg_ask_detail">#f2f2f2</color>
+     <color name="txt_color_disable">#c7c7c7</color>
+     <!-- 楼盘详情 -->
+     <color name="feature_color">#B2000000</color>
+     <color name="building_title_color">#CCFFFFFF</color>
+     
+    <color name="default_menu_back">#ccfafafa</color>
+    <color name="default_menu_press_back">#fafafa</color>
+    <color name="default_menu_press_text">#000000</color>
+    <color name="default_menu_text">#00cf9b</color>
+    <color name="cal_text_normal">#4A4A4A</color>
+    <color name="text_normal">#999999</color>
+    <color name="text_light">#ababab</color>
+    <color name="text_super_light">#c0c0c0</color>
+    <color name="blue_light">#48a5cc</color>
+    <color name="blue_dark">#00aeef</color>
+    <color name="stroke">#77d4f6</color>
+    
+        <!-- calendar color -->
+    <color name="cal_text_light">#ababab</color>
+    <color name="cal_text_super_light">#c0c0c0</color>
+    <color name="cal_blue_light">#8EC5EE</color>
+    <color name="cal_blue_dark">#338eff</color>
+    <color name="cal_stroke">#77d4f6</color>
+    <color name="cal_days_title">#F5F5F5</color>
+    <color name="cal_vertical_line">#E9F6FF</color>
+    <color name="cal_line_grey">#9B9B9B</color>
+    <color name="cal_color_white">#FFFFFF</color>
+    <color name="cal_color_red">#FFE54E36</color>
+    <color name="cal_color_green">#FF16A085</color>
+    <color name="cal_color_point_blue">#FF1875D1</color>
+</resources>

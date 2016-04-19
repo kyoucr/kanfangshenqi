@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ScrollView
+        style="@style/match"
+        android:layout_above="@+id/btnResubmit" >
+
+        <LinearLayout
+            style="@style/layout"
+            android:orientation="vertical" >
+
+            <View
+                style="@style/cut_line"
+                android:layout_marginTop="@dimen/margin_normal" />
+
+            <LinearLayout
+                style="@style/layout"
+                android:background="@android:color/white"
+                android:minHeight="@dimen/min_item_trade_info_status_height"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/txtStatus"
+                    style="@style/layout"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/light_gray"
+                    android:textSize="@dimen/txt_size_big" />
+
+                <TextView
+                    android:id="@+id/txtMoney"
+                    style="@style/match"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:gravity="center_vertical"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/txt_trade_info_money_size" />
+            </LinearLayout>
+
+            <View style="@style/cut_line" />
+
+            <TextView
+                android:id="@+id/txtType"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/title_height"
+                android:background="@android:color/white"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/margin_normal"
+                android:paddingRight="@dimen/margin_normal"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/txt_size_big" />
+
+            <View style="@style/cut_line" />
+
+            <View
+                style="@style/cut_line"
+                android:layout_marginTop="@dimen/margin_normal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/title_height"
+                android:background="@android:color/white"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:gravity="center_vertical"
+                    android:text="@string/txt_bill_no"
+                    android:textColor="@color/light_gray"
+                    android:textSize="@dimen/txt_size_big" />
+
+                <TextView
+                    android:id="@+id/txtBillNO"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_marginRight="@dimen/margin_normal"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/light_gray"
+                    android:textSize="@dimen/txt_size_big" />
+            </LinearLayout>
+
+            <View style="@style/cut_line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/title_height"
+                android:background="@android:color/white"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:gravity="center_vertical"
+                    android:text="@string/txt_create_time"
+                    android:textColor="@color/light_gray"
+                    android:textSize="@dimen/txt_size_big" />
+
+                <TextView
+                    android:id="@+id/txtTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_marginRight="@dimen/margin_normal"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/light_gray"
+                    android:textSize="@dimen/txt_size_big" />
+            </LinearLayout>
+
+            <View style="@style/cut_line" />
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btnResubmit"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/margin_normal"
+        android:layout_marginLeft="@dimen/margin_normal"
+        android:layout_marginRight="@dimen/margin_normal"
+        android:background="@drawable/get_verification_code_normal"
+        android:text="@string/txt_resubmit"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/txt_size_big"
+        android:visibility="gone" />
+
+</RelativeLayout>

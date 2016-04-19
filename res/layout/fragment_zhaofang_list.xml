@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <include layout="@layout/top_menu"/>
+    <LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:paddingLeft="8dp" 
+	    android:paddingRight="8dp"
+	    >
+	    <Spinner
+	        android:id="@+id/spin_quyu"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content" 
+	        android:layout_weight="1"
+	        />
+	
+	    <Spinner
+	        android:id="@+id/spin_jiage"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	         />
+	
+	    <Spinner
+	        android:id="@+id/spin_tese"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content" 
+	        android:layout_weight="1"
+	        />
+	    </LinearLayout>
+	    <RelativeLayout 
+	        android:id="@+id/relative"
+	        android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		   
+	        >
+		   	<ListView
+		        android:id="@+id/houselist"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:background="@drawable/corners_border"
+		        android:cacheColorHint="#00000000"
+		        android:divider="#00000000"
+		        android:listSelector="#00000000"
+		        android:orientation="vertical"
+		        android:scrollbars="none" 
+		        android:visibility="invisible"
+		        >
+		    </ListView>
+	   	</RelativeLayout>
+</LinearLayout>

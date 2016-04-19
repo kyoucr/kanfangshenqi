@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:id="@+id/rltNavigation"
+        android:layout_width="match_parent"
+        android:minHeight="@dimen/title_height"
+        android:layout_height="wrap_content" >
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/title_height"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/radioBtnCash"
+                style="@style/title_tab"
+                android:padding="@dimen/margin_normal"
+                android:text="@string/txt_pick_cash" />
+
+            <RadioButton
+                android:id="@+id/radioBtnIncome"
+                style="@style/title_tab"
+                android:padding="@dimen/margin_normal"
+                android:text="@string/txt_income" />
+        </RadioGroup>
+
+        <com.xinwei.kanfangshenqi.view.TransLateView
+            android:id="@+id/transLateView"
+            android:layout_width="wrap_content"
+            android:layout_below="@id/radioGroup"
+            android:layout_alignLeft="@id/radioGroup"
+            android:layout_height="@dimen/translateview_height"/>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/cutLine"
+        style="@style/cut_line"
+        android:layout_below="@id/rltNavigation" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        style="@style/match"
+        android:layout_below="@id/cutLine" />
+
+</RelativeLayout>

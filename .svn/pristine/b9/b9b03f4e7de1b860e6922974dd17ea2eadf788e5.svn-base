@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:titlebar="http://schemas.android.com/apk/res/com.xinwei.kanfangshenqi"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fafafa"
+    android:orientation="vertical" >
+
+    <!-- 头像 -->
+
+    <View
+        style="@style/cut_line"
+        android:layout_marginTop="10dp" />
+
+    <RelativeLayout
+        android:id="@+id/rl_user_pic"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:background="@drawable/bg_ctrl_item" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:text="头像"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:typeface="serif" />
+
+        <ImageView
+            android:id="@+id/iv_user_photo"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:layout_toLeftOf="@+id/imgArrow1"
+            android:src="@drawable/default_avatar" />
+        <!--
+                android:layout_width="@dimen/img_arrow_width_small"
+                android:layout_height="@dimen/img_arrow_height_small"
+        -->
+
+        <ImageView
+            android:id="@+id/imgArrow1"
+            style="@style/item"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:background="@drawable/right_arrow_button" />
+    </RelativeLayout>
+    <!-- 分割线 -->
+
+    <View style="@style/cut_line" />
+    <!-- 昵称 -->
+
+    <RelativeLayout
+        android:id="@+id/rl_user_nicheng"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:background="@drawable/bg_ctrl_item" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:text="名字"
+            android:textColor="@android:color/black"
+            android:textSize="17sp"
+            android:typeface="serif" />
+
+        <TextView
+            android:id="@+id/tv_user_nicheng"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:layout_toLeftOf="@+id/imgArrow2"
+            android:textSize="14sp"
+            android:typeface="serif" />
+
+        <ImageView
+            android:id="@+id/imgArrow2"
+            style="@style/item"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:background="@drawable/right_arrow_button" />
+    </RelativeLayout>
+    <!-- 分割线 -->
+
+    <View style="@style/cut_line" />
+    <!-- 密码 -->
+
+    <RelativeLayout
+        android:id="@+id/rl_user_password"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:background="@drawable/bg_ctrl_item" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:text="密码"
+            android:textColor="@android:color/black"
+            android:textSize="17sp"
+            android:typeface="serif" />
+
+        <ImageView
+            style="@style/item"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:background="@drawable/right_arrow_button" />
+    </RelativeLayout>
+    <!-- 分割线 -->
+
+    <View style="@style/cut_line" />
+
+    <RelativeLayout
+        android:id="@+id/rl_user_sex"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:background="@drawable/bg_ctrl_item" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:text="性别"
+            android:textColor="@android:color/black"
+            android:textSize="17sp"
+            android:typeface="serif" />
+
+        <TextView
+            android:id="@+id/tv_user_sex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:layout_toLeftOf="@+id/imgArrow4"
+            android:textSize="14sp"
+            android:typeface="serif" />
+
+        <ImageView
+            android:id="@+id/imgArrow4"
+            style="@style/item"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:background="@drawable/right_arrow_button" />
+    </RelativeLayout>
+    <!-- 分割线 -->
+
+    <View style="@style/cut_line" />
+    <!-- 手机号 -->
+
+    <RelativeLayout
+        android:id="@+id/rl_user_phonenum"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:background="@drawable/bg_white" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:text="手机号"
+            android:textColor="@android:color/black"
+            android:textSize="17sp"
+            android:typeface="serif" />
+
+        <TextView
+            android:id="@+id/tv_user_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:textSize="14sp"
+            android:typeface="serif" />
+    </RelativeLayout>
+    <!-- 分割线 -->
+
+    <View style="@style/cut_line" />
+
+    <View
+        style="@style/cut_line"
+        android:layout_marginTop="@dimen/margin_normal" />
+
+    <RelativeLayout
+        android:id="@+id/rl_user_address"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:background="@drawable/bg_ctrl_item" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:text="我的地址"
+            android:textColor="@android:color/black"
+            android:textSize="17sp"
+            android:typeface="serif" />
+
+        <ImageView
+            android:id="@+id/imgArrow5"
+            style="@style/item"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:background="@drawable/right_arrow_button" />
+    </RelativeLayout>
+
+    <View style="@style/cut_line" />
+
+    <RelativeLayout
+        android:id="@+id/rl_user_administration"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:background="@drawable/bg_ctrl_item" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:text="账户管理"
+            android:textColor="@android:color/black"
+            android:textSize="17sp"
+            android:typeface="serif" />
+
+        <ImageView
+            style="@style/item"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:background="@drawable/right_arrow_button" />
+    </RelativeLayout>
+
+    <View style="@style/cut_line" />
+
+</LinearLayout>

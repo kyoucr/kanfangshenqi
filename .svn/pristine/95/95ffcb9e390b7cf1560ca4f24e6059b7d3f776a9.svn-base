@@ -1,0 +1,384 @@
+package com.xinwei.kanfangshenqi.view;
+
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.activity.LoginActivity;
+import com.xinwei.kanfangshenqi.common.Const;
+import com.xinwei.kanfangshenqi.util.Utils;
+import com.xinwei.kanfangshenqi.util.ValidatorUtil;
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+/**********************
+ * alertdialog 类封装
+ * 
+ * @author cn
+ * 
+ **********************/
+
+public class AlertWidget {
+
+	private Context context = null;
+	private AlertDialog.Builder dialog;
+	private Window window;
+	private AlertDialog dlg;
+
+	/********************************
+	 * 构造函数 实例化一个alert对象
+	 * 
+	 * @param activity
+	 *            调用该工具类的activity
+	 ********************************/
+	public AlertWidget(Context context) {
+		this.context = context;
+		this.dialog = new AlertDialog.Builder(this.context);
+	}
+
+	/*******************************
+	 * 设置alert图标
+	 * 
+	 * @param icoResourceId
+	 *            图标的源
+	 *******************************/
+	public void setIcoResourceId(int icoResourceId) {
+		if (icoResourceId != -1) {
+			this.dialog.setIcon(icoResourceId);
+		}
+	}
+
+	/*******************************
+	 * 设置alert标题
+	 * 
+	 * @param title
+	 *            标题
+	 *******************************/
+	public void setTitle(String title) {
+		dialog.setTitle(title);
+	}
+
+	/*******************************
+	 * 设置alert 显示的信息
+	 * 
+	 * @param content
+	 *            内容
+	 *******************************/
+	public void setContent(String content) {
+		dialog.setMessage(content);
+	}
+
+	/*******************************
+	 * 设置确定按钮
+	 * 
+	 * @param btnTXT
+	 *            按钮上要显示的 内容
+	 * @param OK
+	 *            确定按钮触发的事件
+	 *******************************/
+	public void setOKListener(String btnTXT, DialogInterface.OnClickListener OK) {
+		dialog.setNeutralButton(btnTXT, OK);
+	}
+
+	/*******************************
+	 * 设置确定按钮
+	 * 
+	 * @param btnTXT
+	 *            按钮上要显示的 内容
+	 * @param OK
+	 *            确定按钮触发的事件
+	 *******************************/
+	public void setOKListenerWithCancelDefault(String btnTXT,
+			DialogInterface.OnClickListener OK) {
+		dialog.setNeutralButton(btnTXT, OK);
+		dialog.setNegativeButton(context.getString(R.string.txt_cancel),
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int arg1) {
+						dialog.dismiss();
+					}
+				});
+	}
+
+	/*******************************
+	 * 设置确定按钮
+	 * 
+	 * @param OK
+	 *            确定按钮触发的事件
+	 *******************************/
+	public void setOKListenerWithCancelDefault(
+			DialogInterface.OnClickListener OK) {
+		dialog.setNeutralButton(context.getString(R.string.txt_sure), OK);
+		dialog.setNegativeButton(context.getString(R.string.txt_cancel),
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int arg1) {
+						dialog.dismiss();
+					}
+				});
+	}
+
+	public void setThirdListener(String btnTXT,
+			DialogInterface.OnClickListener third) {
+		dialog.setPositiveButton(btnTXT, third);
+	}
+
+	/*******************************
+	 * 设置取消按钮
+	 * 
+	 * @param btnTXT
+	 *            按钮上要显示的内容
+	 * @param Canel
+	 *            取消按钮触发的事件
+	 *******************************/
+	public void setCancelListener(String btnTXT,
+			DialogInterface.OnClickListener Canel) {
+		dialog.setNegativeButton(btnTXT, Canel);
+	}
+
+	/*******************************
+	 * 设置取消按钮 带默认关闭alert功能
+	 * 
+	 * @param btnTXT
+	 *            按钮上要显示的内容
+	 *******************************/
+	public void setCancelListener(String btnTXT) {
+		dialog.setNegativeButton(btnTXT, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+	}
+
+	/*******************************
+	 * 设置alert的 子项 仿菜单的alert
+	 * 
+	 * @param items
+	 *            子项内容 String[]
+	 * @param itemsListener
+	 *            alert中子项单击时触发的事件
+	 *******************************/
+	public void setMenu(String[] items,
+			DialogInterface.OnClickListener itemsListener) {
+
+		dialog.setItems(items, itemsListener);
+	}
+
+	/*******************************
+	 * 设置alert窗体中自定义view
+	 * 
+	 * @param view
+	 *******************************/
+	public void setView(View view) {
+		dialog.setView(view);
+	}
+
+	/*******************************
+	 * 显示alert窗体
+	 *******************************/
+	public void show() {
+		if (dlg == null)
+			dlg = dialog.create();
+		dlg.show();
+		window = dlg.getWindow();
+		window.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+		window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
+				| WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+	}
+
+	/**
+	 ************************* 
+	 * 设置提示框是否可取消
+	 * 
+	 * @param isCancel
+	 ************************* 
+	 */
+	public void setCancelable(boolean isCancel) {
+		if (dialog != null)
+			dialog.setCancelable(isCancel);
+		if (dlg != null)
+			dlg.setCancelable(isCancel);
+	}
+
+	/**
+	 ************************* 
+	 * 设置点击外部提示框是否可取消
+	 * 
+	 * @param isCancel
+	 ************************* 
+	 */
+	public void setCanceledOnTouchOutside(boolean isCancel) {
+		if (dlg != null)
+			dlg.setCanceledOnTouchOutside(isCancel);
+	}
+
+	/*******************************
+	 * 自定义 alertdialog 窗体
+	 * 
+	 * @param drawableId
+	 *            layout的id
+	 *******************************/
+	public void show(int layoutId) {
+		if (dlg == null)
+			dlg = dialog.create();
+		dlg.setCanceledOnTouchOutside(false);
+		dlg.show();
+		window = dlg.getWindow();
+		window.setBackgroundDrawableResource(android.R.color.transparent);
+		window.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+		window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
+				| WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+		window.setContentView(layoutId);
+
+	}
+
+	/**
+	 ************************* 
+	 * 自定义 alertdialog 窗体
+	 * 
+	 * @param v
+	 *            (View)
+	 ************************* 
+	 */
+	public void show(View v) {
+		dlg = dialog.create();
+		dlg.setCanceledOnTouchOutside(true);
+		dlg.show();
+		window = dlg.getWindow();
+		window.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+		window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
+				| WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+		window.setContentView(v);
+	}
+
+	/*******************************
+	 * 返回自定义 布局对象
+	 * 
+	 * @return
+	 *******************************/
+	public Window getWindow() {
+		return this.window;
+	}
+
+	/*******************************
+	 * 关闭自定义 alertdialog 窗体
+	 *******************************/
+	public void close() {
+		if (dlg != null && dlg.isShowing())
+			dlg.dismiss();
+	}
+
+	/**
+	 ************************* 
+	 * 获取对话框
+	 * 
+	 * @return
+	 ************************* 
+	 */
+	public AlertDialog getDlg() {
+		return dlg;
+	}
+
+	/**
+	 ************************* 
+	 * 设置撤销监听事件
+	 * 
+	 * @param listener
+	 ************************* 
+	 */
+	public void setOnCancelListener(DialogInterface.OnCancelListener listener) {
+		if (dlg != null)
+			dlg.setOnCancelListener(listener);
+	}
+
+	/**
+	 ************************* 
+	 * 对话框是否正在显示
+	 * 
+	 * @return
+	 ************************* 
+	 */
+	public boolean isDialogShow() {
+		if (dlg == null)
+			return false;
+		return dlg.isShowing();
+	}
+
+	/**
+	 ******************* 
+	 * 显示bar
+	 ******************* 
+	 */
+	public void showBar() {
+		close();
+		show(R.layout.item_bar);
+	}
+	/**
+	 ********************
+	 * 自定义内容
+	 * @param title
+	 * @param content
+	 * @param txtCancelBtn
+	 * @param txtOkBtn
+	 * @param okListener
+	 ********************
+	 */
+	public void showCustom(String title, String content, String txtCancelBtn,
+			String txtOkBtn, View.OnClickListener okListener) {
+		close();
+		show(R.layout.custom_dialog_layout);
+		TextView txtTitle = (TextView) window.findViewById(R.id.title);
+		if (ValidatorUtil.isValidString(title))
+			txtTitle.setText(title);
+		else
+			txtTitle.setText(context.getString(R.string.alert_title_common));
+		TextView txtContent = (TextView) window.findViewById(R.id.message);
+		if (ValidatorUtil.isValidString(content))
+			txtContent.setText(content);
+		Button btnLeft = (Button) window.findViewById(R.id.positiveButton);
+		if(ValidatorUtil.isValidString(txtCancelBtn))
+			btnLeft.setText(txtCancelBtn);
+		else
+			btnLeft.setText(context.getString(R.string.txt_cancel));
+		btnLeft.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				close();
+			}
+		});
+		Button btnRight = (Button) window.findViewById(R.id.negativeButton);
+
+		if(ValidatorUtil.isValidString(txtCancelBtn))
+			btnRight.setText(txtOkBtn);
+		else
+			btnRight.setText(context.getString(R.string.txt_sure));
+		
+		btnRight.setOnClickListener(okListener);
+	}
+	/**
+	 ********************
+	 * 需登录提示框
+	 ********************
+	 */
+	public void showLogin() {
+		showCustom(null, context.getString(R.string.alert_unlogin),
+				context.getString(R.string.txt_cancel),
+				context.getString(R.string.txt_sure), new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						close();
+						Bundle data = new Bundle();
+						data.putBoolean(Const.FLAG_UNLOGIN, true);
+						Utils.moveTo(context, LoginActivity.class, false, data);
+					}
+				});
+	}
+}

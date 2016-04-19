@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white" >
+
+    <LinearLayout
+        style="@style/layout"
+        android:orientation="vertical" >
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="39dp"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/radioBtnSynthesize"
+                style="@style/radio_btn_building_detail_info"
+                android:checked="true"
+                android:text="综合" />
+
+            <View
+                style="@style/cut_line"
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent" />
+
+            <RadioButton
+                android:id="@+id/radioBtnArea"
+                style="@style/radio_btn_building_detail_info"
+                android:text="同地段" />
+
+            <View
+                style="@style/cut_line"
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent" />
+
+            <RadioButton
+                android:id="@+id/radioBtnPrice"
+                style="@style/radio_btn_building_detail_info"
+                android:text="同价位" />
+
+            <View
+                style="@style/cut_line"
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent" />
+
+            <RadioButton
+                android:id="@+id/radioBtnFeature"
+                style="@style/radio_btn_building_detail_info"
+                android:text="同特色" />
+        </RadioGroup>
+
+        <LinearLayout
+            style="@style/layout"
+            android:orientation="horizontal" >
+
+            <View
+                android:id="@+id/cutLineSynthesize"
+                style="@style/cut_line"
+                android:layout_weight="1"
+                android:visibility="invisible" />
+
+            <View
+                android:id="@+id/cutLineArea"
+                style="@style/cut_line"
+                android:layout_weight="1" />
+
+            <View
+                android:id="@+id/cutLinePrice"
+                style="@style/cut_line"
+                android:layout_weight="1" />
+
+            <View
+                android:id="@+id/cutLineFeature"
+                style="@style/cut_line"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/frameLayout"
+            style="@style/match" />
+    </LinearLayout>
+
+</RelativeLayout>

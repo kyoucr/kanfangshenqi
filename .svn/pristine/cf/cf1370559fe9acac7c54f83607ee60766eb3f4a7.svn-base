@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout style="@style/match" >
+
+        <View
+            android:id="@+id/viewTop"
+            style="@style/layout"
+            android:background="@drawable/bg_course" />
+
+        <LinearLayout
+            android:id="@+id/rltCenter"
+            android:layout_below="@id/viewTop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <View
+                android:id="@+id/viewCenter"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_course" />
+
+            <View
+                android:id="@+id/qrCircle"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/my_qr_course_circle" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/viewDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rltCenter"
+            android:background="@drawable/my_qr_course_desc" />
+
+        <View
+            style="@style/match"
+            android:id="@+id/viewBottom"
+            android:layout_below="@id/viewDesc"
+            android:background="@drawable/bg_course" />
+    </RelativeLayout>
+
+</RelativeLayout>

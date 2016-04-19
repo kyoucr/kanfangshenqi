@@ -1,0 +1,158 @@
+package com.xinwei.kanfangshenqi.fragment;
+
+import java.util.List;
+import java.util.Map;
+
+import android.os.Bundle;
+
+import com.google.gson.Gson;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.lidroid.xutils.view.annotation.ViewInject;
+import com.xinwei.kanfangshenqi.BaseFragment;
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.activity.TradeRecordActivity;
+import com.xinwei.kanfangshenqi.adapter.TradeRecordAdp;
+import com.xinwei.kanfangshenqi.common.Const;
+import com.xinwei.kanfangshenqi.model.TradeRecordList;
+import com.xinwei.kanfangshenqi.model.TradeRecordList.TradeRecord;
+import com.xinwei.kanfangshenqi.request.HttpRequest;
+import com.xinwei.kanfangshenqi.request.HttpRequest.RequestListener;
+import com.xinwei.kanfangshenqi.util.Utils;
+import com.xinwei.kanfangshenqi.util.ValidatorUtil;
+import com.xinwei.kanfangshenqi.view.ListViewWidget;
+import com.xinwei.kanfangshenqi.view.ListViewWidget.ListViewWidgetListener;
+
+/**
+ ******************** 
+ * 收入
+ * 
+ * @author cn
+ ******************** 
+ */
+public class IncomeFragment extends BaseFragment implements OnRefreshListener2{
+	@ViewInject(R.id.pullToRefresh)
+	private PullToRefreshListView pullToRefresh;
+	private TradeRecordAdp tradeRecordAdp;
+	private List<TradeRecord> tradeRecordDataList;
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		addChildView(R.layout.fragment_trade_record);
+	}
+
+	@Override
+	public void onChildViewLoaded() {
+		pullToRefresh.setOnRefreshListener(this);
+		setEmptyPage(R.drawable.ic_income_empty, R.string.hint_income_empty);
+		onVisible();
+	}
+
+	@Override
+	protected void onVisible() {
+		if (!isPrepared || !isVisible || mHasLoadedOnce) {
+			return;
+		}
+		onReloadData();
+	}
+	@Override
+	public void onReloadData() {
+		mHasLoadedOnce = true;
+		showBar();
+		HttpRequest.get(activity, Const.URL_INCOME_RECORD+String.valueOf(mBeginPage), getRequestTag(), null,
+				Utils.getHeaderParamsOnly(), new RequestListener() {
+
+					@Override
+					public void onSuccess(String url, String responseResult) {
+						TradeRecordList tradeRecordList = new Gson().fromJson(responseResult, TradeRecordList.class);
+						tradeRecordDataList = tradeRecordList.getDataList();
+						if(!ValidatorUtil.isValidList(tradeRecordDataList)){
+							isShowEmpty(true);
+							return;
+						}
+						tradeRecordAdp = new TradeRecordAdp(activity, tradeRecordDataList);
+						pullToRefresh.setAdapter(tradeRecordAdp);
+						Utils.judgePullRefreshStatus(pullToRefresh, mBeginPage, tradeRecordList.getPageCount());
+//						Utils.judgeListViewStatus(lViTradeRecord, beginPage, tradeRecordList.getPageCount());
+						isShowContent(true);
+					}
+
+					@Override
+					public void onFailure(String url, String errorInfo) {
+						isShowError(true);
+					}
+
+					@Override
+					public void onError(String url, String responseResult) {
+						isShowError(true);
+					}
+				},true);
+	}
+
+	@Override
+	public boolean onBackPressed() {
+		return false;
+	}
+
+	@Override
+	public String getRequestTag() {
+		return IncomeFragment.class.getSimpleName();
+	}
+
+	@Override
+	public void onPullDownToRefresh(PullToRefreshBase refreshView, final int mBeginPage) {
+		HttpRequest.get(activity, Const.URL_INCOME_RECORD+String.valueOf(mBeginPage), getRequestTag(), null,
+				Utils.getHeaderParamsOnly(), new RequestListener() {
+
+					@Override
+					public void onSuccess(String url, String responseResult) {
+						TradeRecordList tradeRecordList = new Gson().fromJson(responseResult, TradeRecordList.class);
+						tradeRecordDataList = tradeRecordList.getDataList();
+						if(!ValidatorUtil.isValidList(tradeRecordDataList)){
+							isShowEmpty(true);
+							return;
+						}
+						tradeRecordAdp = new TradeRecordAdp(activity, tradeRecordDataList);
+						pullToRefresh.setAdapter(tradeRecordAdp);
+						Utils.judgePullRefreshStatus(pullToRefresh, mBeginPage, tradeRecordList.getPageCount());
+					}
+
+					@Override
+					public void onFailure(String url, String errorInfo) {
+						pullToRefresh.onRefreshComplete(false);
+					}
+
+					@Override
+					public void onError(String url, String responseResult) {
+						pullToRefresh.onRefreshComplete(false);
+					}
+				},true);
+	}
+
+	@Override
+	public void onPullUpToLoad(PullToRefreshBase refreshView, final int mNextPage) {
+		HttpRequest.get(activity, Const.URL_INCOME_RECORD+String.valueOf(mNextPage), getRequestTag(), null,
+				Utils.getHeaderParamsOnly(), new RequestListener() {
+					@Override
+					public void onSuccess(String url, String responseResult) {
+						TradeRecordList tradeRecordList = new Gson().fromJson(responseResult, TradeRecordList.class);
+						tradeRecordDataList.addAll(tradeRecordList.getDataList());
+						Utils.judgePullRefreshStatus(pullToRefresh, mNextPage, tradeRecordList.getPageCount());
+						tradeRecordAdp.notifyDataSetChanged();
+						pullToRefresh.onRefreshComplete(true);
+					}
+
+					@Override
+					public void onFailure(String url, String errorInfo) {
+						pullToRefresh.onRefreshComplete(false);
+					}
+
+					@Override
+					public void onError(String url, String responseResult) {
+						pullToRefresh.onRefreshComplete(false);
+					}
+				},true);
+	}
+
+}

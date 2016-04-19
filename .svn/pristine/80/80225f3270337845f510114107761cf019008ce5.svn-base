@@ -1,0 +1,360 @@
+package com.xinwei.kanfangshenqi.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.greenrobot.eventbus.EventBus;
+import org.xutils.view.annotation.Event;
+import org.xutils.view.annotation.ViewInject;
+
+import android.graphics.Color;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.Response.Listener;
+import com.google.gson.Gson;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.xinwei.kanfangshenqi.BaseActivity;
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.adapter.LouPanAdapter;
+import com.xinwei.kanfangshenqi.common.Const;
+import com.xinwei.kanfangshenqi.dropdownmenu.DropDownMenu;
+import com.xinwei.kanfangshenqi.dropdownmenu.OnMenuSelectedListener;
+import com.xinwei.kanfangshenqi.fragment.housecircle.InterestFragment;
+import com.xinwei.kanfangshenqi.model.DataList;
+import com.xinwei.kanfangshenqi.request.CityOfHousesRequest;
+import com.xinwei.kanfangshenqi.request.HttpRequest;
+import com.xinwei.kanfangshenqi.request.HttpRequest.RequestListener;
+import com.xinwei.kanfangshenqi.response.CityOfHousesResponse;
+import com.xinwei.kanfangshenqi.response.NameOfHousesResponse;
+import com.xinwei.kanfangshenqi.util.StringUtils;
+import com.xinwei.kanfangshenqi.util.Utils;
+import com.xinwei.kanfangshenqi.util.ValidatorUtil;
+import com.xinwei.kanfangshenqi.util.WebUtils;
+import com.xinwei.kanfangshenqi.view.ListViewWidget;
+import com.xinwei.kanfangshenqi.view.ListViewWidget.ListViewWidgetListener;
+
+public class AddAttentionActivity extends BaseActivity implements OnRefreshListener2, OnClickListener {
+
+	private Map<String, String> map = new HashMap<String, String>();
+	private ArrayList<DataList> loupanList;
+	private PullToRefreshListView houselist;
+	@ViewInject(R.id.rltEmptyCustom)
+	private RelativeLayout rltEmptyCustom;
+	private EditText searchEditText;
+	private TextView goBack;
+	private TextView seek;
+	private boolean isRefresh = false;
+	private String[] quyu;
+	private String[] pirce;
+	private String[] tese;
+	private static DropDownMenu mMenu;
+	private LouPanAdapter adpLouPan;
+	final String[] strings = new String[] { "区域", "价格", "特色" };
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		addChildView(R.layout.activity_add_attention);
+	}
+
+	@Override
+	public void onChildViewLoaded() {
+		isShowTitle(false);
+		houselist = (PullToRefreshListView) findViewById(R.id.houselist);
+		houselist.setOnRefreshListener(this);
+		searchEditText = (EditText) findViewById(R.id.tv_top_title);
+		goBack = (TextView) findViewById(R.id.iv_bao);
+		goBack.setOnClickListener(this);
+		seek = (TextView) findViewById(R.id.iv_list);
+		seek.setOnClickListener(this);
+		mMenu = (DropDownMenu) findViewById(R.id.menu);
+		searchEditText.setOnKeyListener(new OnKeyListener() {
+
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
+					if (checkInput()) {
+						searchEditText.getText().toString();
+						map.put("buildingName", searchEditText.getText().toString());
+						getLouPanXin();
+					}
+					return true;
+				}
+				return false;
+			}
+		});
+		onReloadData();
+	}
+
+	/**
+	 * 检测表单
+	 * 
+	 * @return
+	 */
+	private boolean checkInput() {
+		if (StringUtils.isEmpty(searchEditText.getText().toString())) {
+			Utils.makeToastAndShow(this, "请输入楼盘名称", Toast.LENGTH_SHORT);
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public void onReloadData() {
+		getDate();
+		getLouPanXin();
+	}
+
+	@Override
+	public String getRequestTag() {
+		return AddAttentionActivity.class.getSimpleName();
+	}
+
+	private void getDate() {
+		showBar();
+		HttpRequest.get(this,Const.SERVER_URL+ CityOfHousesRequest.APIPATH, getRequestTag(), null, new RequestListener() {
+			
+			@Override
+			public void onSuccess(String url, String responseResult) {
+				CityOfHousesResponse response = new Gson().fromJson(responseResult, CityOfHousesResponse.class);
+				pirce = new String[response.getPirceList().size() + 1];
+				pirce[0] = "价格";
+				for (int i = 0; i < response.getPirceList().size(); i++) {
+					pirce[i + 1] = response.getPirceList().get(i).getPriceSection();
+				}
+				quyu = new String[response.getAreaList().size() + 1];
+				quyu[0] = "区域";
+				for (int i = 0; i < response.getAreaList().size(); i++) {
+					quyu[i + 1] = response.getAreaList().get(i).getAreaName();
+				}
+				tese = new String[response.getBuildingFeatureList().size() + 1];
+				tese[0] = "特色";
+				for (int i = 0; i < response.getBuildingFeatureList().size(); i++) {
+					tese[i + 1] = response.getBuildingFeatureList().get(i).getFeatureName();
+				}
+				InitMenu(response);
+				isShowContent(true);
+			}
+			
+			@Override
+			public void onFailure(String url, String errorInfo) {
+				isShowError(true);
+			}
+			
+			@Override
+			public void onError(String url, String responseResult) {
+				isShowError(true);
+			}
+		});
+	}
+
+	private void InitMenu(final CityOfHousesResponse response) {
+
+		mMenu.setmMenuCount(3);// Menu的个数
+		mMenu.setmShowCount(5);// Menu展开list数量太多是只显示的个数
+		mMenu.setShowCheck(true);// 是否显示展开list的选中项
+		mMenu.setmMenuTitleTextSize(14);// Menu的文字大小
+		mMenu.setmMenuTitleTextColor(Color.parseColor("#000000"));// Menu的文字颜色
+		mMenu.setmMenuListTextSize(16);// Menu展开list的文字大小
+		mMenu.setmMenuListTextColor(Color.BLACK);// Menu展开list的文字颜色
+		// mMenu.setmMenuBackColor(Color.parseColor("#ffffff"));//Menu的背景颜色
+		// 白色80%透明度
+		mMenu.setmMenuPressedBackColor(getResources().getColor(R.color.default_menu_back));// Menu按下的背景颜色
+		mMenu.setmMenuPressedTitleTextColor(Color.BLACK);// Menu按下状态的title文字颜色
+
+		mMenu.setmCheckIcon(R.drawable.ico_make);// Menu展开list的勾选图片
+
+		mMenu.setmUpArrow(R.drawable.menu_arrow_up);// Menu默认状态的箭头
+		mMenu.setmDownArrow(R.drawable.menu_arrow_down);// Menu按下状态的箭头
+
+		mMenu.setDefaultMenuTitle(strings);// 默认未选择任何过滤的Menu title
+
+		mMenu.setShowDivider(true);// 是否显示展开list的分割线
+		mMenu.setmMenuListBackColor(getResources().getColor(R.color.white));// 展开list的背景色
+		mMenu.setmMenuListSelectorRes(R.color.white);// 展开list的listselector
+		mMenu.setmArrowMarginTitle(5);// Menu上箭头图标距title的margin
+
+		mMenu.setMenuSelectedListener(new OnMenuSelectedListener() {
+			@Override
+			public void onSelected(View listview, int RowIndex, int ColumnIndex) {
+				map.remove("buildingName");
+				Log.i("MainActivity", "select " + ColumnIndex + " column and " + RowIndex + " row");
+				if (ColumnIndex == 0) {
+					if (RowIndex > 0) {
+						RowIndex = RowIndex - 1;
+						String areaId = response.getAreaList().get(RowIndex).getAreaId();
+						map.put("areaId", areaId);
+					} else {
+						map.put("areaId", RowIndex + "");
+					}
+					getLouPanXin();
+				} else if (ColumnIndex == 1) {
+					if (RowIndex > 0) {
+						RowIndex = RowIndex - 1;
+						String priceId = response.getPirceList().get(RowIndex).getPriceId();
+						map.put("priceId", priceId);
+					} else {
+						map.put("priceId", RowIndex + "");
+					}
+					getLouPanXin();
+				} else {
+					if (RowIndex > 0) {
+						RowIndex = RowIndex - 1;
+						String featureId = response.getBuildingFeatureList().get(RowIndex).getFeatureId();
+						map.put("featureId", featureId);
+					} else {
+						map.put("featureId", RowIndex + "");
+					}
+					getLouPanXin();
+				}
+			}
+		});
+		List<String[]> items = new ArrayList<String[]>();
+		items.add(quyu);
+		items.add(pirce);
+		items.add(tese);
+		mMenu.setmMenuItems(items);
+		mMenu.setIsDebug(false);
+	}
+
+	private void getLouPanXin() {
+		if (!isRefresh)
+			showBar();
+		HttpRequest.get(activity, Const.URL_NAME_OF_HOUSES, getRequestTag(), map, Utils.getHeaderParamsOnly(),
+				new RequestListener() {
+					@Override
+					public void onSuccess(String url, String responseResult) {
+						isShowContent(true);
+						NameOfHousesResponse mNameOfHousesResponse = new Gson().fromJson(responseResult,
+								NameOfHousesResponse.class);
+						loupanList = mNameOfHousesResponse.getDataList();
+						if (ValidatorUtil.isValidList(loupanList)) {
+							adpLouPan = new LouPanAdapter(loupanList);
+							houselist.setAdapter(adpLouPan);
+							Utils.judgePullRefreshStatus(houselist, mBeginPage, mNameOfHousesResponse.getPageCount());
+							showContent();
+						} else {
+							showEmptyCustom();
+						}
+						if (isRefresh) {
+							houselist.onRefreshComplete(false);
+						} else {
+							closeBar();
+						}
+						isRefresh = false;
+					}
+
+					@Override
+					public void onFailure(String url, String errorInfo) {
+
+						if (isRefresh) {
+							houselist.onRefreshComplete(false);
+						} else {
+							closeBar();
+						}
+						isRefresh = false;
+					}
+
+					@Override
+					public void onError(String url, String responseResult) {
+						if (isRefresh) {
+							houselist.onRefreshComplete(false);
+						} else {
+							closeBar();
+						}
+						isRefresh = false;
+					}
+				});
+	}
+	private void showEmptyCustom(){
+		rltEmptyCustom.setVisibility(View.VISIBLE);
+		houselist.setVisibility(View.GONE);
+	}
+	private void showContent(){
+		rltEmptyCustom.setVisibility(View.GONE);
+		houselist.setVisibility(View.VISIBLE);
+	}
+	@Event(value = R.id.houselist, type = OnItemClickListener.class)
+	private void onItemClickEvent(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		DataList dataList = (DataList) arg0.getAdapter().getItem(arg2);
+		Bundle data = new Bundle();
+		data.putSerializable(DataList.class.getSimpleName(), dataList);
+		Utils.moveTo(activity, BuildingDetailInfoActivity.class, false, data);
+	}
+
+	@Override
+	public void onClick(View view) {
+		switch (view.getId()) {
+
+		case R.id.iv_bao:
+			finish();
+			break;
+		case R.id.iv_list:
+			if (checkInput()) {
+				searchEditText.getText().toString();
+				map.put("buildingName", searchEditText.getText().toString());
+				getLouPanXin();
+			}
+			break;
+		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		if (InterestFragment.OnInterestFinishListener != null)
+			InterestFragment.OnInterestFinishListener.onInterestFinish();
+		super.onDestroy();
+	}
+
+	@Override
+	public void onPullDownToRefresh(PullToRefreshBase refreshView, int mBeginPage) {
+		map.put(Const.PARAM_PAGENUM, String.valueOf(mBeginPage));
+		isRefresh = true;
+		getLouPanXin();
+	}
+
+	@Override
+	public void onPullUpToLoad(PullToRefreshBase refreshView, final int mNextPage) {
+		map.put(Const.PARAM_PAGENUM, String.valueOf(mNextPage));
+		HttpRequest.get(activity, Const.URL_NAME_OF_HOUSES, getRequestTag(), map, Utils.getHeaderParamsOnly(),
+				new RequestListener() {
+					@Override
+					public void onSuccess(String url, String responseResult) {
+						NameOfHousesResponse mNameOfHousesResponse = new Gson().fromJson(responseResult,
+								NameOfHousesResponse.class);
+						loupanList.addAll(mNameOfHousesResponse.getDataList());
+						adpLouPan.notifyDataSetChanged();
+						Utils.judgePullRefreshStatus(houselist, mNextPage, mNameOfHousesResponse.getPageCount());
+					}
+
+					@Override
+					public void onFailure(String url, String errorInfo) {
+						houselist.onRefreshComplete(false);
+					}
+
+					@Override
+					public void onError(String url, String responseResult) {
+						houselist.onRefreshComplete(false);
+					}
+				});
+	}
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:titlebar="http://schemas.android.com/apk/res/com.xinwei.kanfangshenqi"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+     >
+        <TextView
+            android:id="@+id/loupan_qingdan_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="浑河湾"
+            android:layout_gravity="center"
+            android:textColor="@color/txt_gray"
+            android:textSize="20sp" />
+	    <com.xinwei.kanfangshenqi.view.ListViewInScroll
+	        android:id="@+id/loupan_qingdan_item_list"
+	        style="@style/list_view"
+	        android:footerDividersEnabled="true"
+	        android:layout_below="@id/rltTitle" />
+</LinearLayout>

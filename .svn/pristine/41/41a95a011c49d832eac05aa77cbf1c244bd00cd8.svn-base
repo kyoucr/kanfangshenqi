@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:gravity="center_vertical"
+        android:layout_marginLeft="@dimen/margin_normal"
+        android:layout_marginRight="@dimen/margin_normal"
+        android:background="@drawable/bg_adp_comment"
+        style="@style/layout">
+
+        <com.xinwei.kanfangshenqi.view.CircleImageViewWithBorder
+            android:id="@+id/imgHead"
+            android:layout_width="@dimen/see_house_circle_img_head_small_size"
+            android:layout_height="@dimen/see_house_circle_img_head_small_size"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="@dimen/margin_normal"/>
+
+        <LinearLayout
+            style="@style/layout"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:layout_toRightOf="@id/imgHead"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/txtDesc"
+                style="@style/layout"
+                android:textColor="@color/txt_color_black"
+                android:textSize="@dimen/txt_size_big" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

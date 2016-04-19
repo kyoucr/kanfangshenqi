@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+
+    <RelativeLayout
+        android:id="@+id/up_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical" >
+
+        <com.xinwei.kanfangshenqi.view.TextViewNoBottomPadding
+            android:id="@+id/loupan_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/loupan_icon"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/txt_size_big" />
+
+        <com.xinwei.kanfangshenqi.view.TextViewNoBottomPadding
+            android:id="@+id/loupan_jiaqian"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/loupan_name"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/loupan_name"
+            android:textColor="@color/txt_gray_nine"
+            android:textSize="@dimen/txt_size_big" />
+
+        <com.xinwei.kanfangshenqi.view.TextViewNoBottomPadding
+            android:id="@+id/tv_loupan_jiaqian_danwei"
+            style="@style/item"
+            android:layout_alignBottom="@id/loupan_jiaqian"
+            android:layout_toRightOf="@id/loupan_jiaqian"
+            android:text="元/平"
+            android:textColor="@color/txt_gray_nine"
+            android:textSize="13sp" />
+
+        <RelativeLayout
+            android:id="@+id/rltDingWei"
+            style="@style/item"
+            android:layout_below="@+id/loupan_name"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="@dimen/margin_normal" >
+
+            <ImageView
+                android:id="@+id/dingwei"
+                android:layout_width="11dp"
+                android:layout_height="15dp"
+                
+                android:layout_centerVertical="true"
+                android:background="@drawable/xjhb_address_icon" />
+
+            <TextView
+                android:id="@+id/loupan_dizhi"
+                style="@style/item"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/dingwei"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/txt_gray_nine"
+                android:textSize="15sp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/lltRed"
+            style="@style/item"
+            android:layout_below="@id/rltDingWei"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/iv_loupan_hongbao"
+                android:layout_width="10dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/middle_red_packet" />
+
+            <TextView
+                android:id="@+id/txtRed"
+                style="@style/item"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:textColor="@color/orange"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rltRight"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginRight="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" >
+
+            <ImageView
+                android:id="@+id/qingdan_list_rili"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/choose_calendar_icon" />
+
+            <TextView
+                android:id="@+id/qingdan_list_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/txt_size_big"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>

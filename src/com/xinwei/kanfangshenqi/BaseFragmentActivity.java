@@ -1,0 +1,427 @@
+package com.xinwei.kanfangshenqi;
+
+import org.xutils.x;
+
+import com.xinwei.kanfangshenqi.app.VolleyManager;
+import com.xinwei.kanfangshenqi.app.XWActivityManager;
+import com.xinwei.kanfangshenqi.app.XWApplication;
+import com.xinwei.kanfangshenqi.util.Utils;
+import com.xinwei.kanfangshenqi.view.AlertWidget;
+import com.xinwei.kanfangshenqi.view.CustomDialog;
+
+import android.app.Activity;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+public abstract class BaseFragmentActivity extends FragmentActivity{
+
+	private CustomDialog dialog;
+
+	protected Activity activity;
+	private RelativeLayout rltContent;
+	private RelativeLayout rltBase;
+	private RelativeLayout rltError;
+	private RelativeLayout rltEmpty;
+	private ImageView imgEmpty;
+	private TextView txtEmpty;
+	private RelativeLayout rltTitle;
+	private RelativeLayout rltLeft;
+	private Button btnCtrl;
+	private ImageView imgTitleCutLine;
+	private TextView txtTitle;
+	private TextView txtLeft;
+	private ImageButton btnLeft;
+	private AlertWidget bar;
+	private TextView txtRight;
+	private AlertWidget alert;
+	
+	/**
+	 ********************
+	 * 获取提示框组件
+	 * @return
+	 ********************
+	 */
+	public AlertWidget getAlert(){
+		if(alert==null)
+			alert = new AlertWidget(activity);
+		return alert;
+	}
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		activity = this;
+		XWActivityManager.getInstance().pushOneActivity(activity);
+		addBaseView();
+	}
+	private void addBaseView() {
+		setContentView(R.layout.activity_base);
+		rltTitle = (RelativeLayout) findViewById(R.id.rltTitle);
+		rltBase = (RelativeLayout) findViewById(R.id.rltBase);
+		rltContent = (RelativeLayout) findViewById(R.id.rltContent);
+		rltError = (RelativeLayout) findViewById(R.id.rltError);
+		rltEmpty = (RelativeLayout) findViewById(R.id.rltEmpty);
+		imgEmpty = (ImageView) findViewById(R.id.imgEmpty);
+		txtEmpty = (TextView) findViewById(R.id.txtEmpty);
+		rltLeft = (RelativeLayout) findViewById(R.id.rltLeft);
+		txtLeft = (TextView) findViewById(R.id.txtLeft);
+		btnLeft = (ImageButton) findViewById(R.id.btnLeft);
+		txtTitle = (TextView) findViewById(R.id.txtTitle);
+		imgTitleCutLine = (ImageView) findViewById(R.id.imgTitleCutLine);
+		txtRight = (TextView) findViewById(R.id.txtRight);
+		rltLeft.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (activity != null)
+					activity.finish();
+			}
+		});
+		btnCtrl = (Button) findViewById(R.id.btnCtrl);
+		btnCtrl.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onReloadData();
+			}
+		});
+		rltTitle.setVisibility(View.VISIBLE);
+	}
+	/**
+	 *******************
+	 * 添加自定义标题
+	 * @param resId
+	 *******************
+	 */
+	public View addCustomTitle(int resId){
+		rltTitle.removeAllViews();
+		View viewTitle = LayoutInflater.from(XWApplication.getInstance()).inflate(resId, null);
+		rltTitle.addView(viewTitle);
+		return viewTitle;
+	}
+	/**
+	 *******************
+	 * 设置左标题，上一界面标题
+	 * @param titleLeft
+	 *******************
+	 */
+	public void setLeftTitle(String titleLeft){
+		txtLeft.setText(titleLeft);
+	}
+	/**
+	 *******************
+	 * 设置左标题，上一界面标题
+	 * @param resId
+	 *******************
+	 */
+	public void setLeftTitle(int resId){
+		txtLeft.setText(resId);
+	}
+	/**
+	 *******************
+	 * 显示或者隐藏标题
+	 *******************
+	 */
+	public void isShowTitle(boolean isShow) {
+		if (rltTitle == null)
+			rltTitle = (RelativeLayout) findViewById(R.id.rltTitle);
+		if (isShow)
+			rltTitle.setVisibility(View.VISIBLE);
+		else
+			rltTitle.setVisibility(View.GONE);
+	}
+
+	/**
+	 *******************
+	 * 设置标题文字
+	 * 
+	 * @param resId
+	 *******************
+	 */
+	public void setTitleTxt(int resId) {
+		if (txtTitle == null)
+			txtTitle = (TextView) findViewById(R.id.txtTitle);
+		txtTitle.setText(resId);
+	}
+	/**
+	 *******************
+	 * 设置标题文字
+	 * 
+	 * @param resId
+	 *******************
+	 */
+	public void setTitleTxt(String title) {
+		if(title == null)
+			return;
+		if (txtTitle == null)
+			txtTitle = (TextView) findViewById(R.id.txtTitle);
+		txtTitle.setText(title);
+	}
+	/**
+	 *******************
+	 * 是否显示标题左侧控制栏（回退键）
+	 * 
+	 * @param isShow
+	 *******************
+	 */
+	public void isShowLeft(boolean isShow) {
+		if (isShow)
+			rltLeft.setVisibility(View.VISIBLE);
+		else
+			rltLeft.setVisibility(View.GONE);
+	}
+
+	/**
+	 ********************
+	 * 设置右文字
+	 * @param txtRight
+	 ********************
+	 */
+	public void setRightTxt(String txt){
+		if(txt == null)
+			return;
+		txtRight.setText(txt);
+	}
+	/**
+	 ********************
+	 * 设置右文字
+	 * @param txtRight
+	 ********************
+	 */
+	public void setRightTxt(int resId){
+		txtRight.setText(resId);
+	}
+	/**
+	 ********************
+	 * 获取右按钮
+	 * @param resId
+	 ********************
+	 */
+	public TextView getRightBtn(){
+		return this.txtRight;
+	}
+	/**
+	 *******************
+	 * 显示或者隐藏子view
+	 * 
+	 * @param isShow
+	 *******************
+	 */
+	public void isShowContent(boolean isShow) {
+		if (isShow){
+			rltContent.setVisibility(View.VISIBLE);
+			rltError.setVisibility(View.GONE);
+			rltEmpty.setVisibility(View.GONE);
+		}else{
+			rltContent.setVisibility(View.GONE);
+		}
+		if(bar!=null)
+			bar.close();
+	}
+	/**
+	 *******************
+	 * 是否显示错误界面
+	 * @param isShow
+	 *******************
+	 */
+	public void isShowError(boolean isShow) {
+		if (isShow){
+			rltError.setVisibility(View.VISIBLE);
+			rltContent.setVisibility(View.GONE);
+			rltEmpty.setVisibility(View.GONE);
+		}else
+			rltError.setVisibility(View.GONE);
+		if(bar!=null)
+			bar.close();
+	}
+	/**
+	 *******************
+	 * 是否显示无数据界面
+	 * @param isShow
+	 *******************
+	 */
+	public void isShowEmpty(boolean isShow){
+		if (isShow){
+			rltEmpty.setVisibility(View.VISIBLE);
+			rltContent.setVisibility(View.GONE);
+			rltError.setVisibility(View.GONE);
+		}else
+			rltEmpty.setVisibility(View.GONE);
+		if(bar!=null)
+			bar.close();
+	}
+
+	/**
+	 ********************
+	 * 设置空界面
+	 * @param imgRes
+	 * @param txtRes
+	 ********************
+	 */
+	public void setEmptyPage(int imgRes,int txtRes){
+		if(imgRes == 0)
+			imgEmpty.setVisibility(View.GONE);
+		else
+			imgEmpty.setImageBitmap(((BitmapDrawable)getResources().getDrawable(imgRes)).getBitmap());
+		if(txtRes == 0)
+			txtEmpty.setVisibility(View.GONE);
+		else
+			txtEmpty.setText(txtRes);
+	}
+	/**
+	 ********************
+	 * 设置标题下划线是否可见 
+	 * @param isShow
+	 ********************
+	 */
+	public void isShowTitleCutline(boolean isShow){
+		if(isShow)
+			imgTitleCutLine.setVisibility(View.VISIBLE);
+		else
+			imgTitleCutLine.setVisibility(View.GONE);
+	}
+	/**
+	 *******************
+	 * 显示loading的progressbar
+	 *******************
+	 */
+	public void showBar(){
+		if(bar==null)
+			bar = new AlertWidget(this);
+		bar.showBar();
+	}
+	/**
+	 *******************
+	 * 关闭bar
+	 *******************
+	 */
+	public void closeBar(){
+		if(bar!=null)
+			bar.close();
+	}
+
+	/**
+	 ********************
+	 * 设置bar是否可取消
+	 * @param cancelable
+	 ********************
+	 */
+	public void setBarCancelable(boolean cancelable){
+		if(bar!=null)
+			bar.setCancelable(cancelable);
+	}
+	/**
+	 ********************
+	 * 设置base背景
+	 * @param resId
+	 ********************
+	 */
+	public void setBaseResourceBg(int resId){
+		rltBase.setBackgroundResource(resId);
+	}
+	/**
+	 ********************
+	 * 设置标题颜色背景
+	 ********************
+	 */
+	public void setTitleColorBg(int resId){
+		rltTitle.setBackgroundColor(resId);
+	}
+	/**
+	 ********************
+	 * 设置标题resource背景
+	 * @param resId
+	 ********************
+	 */
+	public void setTitleResourceBg(int resId){
+		rltTitle.setBackgroundResource(resId);
+	}
+	/**
+	 *******************
+	 * 判断登录状态 ，并弹提示
+	 * @return
+	 *******************
+	 */
+	public boolean isLogin(){
+		if(null==Utils.getHeaderParamsOnly()){
+			getAlert().showLogin();
+			return false;
+		}
+		return true;
+	}
+	/**
+	 *******************
+	 * 添加子view
+	 * 
+	 * @param resId
+	 *******************
+	 */
+	public void addChildView(int resId) {
+		final View childView = LayoutInflater.from(activity).inflate(resId, null);
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT);
+		rltContent.addView(childView, params);
+		childView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+
+			@Override
+			public void onGlobalLayout() {
+				if (childView.getWidth() > 0) {
+					childView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//					ViewUtils.inject(activity);
+					x.view().inject(activity);
+					onChildViewLoaded();
+				}
+			}
+		});
+	}
+
+	/**
+	 *******************
+	 * 子view的UI加载完成（ViewInject绑定结束）时调用
+	 * 
+	 *******************
+	 */
+	public abstract void onChildViewLoaded();
+
+	/**
+	 *******************
+	 * 点击error界面重新加载数据
+	 *******************
+	 */
+	public abstract void onReloadData();
+
+	/**
+	 *******************
+	 * 获取网络请求tag
+	 * @return
+	 *******************
+	 */
+	public abstract String getRequestTag();
+
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();  
+        Configuration config=new Configuration();  
+        config.setToDefaults();  
+        res.updateConfiguration(config,res.getDisplayMetrics() );
+        return res;
+    }
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if(getRequestTag()!=null)
+			VolleyManager.getRequestQueue().cancelAll(getRequestTag());
+		XWActivityManager.getInstance().popOneActivity(activity);
+	}
+}

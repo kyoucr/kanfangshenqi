@@ -1,0 +1,133 @@
+package com.xinwei.kanfangshenqi.receiver;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.xutils.common.Callback.Cancelable;
+
+import com.king.photo.util.HttpXUtils;
+import com.xinwei.kanfangshenqi.common.Const;
+import com.xinwei.kanfangshenqi.request.HttpRequest.RequestListener;
+import com.xinwei.kanfangshenqi.util.FileUtils;
+import com.xinwei.kanfangshenqi.util.Utils;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+
+public class NetworkConnectChangedReceiver extends BroadcastReceiver {
+	@Override
+	public void onReceive(Context context, Intent intent) {
+		String action = intent.getAction();
+		if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)||Const.ACTION_UPLOAD_ERROR.equals(action)) {
+			if (Utils.isWifiConnected()) {
+				if(!isPreparing&&!isUploading)
+					prepareErrorLog();
+			} else {
+				isPreparing = false;
+				isUploading = false;
+				if(httpHandler!=null){
+					httpHandler.cancel();
+				}
+			}
+
+			// NetworkInfo networkInfo = (NetworkInfo) intent
+			// .getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO); //
+			// 当前的
+			// if(networkInfo!=null&&networkInfo.getType()==ConnectivityManager.TYPE_WIFI){
+			// Utils.logCN("当前是wifi连接！");
+			// }else{
+			// Utils.logCN("当前是其他连接或无连接！");
+			// }
+			// NetworkInfo otherNetworkInfo = (NetworkInfo) intent
+			// .getParcelableExtra(ConnectivityManager.EXTRA_OTHER_NETWORK_INFO);
+			// // 另一个网络状态
+			// if(otherNetworkInfo!=null){
+			// Utils.logCN("其他连接:"+otherNetworkInfo.getTypeName());
+			// }
+			// boolean hasNoConnected = intent.getBooleanExtra(
+			// ConnectivityManager.EXTRA_NO_CONNECTIVITY, false); // 检查是否网络全部断开
+			// boolean isFailover = intent.getBooleanExtra(
+			// ConnectivityManager.EXTRA_IS_FAILOVER, false); // 是不是wifi 和
+			// // 3g在切换 |
+			// // 故障转移
+			// String reason =
+			// intent.getStringExtra(ConnectivityManager.EXTRA_REASON);
+			// if(hasNoConnected){
+			// Utils.logCN("全部断开！");
+			// Utils.logCN("完全断开原因："+reason);
+			// }else{
+			// if(networkInfo!=null&&networkInfo.getType()==ConnectivityManager.TYPE_WIFI){
+			// Utils.logCN("当前是wifi连接！");
+			// }
+			// Utils.logCN("移动网络："+Utils.isMobileConnected(context));
+			// Utils.logCN("wifi网络："+Utils.isWifiConnected(context));
+			// Utils.logCN("没完全断开原因："+reason);
+			// }
+			// if(isFailover){
+			// Utils.logCN("移动网络："+Utils.isMobileConnected(context));
+			// Utils.logCN("wifi网络："+Utils.isWifiConnected(context));
+			// Utils.logCN("切换原因："+reason);
+			// }
+		}
+	}
+
+	private Cancelable httpHandler;
+	private boolean isUploading = false;
+	private boolean isPreparing = false;
+	private List<File> listFile;
+
+	private void prepareErrorLog() {
+		if(listFile == null||listFile.size()==0){
+			isPreparing = false;
+			FileUtils fileUtils = FileUtils.getInstance();
+			File[] files = fileUtils.getFilesByFolder(new File(fileUtils
+					.getCrashPathName()));
+			if (files != null && files.length > 0) {
+				listFile = new ArrayList<File>();
+				for (File file : files) {
+					if (file.getName().endsWith(".log")) {
+						listFile.add(file);
+					}
+				}
+			}
+			isPreparing = false;
+			uploadErrorLog();
+		}
+	}
+	private void uploadErrorLog() {
+		if (listFile != null && listFile.size() > 0&&!isUploading) {
+			isUploading = true;
+			httpHandler = HttpXUtils.upload(null, Const.URL_UPLOAD_ERROR_LOG, listFile, null,
+					null, new RequestListener() {
+
+						@Override
+						public void onSuccess(String url, String responseResult) {
+							if(listFile!=null){
+								try {
+									for(File file :listFile){
+										file.delete();
+									}
+									listFile.clear();
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+							isUploading = false;
+						}
+
+						@Override
+						public void onFailure(String url, String errorInfo) {
+							isUploading = false;
+						}
+
+						@Override
+						public void onError(String url, String responseResult) {
+							isUploading = false;
+						}
+					}, false);
+		}
+	}
+}

@@ -1,0 +1,532 @@
+package com.xinwei.kanfangshenqi.activity;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import com.google.gson.Gson;
+import com.king.photo.util.HttpXUtils;
+import com.lidroid.xutils.view.annotation.ViewInject;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.xinwei.kanfangshenqi.BaseActivity;
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.common.Const;
+import com.xinwei.kanfangshenqi.fragment.WoDeFragment;
+import com.xinwei.kanfangshenqi.request.HttpRequest.RequestListener;
+import com.xinwei.kanfangshenqi.response.UpHeadPortraitResponse;
+import com.xinwei.kanfangshenqi.util.FileUtils;
+import com.xinwei.kanfangshenqi.util.ImageOptions;
+import com.xinwei.kanfangshenqi.util.PreferenceUtils;
+import com.xinwei.kanfangshenqi.util.ToastUtil;
+import com.xinwei.kanfangshenqi.util.Utils;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Base64;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+public class UserInfoActivity extends BaseActivity implements OnClickListener {
+	/**
+	 * 设置用户性别
+	 * 
+	 */
+	@ViewInject(R.id.rl_user_sex)
+	private RelativeLayout rl_user_sex;
+	/**
+	 * 设置用户头像
+	 */
+	@ViewInject(R.id.rl_user_pic)
+	private RelativeLayout rl_user_pic;
+	/**
+	 * 设置用户昵称
+	 */
+	@ViewInject(R.id.rl_user_nicheng)
+	private RelativeLayout rl_user_nicheng;
+	/**
+	 * 设置用户密码
+	 */
+	@ViewInject(R.id.rl_user_password)
+	private RelativeLayout rl_user_password;
+	/**
+	 * 设置用户手机号
+	 */
+	@ViewInject(R.id.rl_user_phonenum)
+	private RelativeLayout rl_user_phonenum;
+	
+	@ViewInject(R.id.rl_user_address)
+	private RelativeLayout rl_user_address;
+	
+	@ViewInject(R.id.rl_user_administration)
+	private RelativeLayout rl_user_administration;
+	/**
+	 * 用户头像imageView
+	 */
+	@ViewInject(R.id.iv_user_photo)
+	private ImageView iv_user_photo;
+
+	@ViewInject(R.id.tv_user_nicheng)
+	private TextView tv_user_nicheng;
+	@ViewInject(R.id.tv_user_phone)
+	private TextView tv_user_phone;
+	@ViewInject(R.id.tv_user_sex)
+	private TextView tv_user_sex;
+	private File cameraFile;// 照相机拍照的图片
+	public static final int USERPIC_REQUEST_CODE_CAMERA = 102;
+	public static final int USERPIC_REQUEST_CODE_LOCAL = 101;
+	public static final int USERPIC_REQUEST_CODE_CUT = 103;
+	private Uri imageUri = null;
+	private String UserPic = null;
+	private String UserNickName = null;
+	private String UserSex = null;
+	private String UserPhone = null;
+	 private String newName ="image.jpg";
+	private PreferenceUtils preferenceUtils;
+	private Bundle data = new Bundle();
+	private String macurl=FileUtils.getInstance().getCachePathName() + "/avater.png";
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		addChildView(R.layout.activity_userinfo_setting);
+	}
+	private void setUserInfo() {
+		// 设置用户信息
+		// iv_user_photo
+		preferenceUtils = PreferenceUtils.getInstance(UserInfoActivity.this);
+		// 获取用户信息
+		UserPic = preferenceUtils.getSettingUserPic();
+		UserNickName =preferenceUtils.getSettingUserNickName();
+		UserPhone = preferenceUtils.getSettingUserAccount();
+		UserSex = preferenceUtils.getSettingUserSex();
+		ImageLoader.getInstance().displayImage(UserPic, iv_user_photo,ImageOptions.getHeaderOptions());
+		tv_user_nicheng.setText(UserNickName);
+		if(UserSex.equals(Const.WOMAN)){
+			tv_user_sex.setText("女");
+		}else if(UserSex.equals(Const.MAN)){
+			tv_user_sex.setText("男");
+		}else{
+			tv_user_sex.setText("火星人");
+		}
+		tv_user_phone.setText(UserPhone);
+	}
+
+	private void init() {
+		rl_user_pic.setOnClickListener(this);
+		rl_user_nicheng.setOnClickListener(this);
+		rl_user_password.setOnClickListener(this);
+		rl_user_phonenum.setOnClickListener(this);
+		rl_user_sex.setOnClickListener(this);
+		rl_user_administration.setOnClickListener(this);
+		rl_user_address.setOnClickListener(this);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.rl_user_pic:
+			change_headurl();
+			showModifyHeadImgPop();
+//			change_headurl();
+			break;
+		case R.id.rl_user_nicheng:
+			data.putString("name",UserNickName);
+			Intent intent = new Intent();
+			intent.setClass(UserInfoActivity.this, ChangeNameActivity.class);
+			intent.putExtras(data);
+			startActivityForResult(intent, 1);
+//			Utils.moveTo(UserInfoActivity.this, ChangeNameActivity.class, false, data);
+			break;
+		case R.id.rl_user_sex:
+			data.putString("sex",PreferenceUtils.getInstance(this).getSettingUserSex());
+			Intent intentsex = new Intent();
+			intentsex.setClass(UserInfoActivity.this, ChangeSexActivity.class);
+			intentsex.putExtras(data);
+			startActivityForResult(intentsex, 2);
+//			Utils.moveTo(UserInfoActivity.this, ChangeSexActivity.class, false, data);
+			break;
+		case R.id.rl_user_password:
+			Utils.moveTo(UserInfoActivity.this, ChangePWDActivity.class, false, null);
+			break;
+		case R.id.rl_user_address:
+			Utils.moveTo(UserInfoActivity.this, ChangeAddressWordActivity.class, false, null);
+			break;
+		case R.id.rl_user_administration:
+			Utils.moveTo(UserInfoActivity.this, ChangeAdministrationActivity.class, false, null);
+			break;
+		}
+	}
+
+	/**
+	 * 更改头像
+	 */
+	public void change_headurl() {
+		/* 创建缓存图片文件-要用于照相和本地图片选择缓存 */
+//		File tmpDir = new File(Environment.getExternalStorageDirectory() + "/avater/");
+//		if (!tmpDir.exists()) {
+//			tmpDir.mkdir();
+//		}
+		cameraFile = new File(FileUtils.getInstance().getCachePathName() + "/avater.png");
+		// cameraFile = new File(PathUtil.getInstance().getImagePath(), "wuyu"
+		// + System.currentTimeMillis() + ".jpg");
+		if (cameraFile == null && !cameraFile.exists()) {// 如果文件存在就不在创建
+			cameraFile.getParentFile().mkdirs();
+		}
+
+//		AlertDialog.Builder builder = new Builder(this);
+//		String[] strarr = { "选择拍照", "选择本地相册" };
+//		builder.setItems(strarr, new DialogInterface.OnClickListener() {
+//			public void onClick(DialogInterface arg0, int arg1) {
+//				// TODO 自动生成的方法存根
+//				if (arg1 == 0) {// 选择拍照
+//					selectPicFromCamera();
+//				} else {// 选择本地相册
+//					selectPicFromLocal();
+//				}
+//			}
+//		});
+//		builder.show();
+	}
+
+	/**
+	 * 从图库获取图片
+	 */
+	public void selectPicFromLocal() {
+		Intent intent;
+		if (Build.VERSION.SDK_INT < 19) {
+			intent = new Intent(Intent.ACTION_GET_CONTENT);
+			intent.setType("image/*");
+		} else {
+			intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+			// startActivityForResult(intent, USERPIC_REQUEST_CODE_LOCAL_19);
+		}
+		startActivityForResult(intent, USERPIC_REQUEST_CODE_LOCAL);
+	}
+
+	/**
+	 * 照相获取图片
+	 */
+	public void selectPicFromCamera() {
+		startActivityForResult(
+				new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile)),
+				USERPIC_REQUEST_CODE_CAMERA);
+	}
+
+	/**
+	 * onActivityResult
+	 */
+	public void onActivityResult(int requestCode, int resultCode, final Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(requestCode==1){
+			//修改姓名
+			if(data!=null){
+				UserInfoActivity.this.runOnUiThread(new Runnable() {    
+			        public void run() {
+			        	tv_user_nicheng.setText(data.getStringExtra("name"));    
+			        }
+				});
+			}
+		}
+		if(requestCode==2){
+			if(data!=null){
+				if(Const.WOMAN.equals(data.getStringExtra("sex"))){
+					UserInfoActivity.this.runOnUiThread(new Runnable() {    
+				        public void run() {
+				        	tv_user_sex.setText("女"); 
+				        }
+					});
+				}
+				else{
+					UserInfoActivity.this.runOnUiThread(new Runnable() {    
+				        public void run() {
+				        	tv_user_sex.setText("男"); 
+				        }
+					});
+				}
+			}
+		}
+		if (requestCode == USERPIC_REQUEST_CODE_CAMERA) { // 获取照片
+			if (cameraFile != null && cameraFile.exists()) {
+				// 改成返回到指定的uri imageUri = Uri.fromFile(cameraFile);
+				cropImageUri(Uri.fromFile(cameraFile), 300, 300, USERPIC_REQUEST_CODE_CUT);
+
+			}
+		} else if (requestCode == USERPIC_REQUEST_CODE_LOCAL) { // 获取本地图片
+			if (data != null) {
+				Uri selectedImage = data.getData();
+				if (selectedImage != null) {
+					cropImageUri(selectedImage, 300, 300, USERPIC_REQUEST_CODE_CUT);
+					// Log.d("log","selectedImage"+selectedImage);
+
+				}
+			}
+		} else if (requestCode == USERPIC_REQUEST_CODE_CUT) {// 裁剪图片
+			// 从剪切图片返回的数据
+			if (data != null) {
+				final Bitmap bitmap = data.getParcelableExtra("data");
+				
+
+				final File file = saveJPGE_After(bitmap, cameraFile); // 获取截取图片后的数据
+//				UpHeadPortraitRequest request = new UpHeadPortraitRequest(new Listener<UpHeadPortraitResponse>() {
+//					@Override
+//					public void onResponse(UpHeadPortraitResponse response) {
+//						// TODO Auto-generated method stub
+//						System.out.println(response.getHttpPath());
+//						System.out.println(response.getMsg());
+//						System.out.println(response.getPath());
+//						System.out.println(response.getStatus());
+//					}
+//				}, this);
+				if (file.exists()) {
+//					request.setFile(bitmaptoString(bitmap));
+//					WebUtils.doPost(request);
+//					sendImage(bitmap);
+//					uploadFile();
+//					Drawable drawables =new BitmapDrawable(bitmap);
+//					ImageLoader.getInstance().displayImage(drawables, WoDeFragment.photo);
+
+//					WoDeFragment.photo.setImageBitmap(bitmap);
+					upload(file);
+//					new Thread(){
+//						@SuppressLint("NewApi")
+//						@Override
+//						public void run(){
+//						//你要执行的方法
+//							
+//							UpHeadPortraitResponse response=FileImageUpload.uploadFile(file,Const.URL_UPLOAD+Const.TYPE_HEADPORTRAIT
+//									,
+//									PreferenceUtils.getInstance(activity).getSettingUserTransId(),PreferenceUtils.getInstance(activity).getSettingUserAppAgent(),
+//									PreferenceUtils.getInstance(activity).getSettingUserOSVer(),PreferenceUtils.getInstance(activity).getSettingUserToken()
+//									);
+//							PreferenceUtils.getInstance(UserInfoActivity.this).setSettingUserPic(response.getHttpPath());
+//							if(WoDeFragment.woDeFragment!=null){
+//								runOnUiThread(new Runnable() {
+//									
+//									@Override
+//									public void run() {
+//										WoDeFragment.woDeFragment.onChildViewLoaded();
+//									}
+//								});
+//							}
+//						//执行完毕后给handler发送一个空消息
+//							
+//						}
+//						}.start();
+				} else {
+					ToastUtil.show("文件不存在！");
+				}
+
+			} else {
+
+			}
+		}
+	}
+	private void upload(File file){
+		showBar();
+		setBarCancelable(false);
+		List<File> listFile = new ArrayList<File>();
+		listFile.add(file);
+		HttpXUtils.upload(this, Const.URL_UPLOAD+Const.TYPE_HEADPORTRAIT, listFile,null,  Utils.getHeaderParamsOnly(), new RequestListener() {
+			
+			@Override
+			public void onSuccess(String url, String responseResult) {
+				closeBar();
+//				iv_user_photo.setImageBitmap(bitmap);
+				UpHeadPortraitResponse response = new Gson().fromJson(responseResult, UpHeadPortraitResponse.class);
+				ImageLoader.getInstance().displayImage(response.getHttpPath(), iv_user_photo,ImageOptions.getOptions());
+				PreferenceUtils.getInstance(UserInfoActivity.this).setSettingUserPic(response.getHttpPath());
+				if(WoDeFragment.woDeFragment!=null){
+					WoDeFragment.woDeFragment.onChildViewLoaded();
+				}
+			}
+			
+			@Override
+			public void onFailure(String url, String errorInfo) {
+				closeBar();
+			}
+			
+			@Override
+			public void onError(String url, String responseResult) {
+				closeBar();
+			}
+		}, true);
+	}
+	/**
+	 * 裁剪图片
+	 * 
+	 * @param uri
+	 * @param outputX
+	 * @param outputY
+	 * @param requestCode
+	 */
+	private void cropImageUri(Uri uri, int outputX, int outputY, int requestCode) {
+		Intent intent = new Intent("com.android.camera.action.CROP");
+		intent.setDataAndType(uri, "image/*");
+		intent.putExtra("crop", "true");
+		intent.putExtra("aspectX", 1);
+		intent.putExtra("aspectY", 1);
+		intent.putExtra("outputX", outputX);
+		intent.putExtra("outputY", outputY);
+		intent.putExtra("scale", true);
+		intent.putExtra("return-data", true);
+		intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+		intent.putExtra("noFaceDetection", true); // no face detection
+		startActivityForResult(intent, requestCode);
+	}
+
+	/**
+	 * bitmap 转 file 保存图片为JPEG
+	 * 
+	 * @param bitmap
+	 * @param cameraFile2
+	 */
+	public File saveJPGE_After(Bitmap bitmap, File cameraFile2) {
+		// File file = new File(cameraFile2);
+		try {
+			FileOutputStream out = new FileOutputStream(cameraFile2);
+			if (bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)) {
+				out.flush();
+				out.close();
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return cameraFile2;
+	}
+
+	public Bitmap stringtoBitmap(String string) {
+		// 将字符串转换成Bitmap类型
+		Bitmap bitmap = null;
+		try {
+			byte[] bitmapArray;
+			bitmapArray = Base64.decode(string, Base64.DEFAULT);
+			bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return bitmap;
+	}
+
+	public String bitmaptoString(Bitmap bitmap) {
+
+		// 将Bitmap转换成字符串
+		String string = null;
+		ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+		bitmap.compress(CompressFormat.PNG, 100, bStream);
+		byte[] bytes = bStream.toByteArray();
+		string = Base64.encodeToString(bytes, Base64.DEFAULT);
+		return string;
+	}
+
+	@Override
+	public void onChildViewLoaded() {
+		setTitleTxt("个人信息");
+		setLeftTitle("我的");
+		init();
+		setUserInfo();
+	}
+
+	@Override
+	public void onReloadData() {
+		
+	}
+
+	@Override
+	public String getRequestTag() {
+		return null;
+	}
+	private RelativeLayout rltPop;
+	private PopupWindow pop;
+	private void showModifyHeadImgPop() {
+		if(pop == null){
+			pop = new PopupWindow(LayoutParams.MATCH_PARENT,
+					LayoutParams.WRAP_CONTENT);
+			View view = LayoutInflater.from(activity).inflate(R.layout.pop_modify_head_img, null);
+			pop.setContentView(view);
+			pop.setBackgroundDrawable(new BitmapDrawable());
+			rltPop = (RelativeLayout) view.findViewById(R.id.rltPop);
+			Button btnTakePicture = (Button) view.findViewById(R.id.btnTakePicture);
+			Button btnFromAlbum = (Button) view.findViewById(R.id.btnFromAlbum);
+			Button btnCancel = (Button) view.findViewById(R.id.btnCancel);
+			view.setOnTouchListener(new OnTouchListener() {
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					if (pop != null && pop.isShowing()){
+						rltPop.startAnimation(AnimationUtils.loadAnimation(activity,R.anim.pop_share_hidden_anim));
+						pop.dismiss();
+					}
+					return false;
+				}
+			});
+			btnTakePicture.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if(pop != null && pop.isShowing()){
+						//TODO 照相
+						selectPicFromCamera();
+						rltPop.startAnimation(AnimationUtils.loadAnimation(activity,R.anim.pop_share_hidden_anim));
+						pop.dismiss();
+					}
+				}
+			});
+			btnFromAlbum.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if(pop != null && pop.isShowing()){
+						//TODO 从相册里选
+						selectPicFromLocal();
+						rltPop.startAnimation(AnimationUtils.loadAnimation(activity,R.anim.pop_share_hidden_anim));
+						pop.dismiss();
+					}
+				}
+			});
+			btnCancel.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if(pop != null && pop.isShowing()){
+						rltPop.startAnimation(AnimationUtils.loadAnimation(activity,R.anim.pop_share_hidden_anim));
+						pop.dismiss();
+					}
+				}
+			});
+		}
+		rltPop.startAnimation(AnimationUtils.loadAnimation(activity,R.anim.pop_share_show_anim));
+		if(!pop.isShowing())
+			pop.showAtLocation(rltBase, Gravity.BOTTOM| Gravity.CENTER_HORIZONTAL, 0, 0);
+	}
+	@Override
+	public void onBackPressed() {
+		if(pop!=null&&pop.isShowing())
+			pop.dismiss();
+		else
+			super.onBackPressed();
+	}
+}

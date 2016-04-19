@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/lViComment"
+        android:dividerHeight="0dp"
+        android:divider="@null"
+        android:layout_above="@+id/relComment"
+        style="@style/list_view"/>
+
+    <RelativeLayout
+        android:id="@+id/relComment"
+        style="@style/layout"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical" >
+
+        <EditText
+            android:id="@+id/edtTxtComment"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height_comment"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/margin_normal"
+            android:layout_toLeftOf="@+id/btnComment"
+            android:background="@drawable/bg_edt"
+            android:gravity="center_vertical"
+            android:hint="@string/txt_discuss"
+            android:singleLine="true"
+            android:textSize="@dimen/txt_size_small" />
+
+        <Button
+            android:id="@+id/btnComment"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/item_height_comment"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:background="@drawable/bg_edt"
+            android:minWidth="@dimen/min_btn_width_comment"
+            android:text="@string/txt_send"
+            android:textColor="@color/light_gray"
+            android:textSize="@dimen/txt_size_small" />
+    </RelativeLayout>
+
+</RelativeLayout>

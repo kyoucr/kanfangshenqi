@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:gravity="center">
+
+    <RelativeLayout
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/xlistview_header_content"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/list_view_widget_refresh_head_height" >
+
+        <LinearLayout
+            android:id="@+id/xlistview_header_text"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/xlistview_header_hint_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/listview_header_hint_normal" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:visibility="gone" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/listview_header_last_time"
+                    android:textSize="@dimen/list_view_widget_txt_size" />
+
+                <TextView
+                    android:id="@+id/xlistview_header_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/list_view_widget_txt_size" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/xlistview_header_arrow"
+            android:layout_width="40dp"
+            android:layout_toLeftOf="@id/xlistview_header_text"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true" />
+
+        <ImageView
+            android:id="@+id/xlistview_header_progressbar"
+            android:layout_width="40dp"
+            android:layout_toLeftOf="@id/xlistview_header_text"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+
+</LinearLayout>

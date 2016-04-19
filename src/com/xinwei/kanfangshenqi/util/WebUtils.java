@@ -1,0 +1,513 @@
+package com.xinwei.kanfangshenqi.util;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
+import android.util.Log;
+
+import com.xinwei.kanfangshenqi.app.VolleyManager;
+import com.xinwei.kanfangshenqi.common.Const;
+import com.xinwei.kanfangshenqi.network.FileItem;
+import com.xinwei.kanfangshenqi.network.KfsqHttpRequest;
+
+public class WebUtils {
+	public static String buildQuery(Map<String, String> params) {
+		if (params == null || params.isEmpty()) {
+			return null;
+		}
+		StringBuilder query = new StringBuilder();
+		Set<Entry<String, String>> entries = params.entrySet();
+		boolean hasParam = false;
+
+		for (Entry<String, String> entry : entries) {
+			String name = entry.getKey();
+			String value = entry.getValue();
+			if (StringUtils.areNotEmpty(name, value)) {
+				if (hasParam) {
+					query.append("&");
+				} else {
+					hasParam = true;
+				}
+				try {
+					query.append(name).append("=")
+							.append(URLEncoder.encode(value, "utf-8"));
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return query.toString();
+	}
+	
+	private static final String METHOD_POST = "POST";
+	private static final String METHOD_GET = "GET";
+
+	private static final String TAG_NAME = "WebUtils";
+
+	private WebUtils() {
+	}
+
+	public static String doPost(String url, Map<String, String> params,
+			int connectTimeout, int readTimeout) throws IOException {
+		return doPost(url, params, Const.DEFAULT_CHARSET, connectTimeout,
+				readTimeout);
+	}
+
+	/**
+	 * 执行带文件上传的HTTP POST请求。
+	 *
+	 * @param url
+	 *            请求地址
+	 * @param textParams
+	 *            文本请求参数
+	 * @param fileParams
+	 *            文件请求参数
+	 * @return 响应字符串
+	 * @throws IOException
+	 */
+	public static String doPost(String url, Map<String, String> params,
+			Map<String, FileItem> fileParams, int connectTimeout,
+			int readTimeout) throws IOException {
+		if (fileParams == null || fileParams.isEmpty()) {
+			return doPost(url, params, Const.DEFAULT_CHARSET,
+					connectTimeout, readTimeout);
+		} else {
+			return doPost(url, params, fileParams, Const.DEFAULT_CHARSET,
+					connectTimeout, readTimeout);
+		}
+	}
+
+	public static String doPost(String url, Map<String, String> params,
+			String charset, int connectTimeout, int readTimeout)
+			throws IOException {
+		String ctype = "application/x-www-form-urlencoded;charset=" + charset;
+		String query = buildQuery(params, charset);
+		byte[] content = {};
+		if (query != null) {
+			content = query.getBytes(charset);
+		}
+		return doPost(url, ctype, content, connectTimeout, readTimeout);
+	}
+
+	public static String doPost(String url, String ctype, byte[] content,
+			int connectTimeout, int readTimeout) throws IOException {
+		HttpURLConnection conn = null;
+		OutputStream out = null;
+		String rsp = null;
+		Log.e(TAG_NAME, url + "?" + new String(content));
+		try {
+			try {
+				conn = getConnection(new URL(url), METHOD_POST, ctype);
+				conn.setConnectTimeout(connectTimeout);
+				conn.setReadTimeout(readTimeout);
+
+				out = conn.getOutputStream();
+				out.write(content);
+				rsp = getResponseAsString(conn);
+			} catch (IOException e) {
+				HttpLogger.logHttpException(url, content.toString(), e.getMessage());
+				throw e;
+			}
+
+		} finally {
+			if (out != null) {
+				out.close();
+			}
+			if (conn != null) {
+				try {
+					conn.disconnect();
+				} catch (Exception e) {
+				}
+
+			}
+		}
+
+		return rsp;
+	}
+
+	public static String doGet(String url, Map<String, String> params)
+			throws IOException {
+		return doGet(url, params);
+	}
+
+	public static String doGet(String url, Map<String, String> params,
+			String charset) throws IOException {
+		HttpURLConnection conn = null;
+		String rsp = null;
+
+		try {
+			String ctype = "application/x-www-form-urlencoded;charset="
+					+ charset;
+			String query = buildQuery(params, charset);
+			try {
+				conn = getConnection(buildGetUrl(url, query), METHOD_GET, ctype);
+			} catch (IOException e) {
+				HttpLogger.logHttpException(url, e.getMessage());
+				throw e;
+			}
+
+			try {
+				rsp = getResponseAsString(conn);
+			} catch (IOException e) {
+				HttpLogger.logHttpException(url, e.getMessage());
+				throw e;
+			}
+
+		} finally {
+			if (conn != null) {
+				conn.disconnect();
+			}
+		}
+
+		return rsp;
+	}
+
+	private static HttpURLConnection getConnection(URL url, String method,
+			String ctype) throws IOException {
+
+//		Authenticator.setDefault(new BasicAuthenticator("username", "psw"));
+//		Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxy.neusoft.com", 8080));
+//		HttpURLConnection conn = (HttpURLConnection) url.openConnection(proxy);
+
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod(method);
+		conn.setDoInput(true);
+		conn.setDoOutput(true);
+
+		conn.setRequestProperty("Accept",
+				"text/xml,text/json,application/json,text/html");
+		conn.setRequestProperty("User-Agent", "android_client");
+		conn.setRequestProperty("Content-Type", ctype);
+		return conn;
+	}
+
+	private static URL buildGetUrl(String strUrl, String query)
+			throws IOException {
+		URL url = new URL(strUrl);
+		if (StringUtils.isEmpty(query)) {
+			return url;
+		}
+
+		if (StringUtils.isEmpty(url.getQuery())) {
+			if (strUrl.endsWith("?")) {
+				strUrl = strUrl + query;
+			} else {
+				strUrl = strUrl + "?" + query;
+			}
+		} else {
+			if (strUrl.endsWith("&")) {
+				strUrl = strUrl + query;
+			} else {
+				strUrl = strUrl + "&" + query;
+			}
+		}
+
+		return new URL(strUrl);
+	}
+
+	public static String buildQuery(Map<String, String> params, String charset)
+			throws IOException {
+		if (params == null || params.isEmpty()) {
+			return null;
+		}
+
+		StringBuilder query = new StringBuilder();
+		Set<Entry<String, String>> entries = params.entrySet();
+		boolean hasParam = false;
+
+		for (Entry<String, String> entry : entries) {
+			String name = entry.getKey();
+			String value = entry.getValue();
+			if (StringUtils.areNotEmpty(name, value)) {
+				if (hasParam) {
+					query.append("&");
+				} else {
+					hasParam = true;
+				}
+
+				query.append(name).append("=")
+						.append(URLEncoder.encode(value, charset));
+			}
+		}
+
+		return query.toString();
+	}
+
+	protected static String getResponseAsString(HttpURLConnection conn)
+			throws IOException {
+		String charset = getResponseCharset(conn.getContentType());
+		InputStream es = conn.getErrorStream();
+		if (es == null) {
+			return getStreamAsString(conn.getInputStream(), charset);
+		} else {
+			String msg = getStreamAsString(es, charset);
+			if (StringUtils.isEmpty(msg)) {
+				throw new IOException(conn.getResponseCode() + ":"
+						+ conn.getResponseMessage());
+			} else {
+				throw new IOException(msg);
+			}
+		}
+	}
+
+	private static String getStreamAsString(InputStream stream, String charset)
+			throws IOException {
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(
+					stream, charset));
+			StringWriter writer = new StringWriter();
+
+			char[] chars = new char[256];
+			int count = 0;
+			while ((count = reader.read(chars)) > 0) {
+				writer.write(chars, 0, count);
+			}
+
+			return writer.toString();
+
+		} finally {
+			if (reader != null) {
+				reader.close();
+			}
+		}
+	}
+
+	private static String getResponseCharset(String ctype) {
+		String charset = Const.DEFAULT_CHARSET;
+
+		// if (StringUtils.isNotEmpty(ctype)) {
+		// String[] params = ctype.split(";");
+		// for (String param : params) {
+		// param = param.trim();
+		// if (param.startsWith("charset")) {
+		// String[] pair = param.split("=", 2);
+		// if (pair.length == 2) {
+		// if (!StringUtils.isEmpty(pair[1])) {
+		// charset = pair[1].trim();
+		// }
+		// }
+		// break;
+		// }
+		// }
+		// }
+
+		return charset;
+	}
+
+	public static String decode(String value) {
+		return decode(value, Const.DEFAULT_CHARSET);
+	}
+
+	public static String encode(String value) {
+		return encode(value, Const.DEFAULT_CHARSET);
+	}
+
+	/**
+	 * @Title: decode
+	 * @Description: 解码
+	 * @param @param value
+	 * @param @param charset
+	 * @param @return
+	 * @return String 返回类型
+	 * @throws
+	 */
+	public static String decode(String value, String charset) {
+		String result = null;
+		if (!StringUtils.isEmpty(value)) {
+			try {
+				result = URLDecoder.decode(value, charset);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * @Title: encode
+	 * @Description: 转码
+	 * @param @param value
+	 * @param @param charset
+	 * @param @return
+	 * @return String 返回类型
+	 * @throws
+	 */
+	public static String encode(String value, String charset) {
+		String result = null;
+		if (!StringUtils.isEmpty(value)) {
+			try {
+				result = URLEncoder.encode(value, charset);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 执行带文件上传的HTTP POST请求。
+	 *
+	 * @param url
+	 *            请求地址
+	 * @param textParams
+	 *            文本请求参数
+	 * @param fileParams
+	 *            文件请求参数
+	 * @param charset
+	 *            字符集，如UTF-8, GBK, GB2312
+	 * @return 响应字符串
+	 * @throws IOException
+	 */
+	public static String doPost(String url, Map<String, String> params,
+			Map<String, FileItem> fileParams, String charset,
+			int connectTimeout, int readTimeout) throws IOException {
+		String boundary = System.currentTimeMillis() + ""; // 随机分隔线
+		HttpURLConnection conn = null;
+		OutputStream out = null;
+		String rsp = null;
+		try {
+			try {
+				String ctype = "multipart/form-data;charset=" + charset
+						+ ";boundary=" + boundary;
+				conn = getConnection(new URL(url), METHOD_POST, ctype);
+				conn.setConnectTimeout(connectTimeout);
+				conn.setReadTimeout(readTimeout);
+			} catch (IOException e) {
+//				Map<String, String> map = getParamsFromUrl(url);
+				HttpLogger.logHttpException(url, e.toString());
+				throw e;
+			}
+
+			try {
+				out = conn.getOutputStream();
+
+				byte[] entryBoundaryBytes = ("\r\n--" + boundary + "\r\n")
+						.getBytes(charset);
+
+				// 组装文本请求参数
+				Set<Entry<String, String>> textEntrySet = params.entrySet();
+				for (Entry<String, String> textEntry : textEntrySet) {
+					byte[] textBytes = getTextEntry(textEntry.getKey(),
+							textEntry.getValue(), charset);
+					out.write(entryBoundaryBytes);
+					out.write(textBytes);
+				}
+
+				// 组装文件请求参数
+				Set<Entry<String, FileItem>> fileEntrySet = fileParams
+						.entrySet();
+				for (Entry<String, FileItem> fileEntry : fileEntrySet) {
+					FileItem fileItem = fileEntry.getValue();
+					byte[] fileBytes = getFileEntry(fileEntry.getKey(),
+							fileItem.getFileName(), fileItem.getMimeType(),
+							charset);
+					out.write(entryBoundaryBytes);
+					out.write(fileBytes);
+					out.write(fileItem.getContent());
+				}
+
+				// 添加请求结束标志
+				byte[] endBoundaryBytes = ("\r\n--" + boundary + "--\r\n")
+						.getBytes(charset);
+				out.write(endBoundaryBytes);
+				rsp = getResponseAsString(conn);
+			} catch (IOException e) {
+				HttpLogger.logHttpException(url, e.toString());
+				throw e;
+			}
+
+		} finally {
+			if (out != null) {
+				out.close();
+			}
+			if (conn != null) {
+				conn.disconnect();
+			}
+		}
+
+		return rsp;
+	}
+
+	private static byte[] getTextEntry(String fieldName, String fieldValue,
+			String charset) throws IOException {
+		StringBuilder entry = new StringBuilder();
+		entry.append("Content-Disposition:form-data;name=\"");
+		entry.append(fieldName);
+		entry.append("\"\r\nContent-Type:text/plain\r\n\r\n");
+		entry.append(fieldValue);
+		return entry.toString().getBytes(charset);
+	}
+
+	private static byte[] getFileEntry(String fieldName, String fileName,
+			String mimeType, String charset) throws IOException {
+		StringBuilder entry = new StringBuilder();
+		entry.append("Content-Disposition:form-data;name=\"");
+		entry.append(fieldName);
+		entry.append("\";filename=\"");
+		entry.append(fileName);
+		entry.append("\"\r\nContent-Type:");
+		entry.append(mimeType);
+		entry.append("\r\n\r\n");
+		return entry.toString().getBytes(charset);
+	}
+
+	/**
+	 * @Title: getParamsFromUrl
+	 * @Description: 读取URL中的参数
+	 * @param @param url
+	 * @param @return
+	 * @return Map<String,String> 返回类型
+	 * @throws
+	 */
+//	private static Map<String, String> getParamsFromUrl(String url) {
+//		Map<String, String> map = null;
+//		if (url != null && url.indexOf('?') != -1) {
+//			map = splitUrlQuery(url.substring(url.indexOf('?') + 1));
+//		}
+//		if (map == null) {
+//			map = new HashMap<String, String>();
+//		}
+//		return map;
+//	}
+
+	/**
+	 * 从URL中提取所有的参数。
+	 *
+	 * @param query
+	 *            URL地址
+	 * @return 参数映射
+	 */
+	public static Map<String, String> splitUrlQuery(String query) {
+		Map<String, String> result = new HashMap<String, String>();
+
+		String[] pairs = query.split("&");
+		if (pairs != null && pairs.length > 0) {
+			for (String pair : pairs) {
+				String[] param = pair.split("=", 2);
+				if (param != null && param.length == 2) {
+					result.put(param[0], param[1]);
+				}
+			}
+		}
+		return result;
+	}
+	
+	public static void doPost(KfsqHttpRequest<?> request){
+		VolleyManager.addToQueue(request);
+	}
+}

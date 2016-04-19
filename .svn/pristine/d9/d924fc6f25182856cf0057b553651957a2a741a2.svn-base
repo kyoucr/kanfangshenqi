@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.handmark.pulltorefresh.library.PullToRefreshScrollView
+        android:id="@+id/pullToRefresh"
+        android:layout_above="@+id/relComment"
+        style="@style/match">
+    <!-- <com.handmark.pulltorefresh.library.PullToRefreshWebView
+        android:id="@+id/pullToRefresh"
+        android:layout_above="@+id/relComment"
+        style="@style/match"> -->
+
+        <RelativeLayout style="@style/match" >
+
+            <RelativeLayout
+                android:id="@+id/rltTop"
+                style="@style/layout" >
+
+                <com.xinwei.kanfangshenqi.view.CircleImageViewWithBorder
+                    android:id="@+id/imgHead"
+                    android:layout_width="@dimen/see_house_circle_img_head_size"
+                    android:layout_height="@dimen/see_house_circle_img_head_size"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/margin_normal"
+                    android:background="@drawable/not_logged_in_headpic" />
+
+                <LinearLayout
+                    style="@style/layout"
+                    android:layout_marginRight="@dimen/margin_normal"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:layout_toRightOf="@id/imgHead"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/txtName"
+                        style="@style/item"
+                        android:textColor="@color/txt_color_black"
+                        android:textSize="@dimen/txt_size_big" />
+
+                    <TextView
+                        android:id="@+id/txtContent"
+                        style="@style/layout"
+                        android:layout_marginTop="@dimen/margin_normal"
+                        android:textColor="@color/txt_color_black"
+                        android:textSize="@dimen/txt_size_big" />
+
+                    <com.xinwei.kanfangshenqi.view.GridViewInScroll
+                        android:id="@+id/gridViewImg"
+                        style="@style/list_view"
+                        android:horizontalSpacing="@dimen/margin_small"
+                        android:numColumns="3"
+                        android:verticalSpacing="@dimen/margin_small" />
+
+                    <RelativeLayout
+                        style="@style/layout"
+                        android:layout_marginTop="@dimen/margin_normal" >
+
+                        <TextView
+                            android:id="@+id/txtTime"
+                            style="@style/item"
+                            android:layout_alignParentLeft="true"
+                            android:textColor="@color/light_gray"
+                            android:textSize="@dimen/txt_size_normal" />
+
+                        <LinearLayout
+                            android:id="@+id/lltCommentParent"
+                            style="@style/item"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal" >
+
+                            <ImageView
+                                android:layout_width="@dimen/img_leave_words_width"
+                                android:layout_height="@dimen/img_leave_words_height"
+                                android:background="@drawable/btn_comment" />
+
+                            <TextView
+                                android:id="@+id/txtNum"
+                                style="@style/item"
+                                android:layout_marginLeft="@dimen/margin_small"
+                                android:textColor="@color/txt_color_black"
+                                android:textSize="@dimen/txt_size_normal" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/imgArrow"
+                            style="@style/item"
+                            android:visibility="gone"
+                            android:layout_alignParentRight="true"
+                            android:layout_below="@id/lltCommentParent"
+                            android:layout_marginRight="@dimen/margin_normal"
+                            android:background="@drawable/ic_arrow_up_ask_detail" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rltComment"
+                style="@style/layout"
+                android:visibility="gone"
+                android:layout_below="@id/rltTop"
+                android:layout_marginLeft="@dimen/margin_normal"
+                android:layout_marginRight="@dimen/margin_normal"
+                android:background="@color/bg_ask_detail" >
+                <com.xinwei.kanfangshenqi.view.ListViewInScroll
+                    android:id="@+id/lViComment"
+                    style="@style/list_view"
+                    android:layout_margin="@dimen/margin_small"
+                    android:divider="@null"
+                    android:scrollbars="none"
+                    android:dividerHeight="0dp"/>
+            </RelativeLayout>
+        </RelativeLayout>
+    <!-- </com.handmark.pulltorefresh.library.PullToRefreshWebView> -->
+    </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
+
+    <RelativeLayout
+        android:id="@+id/relComment"
+        style="@style/layout"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical" >
+
+        <EditText
+            android:id="@+id/edtTxtComment"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height_comment"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/margin_normal"
+            android:layout_toLeftOf="@+id/btnComment"
+            android:background="@drawable/bg_edt"
+            android:gravity="center_vertical"
+            android:hint="@string/txt_discuss"
+            android:singleLine="true"
+            android:textSize="@dimen/txt_size_small" />
+
+        <Button
+            android:id="@+id/btnComment"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/item_height_comment"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:background="@drawable/bg_edt"
+            android:minWidth="@dimen/min_btn_width_comment"
+            android:text="@string/txt_send"
+            android:textColor="@color/light_gray"
+            android:textSize="@dimen/txt_size_small" />
+    </RelativeLayout>
+
+</RelativeLayout>

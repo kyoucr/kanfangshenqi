@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.xinwei.kanfangshenqi"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@android:color/white"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:id="@+id/main_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/cutLine"
+        android:orientation="vertical" >
+    </FrameLayout>
+
+    <View
+        android:id="@+id/cutLine"
+        style="@style/cut_line"
+        android:layout_above="@+id/radioGroup" />
+
+    <com.xinwei.kanfangshenqi.view.NestRadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <com.xinwei.kanfangshenqi.view.DrawRadioButton
+            android:id="@+id/radioBtnFindHouse"
+            style="@style/main_tab"
+            android:text="@string/tab_bar_ic_kanfang"
+            android:textSize="@dimen/txt_size_tiny"
+            app:drawableHeight="@dimen/home_ctrl_img_height"
+            app:drawableTop="@drawable/radio_btn_kanfang"
+            app:drawableWidth="@dimen/home_ctrl_img_width" />
+
+        <com.xinwei.kanfangshenqi.view.DrawRadioButton
+            android:id="@+id/radioBtnPlan"
+            style="@style/main_tab"
+            android:text="@string/tab_bar_ic_jihua"
+            android:textSize="@dimen/txt_size_tiny"
+            app:drawableHeight="@dimen/home_ctrl_img_height"
+            app:drawableTop="@drawable/radio_btn_jihua"
+            app:drawableWidth="@dimen/home_ctrl_img_width" />
+
+        <com.xinwei.kanfangshenqi.view.DrawRadioButton
+            android:id="@+id/radioBtnDiscover"
+            style="@style/main_tab"
+            android:text="@string/tab_bar_ic_faxian"
+            android:textSize="@dimen/txt_size_tiny"
+            app:drawableHeight="@dimen/home_ctrl_img_height"
+            app:drawableTop="@drawable/radio_btn_faxian"
+            app:drawableWidth="@dimen/home_ctrl_img_width" />
+
+        <com.xinwei.kanfangshenqi.view.DrawRadioButton
+            android:id="@+id/radioBtnMy"
+            style="@style/main_tab"
+            android:text="@string/tab_bar_ic_wode"
+            android:textSize="@dimen/txt_size_tiny"
+            app:drawableHeight="@dimen/home_ctrl_img_height"
+            app:drawableTop="@drawable/radio_btn_wode"
+            app:drawableWidth="@dimen/home_ctrl_img_width" />
+    </com.xinwei.kanfangshenqi.view.NestRadioGroup>
+
+    <com.xinwei.kanfangshenqi.view.NestRadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <com.xinwei.kanfangshenqi.view.DrawRadioButton
+            style="@style/main_tab"
+            android:text="@string/tab_bar_ic_kanfang"
+            android:textSize="@dimen/txt_size_tiny"
+            android:visibility="invisible"
+            app:drawableHeight="@dimen/home_ctrl_img_height"
+            app:drawableTop="@drawable/radio_btn_kanfang"
+            app:drawableWidth="@dimen/home_ctrl_img_width" />
+
+        <RelativeLayout
+            android:id="@+id/rltUnPlan"
+            style="@style/main_tab"
+            android:clickable="false" >
+
+            <com.xinwei.kanfangshenqi.view.DrawRadioButton
+                android:id="@+id/invisibleView"
+                style="@style/item"
+                android:clickable="false"
+                android:gravity="center"
+                android:minHeight="@dimen/title_height"
+                android:paddingTop="@dimen/margin_small"
+                android:text="@string/tab_bar_ic_jihua"
+                android:textColor="@color/tab_selector"
+                android:textSize="@dimen/txt_size_tiny"
+                android:visibility="invisible"
+                app:drawableHeight="@dimen/home_ctrl_img_height"
+                app:drawableTop="@drawable/radio_btn_jihua"
+                app:drawableWidth="@dimen/home_ctrl_img_width" />
+
+            <com.xinwei.kanfangshenqi.view.CornerRadiusTextView
+                android:id="@+id/txtUnPlan"
+                android:layout_width="wrap_content"
+                android:layout_height="14dp"
+                android:layout_alignRight="@id/invisibleView"
+                android:layout_alignTop="@id/invisibleView"
+                android:layout_marginRight="-5dp"
+                android:background="@color/orange"
+                android:gravity="center"
+                android:minWidth="14dp"
+                android:paddingLeft="@dimen/margin_tiny"
+                android:paddingRight="@dimen/margin_tiny"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/txt_size_tiny"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <com.xinwei.kanfangshenqi.view.DrawRadioButton
+            style="@style/main_tab"
+            android:text="@string/tab_bar_ic_faxian"
+            android:textSize="@dimen/txt_size_tiny"
+            android:visibility="invisible"
+            app:drawableHeight="@dimen/home_ctrl_img_height"
+            app:drawableTop="@drawable/radio_btn_faxian"
+            app:drawableWidth="@dimen/home_ctrl_img_width" />
+
+        <com.xinwei.kanfangshenqi.view.DrawRadioButton
+            style="@style/main_tab"
+            android:text="@string/tab_bar_ic_wode"
+            android:textSize="@dimen/txt_size_tiny"
+            android:visibility="invisible"
+            app:drawableHeight="@dimen/home_ctrl_img_height"
+            app:drawableTop="@drawable/radio_btn_wode"
+            app:drawableWidth="@dimen/home_ctrl_img_width" />
+    </com.xinwei.kanfangshenqi.view.NestRadioGroup>
+
+</RelativeLayout>

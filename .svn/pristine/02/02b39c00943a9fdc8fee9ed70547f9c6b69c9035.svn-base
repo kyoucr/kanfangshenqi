@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lltHouseType"
+    style="@style/item"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        style="@style/item"
+        android:layout_gravity="center"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="@dimen/item_size_house_type"
+            android:layout_height="@dimen/item_size_house_type"
+            android:layout_gravity="center_horizontal"
+            android:padding="1px"
+            android:layout_marginTop="@dimen/left_margin_most"
+            android:background="@drawable/bg_house_type" >
+
+            <ImageView
+                android:id="@+id/imgHouseType"
+                style="@style/match" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtDesc"
+            style="@style/item"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:maxLines="2"
+            android:maxWidth="@dimen/item_size_house_type"
+            android:textColor="@color/txt_gray"
+            android:textSize="@dimen/txt_little_normal" />
+    </LinearLayout>
+
+</LinearLayout>

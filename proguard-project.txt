@@ -1,0 +1,158 @@
+# To enable ProGuard in your project, edit project.properties
+# to define the proguard.config property as described in that file.
+#
+# Add project specific ProGuard rules here.
+# By default, the flags in this file are appended to flags specified
+# in ${sdk.dir}/tools/proguard/proguard-android.txt
+# You can edit the include path and order by changing the ProGuard
+# include property in project.properties.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# Add any project specific keep options here:
+
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
+
+-keepattributes *JavascriptInterface*
+-keepclassmembers class com.xinwei.kanfangshenqi.activity.WebBuildingInfoActivity$JsObject {
+   *;
+}
+-optimizationpasses 5
+-dontusemixedcaseclassnames
+#-dontskipnonpubliclibraryclasses
+#-dontpreverify
+-verbose
+-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+
+-ignorewarnings
+-keepattributes *Annotation*
+-keepattributes Signature
+
+-libraryjars libs/gson-1.7.1.jar
+-libraryjars libs/jpush-android-2.0.5.jar
+-libraryjars libs/volley.jar
+-libraryjars libs/AMap_android_API_2DMap_Lib_V2.7.0_20151124.jar
+-libraryjars libs/android-support-v4.jar
+-libraryjars libs/AMap_Location_v2.1.0_20151202.jar
+-libraryjars libs/AMap_Services_V2.7.0_20151125.jar
+-libraryjars libs/libammsdk.jar
+-libraryjars libs/mta-sdk-1.6.2.jar
+-libraryjars libs/nineoldandroids-2.4.0.jar
+-libraryjars libs/open_sdk_r5509.jar
+-libraryjars libs/universal-image-loader-1.9.1.jar
+-libraryjars libs/weiboSDKCore_3.1.2.jar
+-libraryjars libs/zxing.jar
+
+-libraryjars libs/arm64-v8a/libjpush205.so
+-libraryjars libs/arm64-v8a/libweibosdkcore.so
+-libraryjars libs/armeabi/libjpush205.so
+-libraryjars libs/armeabi/libweibosdkcore.so
+-libraryjars libs/armeabi-v7a/libjpush205.so
+-libraryjars libs/armeabi-v7a/libweibosdkcore.so
+-libraryjars libs/mips/libweibosdkcore.so
+-libraryjars libs/mips64/libweibosdkcore.so
+-libraryjars libs/x86/libweibosdkcore.so
+-libraryjars libs/x86_64/libweibosdkcore.so
+
+-keep class * extends java.lang.annotation.Annotation {*;}
+-keep class com.lidroid.xutils.** {*;}
+-keep class android.backport.webp.** {*;}
+-keep class com.google.gson.** {*;}
+-keep class cn.jpush.** {*;}
+-keep class com.android.volley** {*;}
+-keep class com.amap.** {*;}
+-keep class com.nineoldandroids.** {*;}
+-keep class com.nostra13.** {*;}
+-keep class com.tencent.** {*;}
+-keep class com.google.** {*;}
+-keep class android.support.** {*;}
+-keep class com.sina.** {*;}
+-keep class com.autonavi.** {*;}
+-keep class com.loc.** {*;}
+-keep class android.support.** {*;}
+
+-keep class com.xinwei.kanfangshenqi.model.** {*;}
+-keep class com.xinwei.kanfangshenqi.calendar.doim.** {*;}
+-keep class com.xinwei.kanfangshenqi.response.** {*;}
+-keep class com.xinwei.kanfangshenqi.request.** {*;}
+-keep class com.xinwei.kanfangshenqi.network.** {*;}
+-keep class org.greenrobot.eventbus** {*;}
+-keep class org.xutils.** {*;}
+
+
+-keepclassmembers class * {  
+	private void *(android.view.View); 
+ 	private void *Click(...); 
+  	private void *Event(...);
+    public void *Event(**);
+}
+
+-keepclassmembers class * extends com.xinwei.kanfangshenqi.BaseActivity {
+   public void *(android.view.View);
+   public boolean *(android.view.View);
+   public void *(android.widget.AdapterView, android.view.View, int ,long );
+   public void *(android.widget.CompoundButton , boolean);
+   public void *(android.widget.RadioGroup , int);
+}
+-keepclassmembers class * extends com.xinwei.kanfangshenqi.BaseFragmentActivity {
+   public void *(android.view.View);
+   public boolean *(android.view.View);
+   public void *(android.widget.AdapterView, android.view.View, int ,long );
+   public void *(android.widget.CompoundButton , boolean);
+   public void *(android.widget.RadioGroup , int);
+}
+-keepclassmembers class * extends android.app.Activity {
+   public void *(android.view.View);
+   public boolean *(android.view.View);
+   public void *(android.widget.AdapterView, android.view.View, int ,long );
+   public void *(android.widget.CompoundButton , boolean);
+   public void *(android.widget.RadioGroup , int);
+}
+-keepclassmembers class * extends android.support.v4.app.FragmentActivity {
+   public void *(android.view.View);
+   public boolean *(android.view.View);
+   public void *(android.widget.AdapterView, android.view.View, int ,long );
+   public void *(android.widget.CompoundButton , boolean);
+   public void *(android.widget.RadioGroup , int);
+}
+-keepclassmembers class * extends com.xinwei.kanfangshenqi.BaseFragment {
+   public void *(android.view.View);
+   public boolean *(android.view.View);
+   public void *(android.widget.AdapterView, android.view.View, int ,long );
+   public void *(android.widget.CompoundButton , boolean);
+   public void *(android.widget.RadioGroup , int);
+}
+-keepclassmembers class * extends android.support.v4.app.Fragment {
+   public void *(android.view.View);
+   public boolean *(android.view.View);
+   public void *(android.widget.AdapterView, android.view.View, int ,long );
+   public void *(android.widget.CompoundButton , boolean);
+   public void *(android.widget.RadioGroup , int);
+}
+-keepclasseswithmembernames class * {  
+    native <methods>;  
+}
+
+-keepclasseswithmembernames class * {
+   public <init>(android.content.Context, android.util.AttributeSet);
+}
+
+-keepclasseswithmembernames class * {  
+   public <init>(android.content.Context, android.util.AttributeSet, int);  
+}  
+-keepclassmembers enum * {
+   public static **[] values();  
+   public static ** valueOf(java.lang.String);  
+}  
+-keep class * implements android.os.Parcelable {  
+  public static final android.os.Parcelable$Creator *;  
+}  
+-keepclasseswithmembers class * {  
+    public <init>(android.content.Context);  
+}

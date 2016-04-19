@@ -1,0 +1,604 @@
+com.king.photo.activity.GalleryActivity:
+    private android.widget.TextView positionTextView
+    android.widget.RelativeLayout photo_relativeLayout
+com.king.photo.activity.PublishActivity:
+    private static final int TAKE_PICTURE
+    384:390:public java.lang.String getString(java.lang.String)
+com.king.photo.activity.PublishActivity$GridAdapter:
+    private boolean shape
+    282:282:public boolean isShape()
+    286:287:public void setShape(boolean)
+    313:314:public void setSelectedPosition(int)
+    317:317:public int getSelectedPosition()
+com.king.photo.adapter.AlbumGridViewAdapter:
+    133:133:public int dipToPx(int)
+com.king.photo.adapter.AlbumGridViewAdapter$ViewHolder:
+    public android.widget.TextView textView
+com.king.photo.adapter.FolderAdapter:
+    172:172:public int dipToPx(int)
+com.king.photo.util.AlbumHelper:
+    83:89:void getAlbum()
+    92:132:private void getAlbumColumnData(android.database.Cursor)
+    226:236:java.lang.String getOriginalImagePath(java.lang.String)
+com.king.photo.util.Bimp:
+    13:13:public Bimp()
+com.king.photo.util.FileUtils:
+    12:12:public FileUtils()
+    23:41:public static void saveBitmap(android.graphics.Bitmap,java.lang.String)
+    91:96:public static void delFile(java.lang.String)
+    114:122:public static boolean fileIsExists(java.lang.String)
+com.king.photo.util.GetCodeResponse:
+    12:13:public void setStatus(java.lang.String)
+    18:19:public void setMsg(java.lang.String)
+com.king.photo.util.HttpXUtils:
+    private static final java.lang.String SUCCESS
+    private static final java.lang.String UN_LOGIN
+    21:21:public HttpXUtils()
+com.king.photo.util.ImageItem:
+    17:17:public java.lang.String getImageId()
+    20:21:public void setImageId(java.lang.String)
+    23:23:public java.lang.String getThumbnailPath()
+    26:27:public void setThumbnailPath(java.lang.String)
+    35:35:public boolean isSelected()
+    38:39:public void setSelected(boolean)
+com.king.photo.util.NoScrollGridView:
+    13:14:public NoScrollGridView(android.content.Context,android.util.AttributeSet)
+com.king.photo.util.PreferenceUtils
+com.king.photo.util.PublicWay:
+    13:13:public PublicWay()
+com.king.photo.util.Res:
+    13:13:public Res()
+    44:44:public static int getAnimID(java.lang.String)
+    52:52:public static int getXmlID(java.lang.String)
+    57:58:public static android.content.res.XmlResourceParser getXml(java.lang.String)
+    66:66:public static int getRawID(java.lang.String)
+    89:89:public static int getAttrID(java.lang.String)
+    94:94:public static int getDimenID(java.lang.String)
+    99:99:public static int getColorID(java.lang.String)
+    104:104:public static int getColor(java.lang.String)
+    109:109:public static int getStyleID(java.lang.String)
+    125:125:public static int[] getInteger(java.lang.String)
+com.king.photo.zoom.Compat:
+    private static final int SIXTY_FPS_INTERVAL
+    7:7:public Compat()
+com.king.photo.zoom.IPhotoView
+com.king.photo.zoom.PhotoView:
+    42:42:public boolean canZoom()
+    156:157:public void zoomTo(float,float,float)
+com.king.photo.zoom.PhotoViewAttacher:
+    static final java.lang.String LOG_TAG
+    static final int EDGE_NONE
+    static final int EDGE_LEFT
+    static final int EDGE_RIGHT
+    static final int EDGE_BOTH
+    public static final float DEFAULT_MAX_SCALE
+    public static final float DEFAULT_MID_SCALE
+    public static final float DEFAULT_MIN_SCALE
+    164:164:public final boolean canZoom()
+com.king.photo.zoom.PhotoViewAttacher$AnimatedZoomRunnable:
+    static final float ANIMATION_SCALE_PER_ITERATION_IN
+    static final float ANIMATION_SCALE_PER_ITERATION_OUT
+com.king.photo.zoom.SDK16:
+    7:7:public SDK16()
+com.king.photo.zoom.VersionedGestureDetector:
+    static final java.lang.String LOG_TAG
+com.king.photo.zoom.VersionedGestureDetector$EclairDetector:
+    private static final int INVALID_POINTER_ID
+com.xinwei.kanfangshenqi.BaseActivity:
+    303:304:public void setTitleResourceBg(int)
+com.xinwei.kanfangshenqi.BaseFragment:
+    private android.widget.RelativeLayout rltBase
+    132:137:public void setTitleTxt(java.lang.String)
+    159:162:public void setRightTxt(java.lang.String)
+    170:171:public void setRightTxt(int)
+    179:179:public android.widget.TextView getRightTxt()
+    275:279:public void isShowTitleCutline(boolean)
+    288:289:public void setBaseResourceBg(int)
+    296:297:public void setTitleColorBg(int)
+    305:306:public void setTitleResourceBg(int)
+    334:336:public void setBarCancelable(boolean)
+com.xinwei.kanfangshenqi.BaseFragmentActivity:
+    private com.xinwei.kanfangshenqi.view.CustomDialog dialog
+    private android.widget.RelativeLayout rltBase
+    146:151:public void setTitleTxt(java.lang.String)
+    160:164:public void isShowLeft(boolean)
+    173:176:public void setRightTxt(java.lang.String)
+    184:185:public void setRightTxt(int)
+    193:193:public android.widget.TextView getRightBtn()
+    232:238:public void isShowEmpty(boolean)
+    248:250:public void setEmptyPage(int,int)
+    290:292:public void setBarCancelable(boolean)
+    300:301:public void setBaseResourceBg(int)
+    308:309:public void setTitleColorBg(int)
+    317:318:public void setTitleResourceBg(int)
+com.xinwei.kanfangshenqi.BuildConfig
+com.xinwei.kanfangshenqi.Manifest
+com.xinwei.kanfangshenqi.Manifest$permission
+com.xinwei.kanfangshenqi.R:
+    10:10:public R()
+com.xinwei.kanfangshenqi.R$anim
+com.xinwei.kanfangshenqi.R$attr
+com.xinwei.kanfangshenqi.R$bool
+com.xinwei.kanfangshenqi.R$color
+com.xinwei.kanfangshenqi.R$dimen
+com.xinwei.kanfangshenqi.R$drawable
+com.xinwei.kanfangshenqi.R$id
+com.xinwei.kanfangshenqi.R$integer
+com.xinwei.kanfangshenqi.R$layout
+com.xinwei.kanfangshenqi.R$string
+com.xinwei.kanfangshenqi.R$style
+com.xinwei.kanfangshenqi.R$styleable:
+    4088:4088:public R$styleable()
+com.xinwei.kanfangshenqi.activity.AskDetailActivity:
+    private android.widget.Button btnComment
+com.xinwei.kanfangshenqi.activity.ChangeAddressWordActivity:
+    244:270:private void changeCompanyAddr(java.lang.String,java.lang.String,java.lang.String)
+    299:304:public static java.lang.String getLongitudeLatitude()
+com.xinwei.kanfangshenqi.activity.ChangeAddressWordActivity$3
+com.xinwei.kanfangshenqi.activity.ChangeNameActivity:
+    private android.content.Intent intent
+com.xinwei.kanfangshenqi.activity.FindPwdActivity:
+    private static final int PERIOD
+    183:203:private boolean checkInput()
+com.xinwei.kanfangshenqi.activity.LoginActivity:
+    private android.widget.TextView mFindPwd
+    private android.widget.TextView mQuickLogin
+    private static final int MSG_SET_ALIAS
+    private static final int MSG_SET_TAGS
+    109:131:private void oldInit()
+com.xinwei.kanfangshenqi.activity.MainActivity:
+    private java.lang.String[] datalist
+    194:194:public java.lang.String[] getDatalist()
+    197:198:public void setDatalist(java.lang.String[])
+com.xinwei.kanfangshenqi.activity.PickCashActivity:
+    private static final int ZHI_FU_BAO
+com.xinwei.kanfangshenqi.activity.PublishGiftActivity:
+    private android.widget.RadioGroup radioGroup
+    private static final int UNPUBLISH_PAGE
+    private static final int PUBLISHED_PAGE
+    85:93:public void onCheckChanged(android.widget.RadioGroup,int)
+com.xinwei.kanfangshenqi.activity.RegisterActivity:
+    private android.widget.EditText mEditPwdAgen
+    private android.widget.Button mBtn
+    private android.widget.TextView treaty
+    private static final int PERIOD
+    258:301:protected void doPrepareTask(java.lang.String)
+com.xinwei.kanfangshenqi.activity.RegisterActivity$5
+com.xinwei.kanfangshenqi.activity.SeachActivity:
+    private java.util.ArrayList loupanList
+com.xinwei.kanfangshenqi.activity.SettingActivity:
+    private android.widget.RelativeLayout rltClearCache
+    private android.widget.LinearLayout lltAboutUs
+com.xinwei.kanfangshenqi.activity.SpeedinessLoginActivity:
+    private android.widget.TextView treaty
+    private java.lang.String mUserAccount
+    private java.lang.String mUserCode
+    private static final int PERIOD
+    private static final int MSG_SET_ALIAS
+    private static final int MSG_SET_TAGS
+com.xinwei.kanfangshenqi.activity.TradeRecordActivity:
+    private android.widget.RadioGroup radioGroup
+    private static final int CASH_PAGE
+    private static final int INCOME_PAGE
+    83:91:public void onCheckChanged(android.widget.RadioGroup,int)
+com.xinwei.kanfangshenqi.activity.UserInfoActivity:
+    public static final int USERPIC_REQUEST_CODE_CAMERA
+    public static final int USERPIC_REQUEST_CODE_LOCAL
+    public static final int USERPIC_REQUEST_CODE_CUT
+    392:401:public android.graphics.Bitmap stringtoBitmap(java.lang.String)
+    407:412:public java.lang.String bitmaptoString(android.graphics.Bitmap)
+com.xinwei.kanfangshenqi.activity.WebBuildingInfoActivity:
+    private com.xinwei.kanfangshenqi.model.UserInfos mUserInfos
+    private java.lang.String buildingId
+    private com.xinwei.kanfangshenqi.view.CustomDialog dialog
+    private java.util.Map paramsHead
+    private java.lang.String title
+    242:243:public void setPlan(boolean)
+    245:247:private void setTitles(java.lang.String)
+    47:47:static synthetic void access$0(com.xinwei.kanfangshenqi.activity.WebBuildingInfoActivity,com.xinwei.kanfangshenqi.model.UserInfos)
+    47:47:static synthetic com.xinwei.kanfangshenqi.model.UserInfos access$1(com.xinwei.kanfangshenqi.activity.WebBuildingInfoActivity)
+    38:38:static synthetic android.app.Activity access$2(com.xinwei.kanfangshenqi.activity.WebBuildingInfoActivity)
+    244:244:static synthetic void access$3(com.xinwei.kanfangshenqi.activity.WebBuildingInfoActivity,java.lang.String)
+    51:51:static synthetic java.lang.String access$4(com.xinwei.kanfangshenqi.activity.WebBuildingInfoActivity)
+com.xinwei.kanfangshenqi.activity.WebBuildingInfoActivity$AnotherTask
+com.xinwei.kanfangshenqi.activity.WebBuildingInfoActivity$JsObject:
+    172:191:public java.lang.String userInformation()
+    197:200:public void callPhone(java.lang.String)
+    204:212:public void houseReviewViewControllerWithBuildingId(java.lang.String,java.lang.String,java.lang.String)
+    216:219:public void houseReviewDetailViewControllerWithCommentId(java.lang.String)
+    223:224:public void updateTitleWithString(java.lang.String)
+    227:228:public void showLoginView()
+    231:231:public void updateHouseIdWithString(java.lang.String)
+    234:235:public void planState(boolean)
+com.xinwei.kanfangshenqi.adapter.LouPanAdapter:
+    28:30:public LouPanAdapter(android.view.LayoutInflater)
+    136:136:public java.util.List getmList()
+    140:141:public void setmList(java.util.List)
+com.xinwei.kanfangshenqi.adapter.LouPanQingDanAdapter
+com.xinwei.kanfangshenqi.adapter.LouPanQingDanAdapter$1
+com.xinwei.kanfangshenqi.adapter.LouPanQingDanAdapter$ViewHolder
+com.xinwei.kanfangshenqi.adapter.LouPanQingDanListItemAdapter:
+    private java.lang.String day
+    52:52:public int getWeizhi()
+    56:57:public void setWeizhi(int)
+    59:62:public LouPanQingDanListItemAdapter(android.view.LayoutInflater,android.app.Activity)
+    220:220:public java.util.List getmList()
+    224:225:public void setmList(java.util.ArrayList)
+com.xinwei.kanfangshenqi.adapter.LouPanQingDanListItemAdapter$ViewHolder:
+    public java.lang.String phone
+    public java.lang.String longitude
+    public java.lang.String latitude
+com.xinwei.kanfangshenqi.adapter.LouPanSearchAdapter
+com.xinwei.kanfangshenqi.adapter.LouPanSearchAdapter$MyFilter
+com.xinwei.kanfangshenqi.adapter.PlansAdapter:
+    30:34:public PlansAdapter(android.view.LayoutInflater,android.app.Activity)
+    81:81:public java.util.List getmList()
+    85:86:public void setmList(java.util.List)
+com.xinwei.kanfangshenqi.app.VolleyManager:
+    15:15:public VolleyManager()
+    45:48:public static void addToQueue(com.xinwei.kanfangshenqi.network.KfsqHttpRequest,java.lang.String)
+    64:65:public static void cancel(java.lang.Object)
+    68:71:public static com.android.volley.toolbox.ImageLoader getImageLoader()
+com.xinwei.kanfangshenqi.app.XWActivityManager:
+    60:71:public void popAllActivityExceptOne(java.lang.Object)
+com.xinwei.kanfangshenqi.app.XWApplication:
+    private java.lang.Class classT
+    82:83:public void setNeedLoginClass(java.lang.Class)
+    91:91:public java.lang.Class getNeedLoginClass()
+com.xinwei.kanfangshenqi.common.Const
+com.xinwei.kanfangshenqi.common.ShareQQ:
+    private static final java.lang.String APPID_QQ
+com.xinwei.kanfangshenqi.common.ShareWeiXin:
+    public static final java.lang.String APPID_WEI_XIN
+com.xinwei.kanfangshenqi.common.ShareXinLang:
+    private static final java.lang.String APPID_XINLANG_WEIBO
+    89:101:private com.sina.weibo.sdk.api.WebpageObject getWebpageObj()
+    130:175:private void share()
+    34:34:static synthetic android.app.Activity access$0(com.xinwei.kanfangshenqi.common.ShareXinLang)
+com.xinwei.kanfangshenqi.common.ShareXinLang$1
+com.xinwei.kanfangshenqi.common.ShareXinLang$2
+com.xinwei.kanfangshenqi.exception.BaseException
+com.xinwei.kanfangshenqi.exception.TokenInvalid:
+    private static final long serialVersionUID
+com.xinwei.kanfangshenqi.floatingactionbutton.DirectionScrollListener
+com.xinwei.kanfangshenqi.floatingactionbutton.FloatingActionButton:
+    110:112:public void setShadow(float,float,float,int)
+    161:171:public void hide(boolean)
+    174:177:public void listenTo(android.widget.AbsListView)
+com.xinwei.kanfangshenqi.fragment.GuideFragment2:
+    32:33:public void reload()
+com.xinwei.kanfangshenqi.fragment.JiHuaFragment:
+    private com.xinwei.kanfangshenqi.view.CalendarView myCalendarView
+    private java.util.Map paramsHead
+    private com.xinwei.kanfangshenqi.response.PlansResponse response
+    private com.xinwei.kanfangshenqi.adapter.PlansAdapter contentAdapter
+    private android.widget.ImageView course_setjourney_iv
+    209:239:private void getLouPan()
+    88:88:static synthetic java.util.ArrayList access$5(com.xinwei.kanfangshenqi.fragment.JiHuaFragment)
+    84:84:static synthetic android.widget.ListView access$8(com.xinwei.kanfangshenqi.fragment.JiHuaFragment)
+com.xinwei.kanfangshenqi.fragment.JiHuaFragment$3
+com.xinwei.kanfangshenqi.fragment.ZhaoFangFragment:
+    private android.widget.PopupWindow popuWindow1
+    private android.view.View contentView1
+    937:986:private void initPopuWindowFirstRedPacket(android.view.View)
+    146:146:static synthetic android.widget.PopupWindow access$33(com.xinwei.kanfangshenqi.fragment.ZhaoFangFragment)
+    148:148:static synthetic int access$34(com.xinwei.kanfangshenqi.fragment.ZhaoFangFragment)
+    148:148:static synthetic void access$35(com.xinwei.kanfangshenqi.fragment.ZhaoFangFragment,int)
+com.xinwei.kanfangshenqi.fragment.ZhaoFangFragment$12
+com.xinwei.kanfangshenqi.fragment.ZhaoFangFragment$13
+com.xinwei.kanfangshenqi.fragment.ZhaoFangFragment$14
+com.xinwei.kanfangshenqi.fragment.housecircle.InterestFragment:
+    private android.widget.RelativeLayout rltAddNewInterest
+com.xinwei.kanfangshenqi.receiver.JPushReceiver:
+    private static final java.lang.String TAG
+com.xinwei.kanfangshenqi.util.BitmapLoaderUtil:
+    35:36:public void setDefaultLoadingImage(int)
+    44:45:public void setDefaultLoadFailedImage(int)
+    68:74:public void display(android.widget.ImageView,java.lang.String,boolean)
+com.xinwei.kanfangshenqi.util.CharsetUtils
+com.xinwei.kanfangshenqi.util.CommonUtils
+com.xinwei.kanfangshenqi.util.CrashHandler
+com.xinwei.kanfangshenqi.util.DateUtil:
+    16:16:public DateUtil()
+    61:61:public static int getHour()
+    64:64:public static int getMinute()
+    76:85:public static int[] getWeekSunday(int,int,int,int)
+com.xinwei.kanfangshenqi.util.DensityUtil:
+    5:5:public DensityUtil()
+    27:28:public static int px2sp(android.content.Context,float)
+    36:37:public static int sp2px(android.content.Context,float)
+com.xinwei.kanfangshenqi.util.DoubleKeyValueMap
+com.xinwei.kanfangshenqi.util.FileUtils:
+    58:58:public java.io.File getCacheFile()
+    68:70:public java.lang.String getDownloadPathName()
+    82:86:public java.lang.String getCacheFileSizeByFolder(java.lang.String)
+    102:103:public java.io.File[] getFilesByFolder(java.io.File)
+    146:155:public void clearCacheFile(java.lang.String)
+    178:198:public boolean moveFileToDir(java.lang.String,java.lang.String)
+    208:226:public java.lang.String saveGetUrl(android.graphics.Bitmap,java.lang.String)
+com.xinwei.kanfangshenqi.util.GetLatLon:
+    23:24:public void setLatitude(double)
+    29:30:public void setLongitude(double)
+    56:57:public void destroyAMapLocationListener()
+com.xinwei.kanfangshenqi.util.HttpLogger
+com.xinwei.kanfangshenqi.util.IOUtils
+com.xinwei.kanfangshenqi.util.ImageOptions:
+    15:15:public ImageOptions()
+    30:34:public static com.nostra13.universalimageloader.core.DisplayImageOptions get_gushi_Options()
+    39:43:public static com.nostra13.universalimageloader.core.DisplayImageOptions get_shenqing_Options()
+com.xinwei.kanfangshenqi.util.LogUtils:
+    10:11:private LogUtils()
+    62:71:public static void d(java.lang.String)
+    74:83:public static void d(java.lang.String,java.lang.Throwable)
+    86:95:public static void e(java.lang.String)
+    110:119:public static void i(java.lang.String)
+    122:131:public static void i(java.lang.String,java.lang.Throwable)
+    134:143:public static void v(java.lang.String)
+    146:155:public static void v(java.lang.String,java.lang.Throwable)
+    158:167:public static void w(java.lang.String)
+    170:179:public static void w(java.lang.String,java.lang.Throwable)
+    182:191:public static void w(java.lang.Throwable)
+    195:204:public static void wtf(java.lang.String)
+    207:216:public static void wtf(java.lang.String,java.lang.Throwable)
+    219:228:public static void wtf(java.lang.Throwable)
+com.xinwei.kanfangshenqi.util.LogUtils$CustomLogger:
+    public abstract void d(java.lang.String,java.lang.String)
+    public abstract void d(java.lang.String,java.lang.String,java.lang.Throwable)
+    public abstract void e(java.lang.String,java.lang.String)
+    public abstract void i(java.lang.String,java.lang.String)
+    public abstract void i(java.lang.String,java.lang.String,java.lang.Throwable)
+    public abstract void v(java.lang.String,java.lang.String)
+    public abstract void v(java.lang.String,java.lang.String,java.lang.Throwable)
+    public abstract void w(java.lang.String,java.lang.String)
+    public abstract void w(java.lang.String,java.lang.String,java.lang.Throwable)
+    public abstract void w(java.lang.String,java.lang.Throwable)
+    public abstract void wtf(java.lang.String,java.lang.String)
+    public abstract void wtf(java.lang.String,java.lang.String,java.lang.Throwable)
+    public abstract void wtf(java.lang.String,java.lang.Throwable)
+com.xinwei.kanfangshenqi.util.Logger:
+    private static final boolean DEBUGABLE
+    private static final java.lang.String SPLITTER
+    24:25:private Logger()
+    85:87:public static varargs void v(java.lang.String,java.lang.Object[])
+    98:100:public static varargs void d(java.lang.String,java.lang.Throwable,java.lang.Object[])
+    110:111:public static varargs void e(java.lang.String,java.lang.Throwable,java.lang.Object[])
+    122:124:public static varargs void v(java.lang.String,java.lang.Throwable,java.lang.Object[])
+com.xinwei.kanfangshenqi.util.OtherUtils:
+    private static final int STRING_BUFFER_LENGTH
+    private static javax.net.ssl.SSLSocketFactory sslSocketFactory
+    27:28:private OtherUtils()
+    36:86:public static java.lang.String getUserAgent(android.content.Context)
+    95:109:public static java.lang.String getDiskCacheDir(android.content.Context,java.lang.String)
+    114:118:public static long getAvailableSpace(java.io.File)
+    124:134:public static boolean isSupportRange(org.apache.http.HttpResponse)
+    138:152:public static java.lang.String getFileNameFromHttpResponse(org.apache.http.HttpResponse)
+    156:177:public static java.nio.charset.Charset getCharsetFromHttpRequest(org.apache.http.client.methods.HttpRequestBase)
+    183:197:public static long sizeOfString(java.lang.String,java.lang.String)
+    202:202:public static java.lang.String getSubString(java.lang.String,int,int)
+    206:206:public static java.lang.StackTraceElement getCurrentStackTraceElement()
+    217:247:public static void trustAllHttpsURLConnection()
+com.xinwei.kanfangshenqi.util.OtherUtils$1
+com.xinwei.kanfangshenqi.util.PreferenceUtils:
+    public static final java.lang.String PREFERENCE_NAME
+    public static final java.lang.String SHARED_KEY_SETTING_USER_NICKNAME
+    public static final java.lang.String SHARED_KEY_SETTING_USER_PIC
+    public static final java.lang.String SHARED_KEY_SETTING_USER_SEX
+    public static final java.lang.String SHARED_KEY_SETTING_USER_ACCOUNT
+    public static final java.lang.String SHARED_KEY_SETTING_USER_PASSWORD
+    public static final java.lang.String SHARED_KEY_SETTING_USER_COMPANYADDR
+    public static final java.lang.String SHARED_KEY_SETTING_USER_COMPANYLONGITUDE
+    public static final java.lang.String SHARED_KEY_SETTING_USER_COMPANYLATITUDE
+    public static final java.lang.String SHARED_KEY_SETTING_USER_HOMEADDR
+    public static final java.lang.String SHARED_KEY_SETTING_USER_HOMELONGITUDE
+    public static final java.lang.String SHARED_KEY_SETTING_USER_HOMELATITUDE
+    public static final java.lang.String SHARED_KEY_SETTING_USER_ALIPAYACOUNTNAME
+    public static final java.lang.String SHARED_KEY_SETTING_USER_ALIPAYACOUNTID
+    public static final java.lang.String SHARED_KEY_SETTING_USER_TRANSID
+    public static final java.lang.String SHARED_KEY_SETTING_USER_APPAGENT
+    public static final java.lang.String SHARED_KEY_SETTING_USER_OSVER
+    public static final java.lang.String SHARED_KEY_SETTING_USER_TOKEN
+    85:87:public void setSettingWlanMacAddress(java.lang.String)
+    93:93:public java.lang.String getSettingWlanMacAddress()
+com.xinwei.kanfangshenqi.util.QRCodeUtils:
+    30:31:public void setWidth(int)
+    38:39:public void setHeight(int)
+com.xinwei.kanfangshenqi.util.StringUtils:
+    14:14:public StringUtils()
+    31:41:public static boolean isNumeric(java.lang.Object)
+    45:48:public static boolean hasLength(java.lang.String)
+    52:58:public static java.lang.String trimSpaces(java.lang.String)
+    62:75:public static boolean isIp(java.lang.String)
+    120:132:public static java.lang.String stripNonValidXMLCharacters(java.lang.String)
+    138:152:public static java.lang.String md5(java.lang.String)
+    157:164:public static java.lang.String sha1(java.lang.String)
+    168:180:public static java.lang.String toHexString(byte[])
+    185:206:public static java.lang.String wxSha1(java.lang.String)
+    215:215:public static java.lang.String shortPlace(java.lang.String)
+    224:237:public static java.lang.String shortPlace(java.lang.String,int)
+    241:244:public static java.lang.String displayValue(java.lang.String)
+com.xinwei.kanfangshenqi.util.TextViewWriterUtil:
+    10:10:public TextViewWriterUtil()
+com.xinwei.kanfangshenqi.util.ToastUtil:
+    6:6:public ToastUtil()
+    29:39:public static void showLong(android.content.Context,java.lang.String)
+com.xinwei.kanfangshenqi.util.Utils:
+    45:45:public Utils()
+    125:131:public static android.app.Dialog showProgressDialog(android.content.Context,java.lang.String)
+    135:139:public static boolean isShowing(android.content.Context)
+    148:152:public static boolean isExitsSdcard()
+    178:181:public static boolean checkTelPhoneNum(java.lang.String)
+    191:198:public static boolean checkPwd(java.lang.String)
+    203:209:public static varargs boolean checkComponentEmpty(android.widget.TextView[])
+    213:216:public static int getCurrentHour()
+com.xinwei.kanfangshenqi.util.ValidatorUtil:
+    7:7:public ValidatorUtil()
+    58:60:public static boolean isMobile(java.lang.String)
+    72:74:public static boolean isEmail(java.lang.String)
+    86:91:public static boolean isIdCard(java.lang.String)
+    103:106:public static boolean isIpv4(java.lang.String)
+com.xinwei.kanfangshenqi.util.ViewUtils:
+    41:42:private ViewUtils()
+    45:46:public static void inject(android.view.View)
+    53:54:public static void inject(android.preference.PreferenceActivity)
+    57:58:public static void inject(java.lang.Object,android.view.View)
+    61:62:public static void inject(java.lang.Object,android.app.Activity)
+    65:66:public static void inject(java.lang.Object,android.preference.PreferenceGroup)
+    69:70:public static void inject(java.lang.Object,android.preference.PreferenceActivity)
+com.xinwei.kanfangshenqi.util.WebUtils:
+    private static final java.lang.String METHOD_POST
+    private static final java.lang.String METHOD_GET
+    private static final java.lang.String TAG_NAME
+    61:62:private WebUtils()
+    66:66:public static java.lang.String doPost(java.lang.String,java.util.Map,int,int)
+    85:89:public static java.lang.String doPost(java.lang.String,java.util.Map,java.util.Map,int,int)
+    97:103:public static java.lang.String doPost(java.lang.String,java.util.Map,java.lang.String,int,int)
+    108:141:public static java.lang.String doPost(java.lang.String,java.lang.String,byte[],int,int)
+    146:146:public static java.lang.String doGet(java.lang.String,java.util.Map)
+    151:178:public static java.lang.String doGet(java.lang.String,java.util.Map,java.lang.String)
+    188:197:private static java.net.HttpURLConnection getConnection(java.net.URL,java.lang.String,java.lang.String)
+    202:221:private static java.net.URL buildGetUrl(java.lang.String,java.lang.String)
+    226:249:public static java.lang.String buildQuery(java.util.Map,java.lang.String)
+    254:264:protected static java.lang.String getResponseAsString(java.net.HttpURLConnection)
+    271:289:private static java.lang.String getStreamAsString(java.io.InputStream,java.lang.String)
+    293:311:private static java.lang.String getResponseCharset(java.lang.String)
+    315:315:public static java.lang.String decode(java.lang.String)
+    319:319:public static java.lang.String encode(java.lang.String)
+    332:340:public static java.lang.String decode(java.lang.String,java.lang.String)
+    353:361:public static java.lang.String encode(java.lang.String,java.lang.String)
+    381:449:public static java.lang.String doPost(java.lang.String,java.util.Map,java.util.Map,java.lang.String,int,int)
+    454:459:private static byte[] getTextEntry(java.lang.String,java.lang.String,java.lang.String)
+    464:472:private static byte[] getFileEntry(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+    502:513:public static java.util.Map splitUrlQuery(java.lang.String)
+com.xinwei.kanfangshenqi.util.XmlUtil:
+    36:49:public void save(java.util.Map)
+    57:70:public void saveObject(java.util.Map)
+    92:92:public java.util.Map load()
+    99:100:public void clear()
+    108:109:public void remove(java.lang.String)
+    118:118:public java.lang.String get(java.lang.String,java.lang.String)
+com.xinwei.kanfangshenqi.view.AlertWidget:
+    53:56:public void setIcoResourceId(int)
+    87:88:public void setOKListener(java.lang.String,android.content.DialogInterface$OnClickListener)
+    100:108:public void setOKListenerWithCancelDefault(java.lang.String,android.content.DialogInterface$OnClickListener)
+    130:131:public void setThirdListener(java.lang.String,android.content.DialogInterface$OnClickListener)
+    143:144:public void setCancelListener(java.lang.String,android.content.DialogInterface$OnClickListener)
+    153:159:public void setCancelListener(java.lang.String)
+    172:173:public void setMenu(java.lang.String[],android.content.DialogInterface$OnClickListener)
+    181:182:public void setView(android.view.View)
+    219:221:public void setCanceledOnTouchOutside(boolean)
+    252:260:public void show(android.view.View)
+    268:268:public android.view.Window getWindow()
+    287:287:public android.app.AlertDialog getDlg()
+    310:312:public boolean isDialogShow()
+com.xinwei.kanfangshenqi.view.AlertWidget$1
+com.xinwei.kanfangshenqi.view.AlertWidget$3
+com.xinwei.kanfangshenqi.view.CalendarView:
+    private static final java.lang.String TAG
+    public static final int MONTH_STYLE
+    public static final int WEEK_STYLE
+    private static final int TOTAL_COL
+    private static final int TOTAL_ROW
+    private static final int WEEK
+    60:63:public CalendarView(android.content.Context,android.util.AttributeSet,int)
+    66:69:public CalendarView(android.content.Context,android.util.AttributeSet)
+    77:81:public CalendarView(android.content.Context,int,com.xinwei.kanfangshenqi.view.CalendarView$CallBack)
+com.xinwei.kanfangshenqi.view.CircleImageView:
+    private android.graphics.Bitmap bitmap
+com.xinwei.kanfangshenqi.view.CircleImageViewWithBorder:
+    private static final int COLORDRAWABLE_DIMENSION
+    private static final int DEFAULT_BORDER_WIDTH
+    private static final int DEFAULT_BORDER_COLOR
+com.xinwei.kanfangshenqi.view.ClearEditText:
+    134:135:public void setShakeAnimation()
+    144:147:public static android.view.animation.Animation shakeAnimation(int)
+com.xinwei.kanfangshenqi.view.Configuration:
+    84:97:public void setBackDrawable(android.graphics.drawable.Drawable,android.graphics.drawable.Drawable)
+    135:139:public void setThumbMargin(int,int,int,int)
+    149:150:public void setThumbMargin(int,int,int)
+    153:154:public void setThumbMargin(int,int)
+    157:158:public void setThumbMargin(int)
+    212:213:public void setOnColor(int)
+    216:216:public int getOnColor(int)
+    220:221:public void setOffColor(int)
+    224:224:public int getOffColor()
+    228:229:public void setThumbColor(int)
+    232:232:public int getThumbColor()
+    246:247:public void setThumbWidthAndHeight(int,int)
+com.xinwei.kanfangshenqi.view.Configuration$Default:
+    21:21:Configuration$Default()
+com.xinwei.kanfangshenqi.view.Configuration$Limit:
+    32:32:Configuration$Limit()
+com.xinwei.kanfangshenqi.view.CustomDialog:
+    private android.content.Context context
+com.xinwei.kanfangshenqi.view.CustomDialog$Builder:
+    77:78:public com.xinwei.kanfangshenqi.view.CustomDialog$Builder setMessage(int)
+    87:88:public com.xinwei.kanfangshenqi.view.CustomDialog$Builder setTitle(int)
+    118:119:public com.xinwei.kanfangshenqi.view.CustomDialog$Builder setContentView(android.view.View)
+    130:133:public com.xinwei.kanfangshenqi.view.CustomDialog$Builder setPositiveButton(int,android.content.DialogInterface$OnClickListener)
+    144:146:public com.xinwei.kanfangshenqi.view.CustomDialog$Builder setPositiveButton(java.lang.String,android.content.DialogInterface$OnClickListener)
+    157:160:public com.xinwei.kanfangshenqi.view.CustomDialog$Builder setNegativeButton(int,android.content.DialogInterface$OnClickListener)
+com.xinwei.kanfangshenqi.view.FileImageUpload:
+    private static final java.lang.String TAG
+    private static final int TIME_OUT
+    private static final java.lang.String CHARSET
+    public static final java.lang.String SUCCESS
+    public static final java.lang.String FAILURE
+    26:26:public FileImageUpload()
+com.xinwei.kanfangshenqi.view.ListViewFooterWidget:
+    public static final int STATE_NORMAL
+    public static final int STATE_READY
+    public static final int STATE_LOADING
+    30:32:public ListViewFooterWidget(android.content.Context,android.util.AttributeSet)
+    67:69:public void normal()
+    76:78:public void loading()
+com.xinwei.kanfangshenqi.view.ListViewHeaderWidget:
+    public static final int STATE_NORMAL
+    public static final int STATE_READY
+    public static final int STATE_REFRESHING
+    49:51:public ListViewHeaderWidget(android.content.Context,android.util.AttributeSet)
+com.xinwei.kanfangshenqi.view.ListViewWidget:
+    private static final int SCROLLBACK_HEADER
+    private static final int SCROLLBACK_FOOTER
+    private static final int SCROLL_DURATION
+    private static final int PULL_LOAD_MORE_DELTA
+    private static final float OFFSET_RADIO
+    214:228:public void stopRefreshAndLoad(boolean)
+    383:394:public void setRefreshShow()
+com.xinwei.kanfangshenqi.view.NestRadioGroup:
+    181:182:public void clearCheck()
+com.xinwei.kanfangshenqi.view.NestRadioGroup$LayoutParams:
+    252:253:public NestRadioGroup$LayoutParams(int,int,float)
+    259:260:public NestRadioGroup$LayoutParams(android.view.ViewGroup$LayoutParams)
+    266:267:public NestRadioGroup$LayoutParams(android.view.ViewGroup$MarginLayoutParams)
+com.xinwei.kanfangshenqi.view.RiseNumberListener
+com.xinwei.kanfangshenqi.view.RiseNumberTextView:
+    private static final int STOPPED
+    private static final int RUNNING
+    95:95:static int sizeOfInt(int)
+    121:129:public com.xinwei.kanfangshenqi.view.RiseNumberTextView withNumber(float)
+    148:149:public com.xinwei.kanfangshenqi.view.RiseNumberTextView setDuration(long)
+com.xinwei.kanfangshenqi.view.SlideListView:
+    private static final int RELEASE_To_REFRESH
+    private static final int PULL_To_REFRESH
+    private static final int REFRESHING
+    private static final int DONE
+    private static final int LOADING
+    private static final int RATIO
+    private static final java.lang.String TAG
+    private int lastItemIndex
+    173:174:public void setSelectionfoot()
+    455:455:public void onLoadMoreComplete()
+    486:492:public void onRefreshComplete()
+    501:503:public void clickToRefresh()
+    537:546:public void shrinkListItem(int)
+    549:549:public boolean isLockLeft()
+    557:557:public boolean isLockRight()
+com.xinwei.kanfangshenqi.view.SlideView:
+    private static final java.lang.String TAG
+    private static final float TAN
+com.xinwei.kanfangshenqi.view.SlideView$OnSlideListener:
+    public static final int SLIDE_STATUS_OFF
+    public static final int SLIDE_STATUS_START_SCROLL
+    public static final int SLIDE_STATUS_ON
+com.xinwei.kanfangshenqi.view.TitleBarView:
+    185:186:public void setLeftView(int,java.lang.String)

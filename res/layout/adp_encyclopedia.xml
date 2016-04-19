@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:animateLayoutChanges="true">
+	<View style="@style/cut_line"
+	    android:id="@+id/cutLineTop"/>
+    <RelativeLayout
+        android:id="@+id/rltTitle"
+        style="@style/layout"
+        android:layout_below="@id/cutLineTop"
+        android:background="@android:color/white" >
+
+        <TextView
+            android:id="@+id/txtStep"
+            android:minHeight="15dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/txt_size_tiny"
+            android:gravity="center_vertical|center_horizontal"
+            android:minWidth="17dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_big"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:layout_marginBottom="@dimen/margin_normal"
+            android:background="@drawable/ic_step"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/txtStepDesc"
+            style="@style/item"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/txtStep"
+            android:gravity="center"
+            android:textColor="@color/orange"
+            android:textSize="@dimen/txt_size_normal" />
+    </RelativeLayout>
+
+    <com.xinwei.kanfangshenqi.view.ListViewInScroll
+        android:id="@+id/lViContent"
+        style="@style/list_view"
+        android:footerDividersEnabled="true"
+        android:layout_below="@id/rltTitle" />
+	<ImageView style="@style/cut_line"
+	    android:id="@+id/imgCutline"
+        android:layout_below="@id/lViContent"/>
+    <TextView
+        android:id="@+id/txtCtrl"
+        style="@style/layout"
+        android:layout_below="@id/imgCutline"
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:padding="@dimen/margin_normal"
+        android:textColor="@color/light_gray"
+        android:textSize="@dimen/txt_size_big" />
+
+	<View style="@style/cut_line"
+	    android:layout_below="@id/txtCtrl"
+	    android:id="@+id/cutLineBottom"/>
+</RelativeLayout>

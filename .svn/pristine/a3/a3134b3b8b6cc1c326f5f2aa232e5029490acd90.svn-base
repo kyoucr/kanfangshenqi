@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_transparent" >
+
+    <LinearLayout
+        android:id="@+id/ll_popup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/item_popupwindows_camera"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/title_height"
+                android:background="@drawable/bg_ctrl_item"
+                android:text="拍照"
+                android:textColor="@color/txt_color_black"
+                android:textSize="@dimen/txt_size_big" />
+        </LinearLayout>
+
+        <View style="@style/cut_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/item_popupwindows_Photo"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/title_height"
+                android:background="@drawable/bg_ctrl_item"
+                android:text="从手机相册选择"
+                android:textColor="@color/txt_color_black"
+                android:textSize="@dimen/txt_size_big" />
+        </LinearLayout>
+
+        <View
+            style="@style/cut_line" />
+
+        <Button
+            android:id="@+id/item_popupwindows_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            android:background="@drawable/bg_ctrl_item"
+            android:text="取消"
+            android:textColor="@color/txt_color_black"
+            android:textSize="@dimen/txt_size_big" />
+    </LinearLayout>
+
+</RelativeLayout>

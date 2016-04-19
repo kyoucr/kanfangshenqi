@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/imgTop"
+        style="@style/layout"
+        android:background="@drawable/bg_course" />
+
+    <ImageView
+        android:id="@+id/imgPlan"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imgTop"
+        android:background="@drawable/ic_jihua_first" />
+
+    <ImageView
+        android:id="@+id/imgBottom"
+        style="@style/match"
+        android:layout_below="@id/imgPlan"
+        android:background="@drawable/bg_course" />
+</RelativeLayout>

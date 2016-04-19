@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+    <View
+        android:id="@+id/header_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/line"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:id="@+id/up_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp" >
+
+            <TextView
+                android:id="@+id/loupan_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:maxEms="10"
+                android:singleLine="true"
+                android:text="浑河湾"
+                android:textColor="@color/txt_gray"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/loupan_jiaqian"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/loupan_name"
+                android:text="价钱"
+                android:textColor="@color/orange"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:id="@+id/lookover"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@+id/loupan_jiaqian"
+                android:src="@drawable/look_over_pic"
+                android:visibility="invisible" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/loupan_jiaqian"
+                android:paddingTop="7dp"
+                android:text="元/平"
+                android:textColor="@color/orange"
+                android:textSize="11sp" />
+
+            <RelativeLayout
+                style="@style/match"
+                android:layout_below="@+id/loupan_name" >
+
+                <ImageView
+                    android:id="@+id/dingwei"
+                    style="@style/item"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:src="@drawable/xjhb_address_icon" />
+
+                <TextView
+                    android:id="@+id/loupan_dizhi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/dingwei"
+                    android:layout_centerVertical="true"
+                    android:ellipsize="end"
+                    android:maxEms="14"
+                    android:singleLine="true"
+                    android:text="地址"
+                    android:textColor="@color/txt_gray_nine"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/daohang"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_toLeftOf="@+id/line"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:src="@drawable/navigation_button" />
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="@dimen/divider_height"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@+id/phone"
+            android:background="@color/line" />
+
+        <ImageView
+            android:id="@+id/phone"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginRight="15dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:src="@drawable/phone_button" />
+    </RelativeLayout>
+
+</LinearLayout>

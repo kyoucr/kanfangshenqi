@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_all"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/rltTitle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:background="@color/title_color_white" >
+
+        <RelativeLayout
+            android:id="@+id/rltLeft"
+            style="@style/match"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/txtTitle" >
+
+            <Button
+                android:id="@+id/btnLeftChild"
+                style="@style/item"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:text="取消"
+                android:textColor="@color/orange"
+                android:textSize="@dimen/txt_size_title" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/txtTitle"
+            style="@style/item"
+            android:layout_centerInParent="true"
+            android:text="发表"
+            android:textColor="@color/txt_color_black"
+            android:textSize="@dimen/txt_size_title" />
+
+        <Button
+            android:id="@+id/btnSend"
+            style="@style/item"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:text="发送"
+            android:textColor="@color/orange"
+            android:textSize="@dimen/txt_size_big" />
+
+        <ImageView
+            android:id="@+id/imgTitleCutLine"
+            style="@style/cut_line"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+
+    <View
+        style="@style/cut_line"
+        android:layout_marginTop="@dimen/margin_normal" />
+
+    <EditText
+        android:id="@+id/edtTxtContent"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_publish_height"
+        android:background="@android:color/white"
+        android:gravity="top"
+        android:focusable="true"
+        style="@style/edt_common"
+        android:hint="@string/hint_publish"
+        android:padding="@dimen/margin_normal" />
+
+    <View style="@style/cut_line" />
+
+    <GridView
+        android:background="@android:color/white"
+        android:padding="@dimen/margin_normal"
+        android:id="@+id/noScrollgridview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/item_publish_height"
+        android:horizontalSpacing="3dp"
+        android:numColumns="4"
+        android:scrollbars="none"
+        android:verticalSpacing="5dp" >
+    </GridView>
+
+    <View style="@style/cut_line" />
+
+</LinearLayout>

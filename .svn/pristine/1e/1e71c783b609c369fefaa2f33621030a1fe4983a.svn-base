@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fafafa"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/input_ll"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/login_input_line_height"
+            android:background="@color/line" />
+
+        <RelativeLayout
+            android:id="@+id/verification_code"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            android:background="@drawable/bg_ctrl_item"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:layout_weight="1" >
+
+            <com.xinwei.kanfangshenqi.view.ClearEditText
+                android:id="@+id/et_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:hint="请输入昵称"
+                android:inputType="textPersonName"
+                android:maxLength="10"
+                android:paddingLeft="5dp"
+                android:saveEnabled="true"
+                android:singleLine="true"
+                android:textCursorDrawable="@null"
+                android:textColorHint="@color/text_gray_input"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/login_input_line_height"
+            android:background="@color/line" />
+    </LinearLayout>
+
+</LinearLayout>

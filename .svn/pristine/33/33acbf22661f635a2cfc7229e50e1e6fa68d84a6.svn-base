@@ -1,0 +1,63 @@
+package com.xinwei.kanfangshenqi.util;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
+import com.xinwei.kanfangshenqi.R;
+
+import android.graphics.Bitmap;
+import android.view.View;
+import android.widget.ImageView;
+
+public class ImageLoaderNewUtil {
+	public static ImageLoaderNewUtil imgUtil;
+	private static DisplayImageOptions options;
+	private ImageLoaderNewUtil() {
+			options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.ic_default_loading_normal)
+					.showImageForEmptyUri(R.drawable.ic_default_loading).showImageOnFail(R.drawable.ic_default_loading)
+					.cacheInMemory(true).cacheOnDisc(true).considerExifParams(true).bitmapConfig(Bitmap.Config.RGB_565)
+					.build();
+	}
+	public static ImageLoaderNewUtil getInstance(){
+		if(imgUtil == null)
+			imgUtil = new ImageLoaderNewUtil();
+		return imgUtil;
+	}
+	
+	public void bindImg(ImageView imageView,String url,OnFailListener onFailListener){
+		ImageLoader.getInstance().displayImage(url, imageView, options,new MyImageLoadingListener(onFailListener));
+	}
+	public interface OnFailListener{
+		public void onFailed(String arg0, View arg1, FailReason arg2);
+	}
+	public class MyImageLoadingListener implements ImageLoadingListener{
+		private OnFailListener onFailListener;
+		public MyImageLoadingListener(OnFailListener onFailListener) {
+			this.onFailListener =  onFailListener;
+		}
+		@Override
+		public void onLoadingCancelled(String arg0, View arg1) {
+			
+		}
+
+		@Override
+		public void onLoadingComplete(String arg0, View arg1, Bitmap arg2) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
+			if(onFailListener!=null)
+				onFailListener.onFailed(arg0, arg1, arg2);;
+		}
+
+		@Override
+		public void onLoadingStarted(String arg0, View arg1) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+}

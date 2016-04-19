@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="22dp"
+            android:orientation="horizontal"
+            >
+
+            <ImageButton
+                android:id="@+id/prev"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/left_arrow_button"
+                android:contentDescription="@string/time_prev"
+                android:background="@null"/>
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textColor="@color/text_normal"
+                android:textSize="18sp"/>
+
+            <ImageButton
+                android:id="@+id/next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/right_arrow_button"
+                android:contentDescription="@string/time_next"
+                android:background="@null"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/selection_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/blue_dark"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:minHeight="48dp"
+            android:gravity="center"
+            android:singleLine="true"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:id="@+id/weeks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <!-- Cashes them at first start -->
+        <include layout="@layout/week_layout" />
+        <include layout="@layout/week_layout" />
+        <include layout="@layout/week_layout" />
+        <include layout="@layout/week_layout" />
+        <include layout="@layout/week_layout" />
+        <include layout="@layout/week_layout" />
+
+    </LinearLayout>
+
+</merge>

@@ -1,0 +1,188 @@
+package com.xinwei.kanfangshenqi.fragment;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.xutils.view.annotation.Event;
+import org.xutils.view.annotation.ViewInject;
+
+import com.google.gson.Gson;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.xinwei.kanfangshenqi.BaseFragment2;
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.activity.BuildingDetailInfoActivity;
+import com.xinwei.kanfangshenqi.adapter.LouPanAdapter;
+import com.xinwei.kanfangshenqi.common.Const;
+import com.xinwei.kanfangshenqi.model.DataList;
+import com.xinwei.kanfangshenqi.request.HttpRequest;
+import com.xinwei.kanfangshenqi.request.HttpRequest.RequestListener;
+import com.xinwei.kanfangshenqi.response.NameOfHousesResponse;
+import com.xinwei.kanfangshenqi.util.Utils;
+import com.xinwei.kanfangshenqi.util.ValidatorUtil;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+
+public class ListViewFragmentLayout extends BaseFragment2 implements OnRefreshListener2 {
+	@ViewInject(R.id.houselist)
+	public PullToRefreshListView houselist;
+	public ArrayList<DataList> loupanList;
+	private boolean isRefresh;
+	private Map<String, String> params = new HashMap<String, String>();
+	private LouPanAdapter adpLouPan;
+
+	@Override
+	public void onChildViewLoaded() {
+		houselist.setOnRefreshListener(this);
+		setEmptyPage(R.drawable.image_null_show_pan_null, R.string.hint_no_building_search);
+		onReloadData();
+	}
+
+	@Override
+	public void onReloadData() {
+		if (ZhaoFangFragment.map != null) {
+			Iterator<String> iterator = ZhaoFangFragment.map.keySet().iterator();
+			while (iterator.hasNext()) {
+				String key = iterator.next();
+				String value = ZhaoFangFragment.map.get(key);
+				params.put(key, value);
+			}
+		}
+		params.put(Const.PARAM_ISPAGE, Const.YES);
+		params.put(Const.PARAM_PAGENUM, String.valueOf(mBeginPage));
+		getLouPanXin();
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		EventBus.getDefault().register(this);
+		addChildView(R.layout.fragment_list);
+	}
+
+	@Event(value = R.id.houselist, type = OnItemClickListener.class)
+	private void onItemClickEvent(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		DataList dataList = (DataList) arg0.getAdapter().getItem(arg2);
+		Bundle data = new Bundle();
+		data.putSerializable(DataList.class.getSimpleName(), dataList);
+		Utils.moveTo(activity, BuildingDetailInfoActivity.class, false, data);
+	}
+	@Subscribe
+	public void onConditionChangeEvent(Map<String,String> paramsChange) {
+		if(paramsChange!=null){
+			Iterator<String> iterator = paramsChange.keySet().iterator();
+			while (iterator.hasNext()) {
+				String key = iterator.next();
+				String value = paramsChange.get(key);
+				params.put(key, value);
+			}
+		}
+		params.put(Const.PARAM_PAGENUM, String.valueOf(mBeginPage));
+		getLouPanXin();
+	}
+	@Override
+	public boolean onBackPressed() {
+		return false;
+	}
+
+	@Override
+	public String getRequestTag() {
+		return ListViewFragmentLayout.class.getSimpleName();
+	}
+
+	private void getLouPanXin() {
+		if (!isRefresh)
+			showBar();
+		HttpRequest.get(activity, Const.URL_NAME_OF_HOUSES, getRequestTag(), params, Utils.getHeaderParamsOnly(),
+				new RequestListener() {
+					@Override
+					public void onSuccess(String url, String responseResult) {
+						NameOfHousesResponse mNameOfHousesResponse = new Gson().fromJson(responseResult,
+								NameOfHousesResponse.class);
+						loupanList = mNameOfHousesResponse.getDataList();
+						if (ValidatorUtil.isValidList(loupanList)) {
+							adpLouPan = new LouPanAdapter(loupanList);
+							houselist.setAdapter(adpLouPan);
+							Utils.judgePullRefreshStatus(houselist, mBeginPage,mNameOfHousesResponse.getPageCount());
+							isShowContent(true);
+						}else{
+							isShowEmpty(true);
+						}
+						if(isRefresh){
+							houselist.onRefreshComplete(false);
+						}else{
+							closeBar();
+						}
+						isRefresh = false;
+					}
+
+					@Override
+					public void onFailure(String url, String errorInfo) {
+						
+						if(isRefresh){
+							houselist.onRefreshComplete(false);
+						}else{
+							closeBar();
+						}
+						isRefresh = false;
+					}
+
+					@Override
+					public void onError(String url, String responseResult) {
+						if(isRefresh){
+							houselist.onRefreshComplete(false);
+						}else{
+							closeBar();
+						}
+						isRefresh = false;
+					}
+				});
+	}
+
+	@Override
+	public void onPullDownToRefresh(PullToRefreshBase refreshView, int mBeginPage) {
+		params.put(Const.PARAM_PAGENUM, String.valueOf(mBeginPage));
+		isRefresh = true;
+		getLouPanXin();
+	}
+
+	@Override
+	public void onPullUpToLoad(PullToRefreshBase refreshView, final int mNextPage) {
+		params.put(Const.PARAM_PAGENUM, String.valueOf(mNextPage));
+		HttpRequest.get(activity, Const.URL_NAME_OF_HOUSES, getRequestTag(), params, Utils.getHeaderParamsOnly(),
+				new RequestListener() {
+					@Override
+					public void onSuccess(String url, String responseResult) {
+						NameOfHousesResponse mNameOfHousesResponse = new Gson().fromJson(responseResult,
+								NameOfHousesResponse.class);
+						loupanList.addAll(mNameOfHousesResponse.getDataList());
+						adpLouPan.notifyDataSetChanged();
+						Utils.judgePullRefreshStatus(houselist, mNextPage,
+								mNameOfHousesResponse.getPageCount());
+					}
+
+					@Override
+					public void onFailure(String url, String errorInfo) {
+						houselist.onRefreshComplete(false);
+					}
+
+					@Override
+					public void onError(String url, String responseResult) {
+						houselist.onRefreshComplete(false);
+					}
+				});
+	}
+	@Override
+	public void onDestroy() {
+		EventBus.getDefault().unregister(this);
+		super.onDestroy();
+	}
+}

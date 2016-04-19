@@ -1,0 +1,67 @@
+package com.xinwei.kanfangshenqi.adapter;
+
+import java.util.List;
+
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.model.WonderfulActivity;
+import com.xinwei.kanfangshenqi.util.ImageLoaderUtil;
+import com.xinwei.kanfangshenqi.util.TextViewWriterUtil;
+
+import android.app.Activity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+/**
+ *******************
+ * 精彩活动列表适配器
+ * 
+ * @author cn
+ *
+ *******************
+ */
+public class WonderfulActivityAdp extends BaseAbsAdp {
+	private List<WonderfulActivity> list;
+	private Activity activity;
+	public WonderfulActivityAdp(Activity activity, List<WonderfulActivity> list) {
+		this.activity = activity;
+		this.list = list;
+	}
+
+	@Override
+	public List<?> onGetListData() {
+		return list;
+	}
+
+	@Override
+	public View onGetView(int position, View view) {
+		ViewHolder viewHolder;
+		if (view == null) {
+			viewHolder = new ViewHolder();
+			view = LayoutInflater.from(activity).inflate(R.layout.adp_wonderful_activity, null);
+			viewHolder.imgActivity = (ImageView) view.findViewById(R.id.imgActivity);
+			viewHolder.txtTitle = (TextView) view.findViewById(R.id.txtTitle);
+			viewHolder.txtTime = (TextView) view.findViewById(R.id.txtTime);
+			viewHolder.txtPersons = (TextView) view.findViewById(R.id.txtPersons);
+			view.setTag(viewHolder);
+		} else
+			viewHolder = (ViewHolder) view.getTag();
+		WonderfulActivity wonderfulActivity = list.get(position);
+		if (wonderfulActivity != null) {
+			TextViewWriterUtil.writeValue(viewHolder.txtTitle, wonderfulActivity.getActivityTitle());
+			TextViewWriterUtil.writeValue(viewHolder.txtTime, wonderfulActivity.getSectionTime());
+			TextViewWriterUtil.writeValue(viewHolder.txtPersons,
+					activity.getString(R.string.txt_persons_num, wonderfulActivity.getActivityPersonCnt()));
+			ImageLoaderUtil.getInstance().bindImgFixXY(viewHolder.imgActivity, wonderfulActivity.getActivityImg());
+		}
+		return view;
+	}
+
+	class ViewHolder {
+		ImageView imgActivity;
+		TextView txtTitle;
+		TextView txtTime;
+		TextView txtPersons;
+	}
+}

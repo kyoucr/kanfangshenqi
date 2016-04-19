@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout style="@style/match" >
+
+        <View
+            android:id="@+id/viewTop"
+            style="@style/layout"
+            android:background="@drawable/bg_course" />
+
+        <LinearLayout
+            android:id="@+id/rltCenter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/viewTop"
+            android:orientation="horizontal" >
+
+            <View
+                android:id="@+id/viewCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_course" />
+
+            <View
+                android:id="@+id/qrCircle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/loupan_showdata_circle" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rltDesc"
+            android:layout_width="match_parent"
+            android:layout_height="86dp"
+            android:layout_below="@+id/rltCenter" >
+
+            <View
+                style="@style/match"
+                android:layout_toLeftOf="@+id/viewDesc"
+                android:background="@drawable/bg_course" />
+
+            <View
+                android:id="@+id/viewDesc"
+                android:layout_width="218dp"
+                android:layout_height="86dp"
+                android:layout_toLeftOf="@+id/viewRight"
+                android:background="@drawable/loupan_shouwdata_" />
+
+            <View
+                android:id="@+id/viewRight"
+                style="@style/match"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/bg_course" />
+        </RelativeLayout>
+
+        <View
+            style="@style/match"
+            android:layout_below="@+id/rltDesc"
+            android:background="@drawable/bg_course" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/loupan_show_bg"
+    android:orientation="horizontal" 
+    android:paddingLeft="11dp"
+    android:paddingRight="11dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    >
+    <TextView 
+        android:id="@+id/loupan_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/orange"
+        android:textSize="14sp"
+        android:layout_gravity="center"
+        />
+    <ImageView 
+        android:id="@+id/loupan_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:src="@drawable/little_red_packet"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        />
+</LinearLayout>

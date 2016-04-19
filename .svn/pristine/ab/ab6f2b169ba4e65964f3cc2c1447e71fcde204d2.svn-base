@@ -1,0 +1,55 @@
+package com.xinwei.kanfangshenqi.adapter;
+
+import java.util.List;
+
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.model.Income;
+import com.xinwei.kanfangshenqi.util.TextViewWriterUtil;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+public class IncomeAdp extends BaseAbsAdp{
+	private Context context;
+	private List<Income> list;
+	private String typeHouse = "看房";
+	private String typeDiscuss = "评论";
+	public IncomeAdp(Context context,List<Income> list) {
+		this.context = context;
+		this.list = list;
+	}
+	@Override
+	public List<?> onGetListData() {
+		return list;
+	}
+
+	@Override
+	public View onGetView(int position, View view) {
+		ViewHolder viewHolder;
+		if(view == null){
+			view = LayoutInflater.from(context).inflate(R.layout.adp_income	, null);
+			viewHolder = new ViewHolder();
+			viewHolder.txtMoney = (TextView) view.findViewById(R.id.txtMoney);
+			viewHolder.txtSource = (TextView) view.findViewById(R.id.txtSource);
+			viewHolder.imgIcon = (ImageView) view.findViewById(R.id.imgIcon);
+			view.setTag(viewHolder);
+		}else
+			viewHolder = (ViewHolder) view.getTag();
+		Income income = list.get(position);
+		TextViewWriterUtil.writeValue(viewHolder.txtMoney, income.getPrice());
+		TextViewWriterUtil.writeValue(viewHolder.txtSource, income.getSource());
+		if(typeHouse.equals(income.getType()))
+			viewHolder.imgIcon.setBackgroundResource(R.drawable.redhouse_icon);
+		else
+			viewHolder.imgIcon.setBackgroundResource(R.drawable.redpencil_icon);
+		return view;
+	}
+	class ViewHolder {
+		TextView txtMoney;
+		TextView txtSource;
+		ImageView imgIcon;
+	}
+}

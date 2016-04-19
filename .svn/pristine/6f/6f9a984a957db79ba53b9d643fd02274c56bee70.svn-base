@@ -1,0 +1,86 @@
+package com.xinwei.kanfangshenqi.activity;
+
+import org.xutils.view.annotation.ViewInject;
+
+import com.xinwei.kanfangshenqi.BaseActivity;
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.common.Const;
+
+import android.os.Bundle;
+import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
+
+public class WebActivity extends BaseActivity{
+
+	@ViewInject(R.id.webVContent)
+	private WebView webVContent;
+	@ViewInject(R.id.webVBar)
+	private ProgressBar webVBar;
+	private WebSettings webSettings;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		addChildView(R.layout.activity_web);
+	}
+	@Override
+	public void onChildViewLoaded() {
+		String url = getIntent().getStringExtra(Const.WEB_URL_KEY);
+		String title = getIntent().getStringExtra(Const.WEB_TITLE_KEY);
+		String leftTitle = getIntent().getStringExtra(Const.WEB_LEFT_TITLE_KEY);
+		if(url == null){
+			isShowError(true);
+			return;
+		}
+		if(title!=null)
+			setTitleTxt(title);
+		if(leftTitle!=null)
+			setLeftTitle(leftTitle);
+		webSettings = webVContent.getSettings();
+		webVContent.setWebChromeClient(new WebChromeClient() {
+			@Override
+			public void onProgressChanged(WebView view, int newProgress) {
+				super.onProgressChanged(view, newProgress);
+				webVBar.setVisibility(View.VISIBLE);
+				webVBar.setProgress(newProgress);
+				if (newProgress >= 100) {
+					webVBar.setVisibility(View.GONE);
+				}
+			}
+		});
+		webVContent.setWebViewClient(new WebViewClient() {
+			@Override
+			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+				view.loadUrl(url);
+				return true;
+			}
+		});
+		webSettings.setJavaScriptEnabled(true);
+		webVContent.loadUrl(url);
+	}
+
+	@Override
+	public void onReloadData() {
+	}
+	@Override
+	public void onBackPressed() {
+		if (webVContent.canGoBack()) {
+			webVContent.goBack();
+		} else {
+			super.onBackPressed();
+		}
+	}
+	@Override
+	protected void onDestroy() {
+		if(webSettings!=null)
+			webSettings.setJavaScriptEnabled(false);
+		super.onDestroy();
+	}
+	@Override
+	public String getRequestTag() {
+		return null;
+	}
+}

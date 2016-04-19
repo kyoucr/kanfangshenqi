@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_ctrl_item"
+    android:padding="1dp" >
+
+    <com.xinwei.kanfangshenqi.view.SlideView
+        android:id="@+id/slideView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <RelativeLayout
+            android:id="@+id/edit_rl"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/corners_blue_left"
+            android:clickable="true" >
+
+            <TextView
+                android:id="@+id/edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawableLeft="@drawable/edit"
+                android:gravity="center" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/view_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/default_list_item_selector"
+            android:orientation="horizontal" >
+
+            <include layout="@layout/item_jihua_qingdan_item" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/del_rl"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@color/orange"
+            android:clickable="true" >
+
+            <TextView
+                android:id="@+id/delete"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:text="删除"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/txt_size_normal"
+                android:gravity="center" />
+        </RelativeLayout>
+    </com.xinwei.kanfangshenqi.view.SlideView>
+
+</RelativeLayout>

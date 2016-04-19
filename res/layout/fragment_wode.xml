@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.xinwei.kanfangshenqi"
+    android:id="@+id/lltParent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <!-- 头像 -->
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/top_my_desc_height"
+        android:background="@drawable/wodeuser_bg" >
+
+        <com.xinwei.kanfangshenqi.view.CircleImageViewWithBorder
+            android:id="@+id/photo"
+            android:layout_width="@dimen/img_big_head_size"
+            android:layout_height="@dimen/img_big_head_size"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_huge"
+            app:circle_border_color="@android:color/white"
+            app:circle_border_width="@dimen/img_head_border" />
+
+        <TextView
+            android:id="@+id/txtLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/photo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:ellipsize="end"
+            android:maxWidth="@dimen/max_nickname_width"
+            android:singleLine="true"
+            android:text="点击登录"
+            android:textColor="@color/white"
+            android:textSize="@dimen/txt_size_big" />
+
+        <LinearLayout
+            android:id="@+id/ll_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/photo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_normal" >
+
+            <ImageView
+                android:id="@+id/imgSex"
+                android:layout_width="@dimen/img_sex_size"
+                android:layout_height="@dimen/img_sex_size"
+                android:layout_gravity="center_vertical" />
+
+            <TextView
+                android:id="@+id/txtNickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxWidth="@dimen/max_nickname_width"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/txt_size_huge" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lltCtrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_name"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/margin_small" >
+
+            <TextView
+                android:id="@+id/txtAchievement"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="@string/txt_personal_achievement"
+                android:textColor="@color/white"
+                android:textSize="@dimen/txt_size_big" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_small"
+                android:background="@color/white" />
+
+            <LinearLayout
+                android:id="@+id/lltQR"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/qr_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="left"
+                    android:text="@string/txt_qr"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/txt_size_big" />
+
+                <ImageView
+                    android:id="@+id/iv_qr_code"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:background="@drawable/erweima_icon" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/viewShow"
+            style="@style/layout"
+            android:layout_below="@id/lltCtrl" />
+    </RelativeLayout>
+    <!-- 列表 -->
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/item_member_info" />
+
+</LinearLayout>

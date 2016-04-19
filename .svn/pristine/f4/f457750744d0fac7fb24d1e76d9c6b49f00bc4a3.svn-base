@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.xinwei.kanfangshenqi"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:id="@+id/rltSubTitle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:background="@drawable/kfq_nav_bg" >
+
+        <RelativeLayout
+            android:id="@+id/rltLeft"
+            style="@style/match"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/txtTitle" >
+
+            <ImageButton
+                android:id="@+id/imgLeft"
+                style="@style/item"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/margin_normal"
+                android:background="@null"
+                android:src="@drawable/btn_back_white" />
+
+            <TextView
+                style="@style/item"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_small"
+                android:layout_toRightOf="@id/imgLeft"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/tab_bar_ic_faxian"
+                android:textColor="@color/white"
+                android:textSize="@dimen/txt_size_title" />
+        </RelativeLayout>
+
+        <TextView
+            style="@style/item"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/see_house_circle"
+            android:textColor="@color/white"
+            android:textSize="@dimen/txt_size_title" />
+
+        <Button
+            android:id="@+id/btnPublish"
+            style="@style/item"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:text="@string/txt_publish"
+            android:textColor="@color/white"
+            android:textSize="@dimen/txt_size_big" />
+    </RelativeLayout>
+	<View android:background="@drawable/kfq_tab_bar_bg"
+	    android:layout_height="205dp"
+        android:layout_below="@id/rltSubTitle"
+	    android:layout_width="match_parent"/>
+    <com.xinwei.kanfangshenqi.view.StickyLayout
+        style="@style/match"
+        android:id="@+id/stickyLayout"
+        android:layout_below="@id/rltSubTitle"
+        android:orientation="vertical" >
+		
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:id="@+id/sticky_header"
+                android:layout_width="match_parent"
+                android:layout_height="140dp" >
+
+                <com.xinwei.kanfangshenqi.view.CircleImageViewWithBorder
+                    android:id="@+id/imgHead"
+                    android:layout_width="@dimen/circle_img_head_size"
+                    android:layout_height="@dimen/circle_img_head_size"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    app:circle_border_color="@color/head_border"
+                    app:circle_border_width="@dimen/img_head_border" />
+
+                <LinearLayout
+                    android:id="@+id/lltNickname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imgHead"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/margin_normal" >
+
+                    <TextView
+                        android:id="@+id/txtNickname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxWidth="@dimen/max_nickname_width"
+                        android:singleLine="true"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/txt_size_big" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/sticky_content"
+                style="@style/match"
+                android:background="@color/transparent"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:id="@+id/lltNavigation"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/title_height"
+                        android:orientation="horizontal" >
+
+                        <LinearLayout
+                            android:id="@+id/lltAsk"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/txtAskNum"
+                                style="@style/item"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@android:color/white"
+                                android:textSize="15sp" />
+
+                            <com.xinwei.kanfangshenqi.view.CornerRadiusTextView
+                        		android:background="@color/white_tweenty_percent"
+                                android:layout_height="18dp"
+                                android:layout_width="50dp"
+                                android:layout_marginTop="@dimen/margin_small"
+                                android:gravity="center"
+                                android:text="@string/txt_ask"
+                                android:textColor="@android:color/white"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="@dimen/margin_small"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:background="#cbcbd0" />
+
+                        <LinearLayout
+                            android:id="@+id/lltInterest"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/txtInterestNum"
+                                style="@style/item"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@android:color/white"
+                                android:textSize="15sp" />
+
+                            <com.xinwei.kanfangshenqi.view.CornerRadiusTextView
+                        		android:background="@color/white_tweenty_percent"
+                                android:layout_height="18dp"
+                                android:layout_width="50dp"
+                                android:layout_marginTop="@dimen/margin_small"
+                                android:gravity="center"
+                                android:text="@string/txt_interest"
+                                android:textColor="@android:color/white"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="@dimen/margin_small"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:background="#cbcbd0" />
+
+                        <LinearLayout
+                            android:id="@+id/lltRemind"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/txtRemindNum"
+                                style="@style/item"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@android:color/white"
+                                android:textSize="15sp" />
+
+                            <com.xinwei.kanfangshenqi.view.CornerRadiusTextView
+                        		android:background="@color/white_tweenty_percent"
+                                android:layout_height="18dp"
+                                android:layout_width="50dp"
+                                android:gravity="center"
+                                android:layout_marginTop="@dimen/margin_small"
+                                android:text="@string/txt_remind"
+                                android:textColor="@android:color/white"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_marginTop="@dimen/margin_normal"
+                        android:id="@+id/imgArrow"
+                        android:layout_width="20dp"
+                        android:layout_height="10dp"
+                        android:background="@drawable/ic_arrow_up" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/frame"
+                    android:background="@color/white"
+                    style="@style/match" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.xinwei.kanfangshenqi.view.StickyLayout>
+
+</RelativeLayout>

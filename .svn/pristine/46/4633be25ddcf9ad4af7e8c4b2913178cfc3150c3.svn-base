@@ -1,0 +1,973 @@
+package com.xinwei.kanfangshenqi.fragment;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.xutils.common.util.DensityUtil;
+
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationClientOption.AMapLocationMode;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps2d.AMap;
+import com.amap.api.maps2d.AMap.OnCameraChangeListener;
+import com.amap.api.maps2d.AMap.OnMarkerClickListener;
+import com.amap.api.maps2d.CameraUpdateFactory;
+import com.amap.api.maps2d.LocationSource;
+import com.amap.api.maps2d.MapView;
+import com.amap.api.maps2d.model.BitmapDescriptor;
+import com.amap.api.maps2d.model.BitmapDescriptorFactory;
+import com.amap.api.maps2d.model.CameraPosition;
+import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.maps2d.model.Marker;
+import com.amap.api.maps2d.model.MarkerOptions;
+import com.amap.api.maps2d.model.MyLocationStyle;
+import com.amap.api.maps2d.model.VisibleRegion;
+import com.android.volley.Request;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.lidroid.xutils.view.annotation.ViewInject;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.xinwei.kanfangshenqi.BaseFragment2;
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.activity.BuildingDetailInfoActivity;
+import com.xinwei.kanfangshenqi.activity.ChangeAddressWordActivity;
+import com.xinwei.kanfangshenqi.activity.MainActivity;
+import com.xinwei.kanfangshenqi.app.XWApplication;
+import com.xinwei.kanfangshenqi.common.Const;
+import com.xinwei.kanfangshenqi.model.DataList;
+import com.xinwei.kanfangshenqi.model.RemovePlan;
+import com.xinwei.kanfangshenqi.model.UnPlan;
+import com.xinwei.kanfangshenqi.request.AddPlansRequest;
+import com.xinwei.kanfangshenqi.request.CityOfHousesRequest;
+import com.xinwei.kanfangshenqi.request.HttpRequest;
+import com.xinwei.kanfangshenqi.request.HttpRequest.RequestListener;
+import com.xinwei.kanfangshenqi.response.CityOfHousesResponse;
+import com.xinwei.kanfangshenqi.response.HttpResponse;
+import com.xinwei.kanfangshenqi.response.NameOfHousesResponse;
+import com.xinwei.kanfangshenqi.util.PreferenceUtils;
+import com.xinwei.kanfangshenqi.util.StringUtils;
+import com.xinwei.kanfangshenqi.util.TextViewWriterUtil;
+import com.xinwei.kanfangshenqi.util.ToastUtil;
+import com.xinwei.kanfangshenqi.util.Utils;
+import com.xinwei.kanfangshenqi.util.ValidatorUtil;
+import com.xinwei.kanfangshenqi.util.WebUtils;
+import com.xinwei.kanfangshenqi.view.CircleImageViewWithBorder;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.PopupWindow.OnDismissListener;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class MapFragmentLayout extends BaseFragment2 implements LocationSource, OnCameraChangeListener,
+		OnMarkerClickListener, AMapLocationListener, ErrorListener, OnClickListener {
+	private View mParent;
+
+	private Activity mActivity;
+	@ViewInject(R.id.map)
+	private MapView mapView;
+	@ViewInject(R.id.company)
+	private ImageView iv_company;
+	@ViewInject(R.id.home)
+	private ImageView iv_home;
+
+	@ViewInject(R.id.plus)
+	private ImageView iv_plus;
+	@ViewInject(R.id.subtract)
+	private ImageView iv_subtract;
+	@ViewInject(R.id.location)
+	private ImageView iv_location;
+
+	private CityOfHousesRequest cityOfHousesRequest;
+	private Request requestLouPanXin;
+	private LayoutInflater mLayoutInflater;
+	private Bundle savedInstanceState;
+	private PreferenceUtils preferenceUtils;
+	private PopupWindow popupwindow = null;
+	private View contentView;
+	private LinearLayout jihua;
+	private ImageView image_jihua;
+	private TextView text_jihua;
+	private Bundle data = new Bundle();
+
+	private AMap aMap;
+	private OnLocationChangedListener mListener;
+	private AMapLocationClient mlocationClient;
+	private AMapLocationClientOption mLocationOption;
+	private MarkerOptions markerOptions = new MarkerOptions();
+	private Marker myMarker;
+
+	private Double geoLat;
+	private Double geoLng;
+
+	private double longitude = 0.0;
+	private double latitude = 0.0;
+
+	private boolean isLocation = false;
+	private BitmapDescriptor markerIcons = null;
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		mParent = getView();
+		mActivity = getActivity();
+		preferenceUtils = PreferenceUtils.getInstance(activity);
+		// getLouPanXin(Const.URL_NAME_OF_HOUSES, ZhaoFangFragment.map, false);
+		// getLouPan();
+		// getLouPanArea();
+		// ((ZhaoFangFragment) getParentFragment()).getLouPanQingDan();
+		// initPopuWindowFirstRedPacket(mParent);
+	}
+
+	public void getLouPanArea() {
+		if (cityOfHousesRequest != null)
+			cityOfHousesRequest.cancel();
+		if (requestLouPanXin != null)
+			requestLouPanXin.cancel();
+		cityOfHousesRequest = new CityOfHousesRequest(new Listener<CityOfHousesResponse>() {
+
+			@Override
+			public void onResponse(final CityOfHousesResponse response) {
+				if (!(response != null && "1".equals(response.getStatus()))) {//
+					judgeShowAreaOrDetail();
+					return;
+				}
+				try {
+					((MainActivity)getActivity()).findHouseFragment.InitMenu(response);
+				} catch (Exception e) {
+				}
+				// 设置区域选择
+				// mMenu.setSelectedMenuItem(1,0);
+				markerInit();
+				for (int i = 0; i < response.getBuildingAreaList().size(); i++) {
+					addDistrictMarker(response.getBuildingAreaList().get(i).getAreaName(),
+							response.getBuildingAreaList().get(i).getBuildingCount(),
+							Double.parseDouble(response.getBuildingAreaList().get(i).getLatitude()),
+							Double.parseDouble(response.getBuildingAreaList().get(i).getLongitude()));
+				}
+				judgeShowAreaOrDetail();
+			}
+
+		}, this);
+		WebUtils.doPost(cityOfHousesRequest);
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		EventBus.getDefault().register(this);
+		this.savedInstanceState = savedInstanceState;
+		addChildView(R.layout.fragment_map);
+		mapView = (MapView) parentView.findViewById(R.id.map);
+		initMap();
+	}
+
+	@Subscribe
+	public void onPlanAddEvent(UnPlan unPlan) {
+		if (unPlan.getBuildingId() != null && ZhaoFangFragment.loupanList != null) {
+			for (DataList dataList : ZhaoFangFragment.loupanList) {
+				if (dataList.getBuildingId().equals(unPlan.getBuildingId())) {
+					dataList.setIsPlan(Const.YES);
+					break;
+				}
+			}
+		}
+		if (jihua != null) {
+			jihua.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+				}
+			});
+			image_jihua.setVisibility(View.GONE);
+			text_jihua.setText("已加入计划");
+			text_jihua.setTextColor(getResources().getColor(R.color.txt_color_disable));
+		}
+	}
+
+	@Subscribe
+	public void onPlanRemoveEvent(RemovePlan removePlan) {
+		if (removePlan.getBuildingId() != null && ZhaoFangFragment.loupanList != null) {
+			for (DataList dataList : ZhaoFangFragment.loupanList) {
+				if (dataList.getBuildingId().equals(removePlan.getBuildingId())) {
+					dataList.setIsPlan(Const.NO);
+					break;
+				}
+			}
+		}
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
+		mLayoutInflater = inflater;
+		return parentView;
+	}
+
+	@Override
+	public void onChildViewLoaded() {
+		iv_home.setOnClickListener(this);
+		iv_company.setOnClickListener(this);
+		iv_plus.setOnClickListener(this);
+		iv_subtract.setOnClickListener(this);
+		iv_location.setOnClickListener(this);
+		getLouPanArea();
+	}
+
+	private void initMap() {
+		mapView.onCreate(savedInstanceState);
+		if (aMap == null) {
+			aMap = mapView.getMap();
+			aMap.setLocationSource(this);// 设置定位监听
+			aMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
+			aMap.getUiSettings().setZoomControlsEnabled(false);
+			aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+			aMap.setOnMarkerClickListener(this);// 设置标记监听
+			aMap.setOnCameraChangeListener(this);
+			// 自定义系统定位蓝点
+			MyLocationStyle myLocationStyle = new MyLocationStyle();
+			// 自定义定位蓝点图标
+			myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker));
+			myLocationStyle.strokeColor(Color.argb(0, 0, 0, 0));// 设置圆形的边框颜色
+			myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));// 设置圆形的填充颜色
+			// 将自定义的 myLocationStyle 对象添加到地图上
+			aMap.setMyLocationStyle(myLocationStyle);
+			// 构造 LocationManagerProxy 对象
+			LatLng marker1 = new LatLng(41.781611, 123.401201);
+			// // 设置中心点和缩放比例
+			aMap.moveCamera(CameraUpdateFactory.zoomTo(10));
+			aMap.moveCamera(CameraUpdateFactory.changeLatLng(marker1));
+			// 的控制权,可以用它控制和驱动平移和缩放
+		}
+	}
+
+	@Override
+	public void onReloadData() {
+	}
+
+	@Override
+	public boolean onBackPressed() {
+		return false;
+	}
+
+	@Override
+	public String getRequestTag() {
+		return MapFragmentLayout.class.getSimpleName();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (mapView != null)
+			mapView.onResume();
+	}
+
+	/**
+	 * 方法必须重写 map的生命周期方法
+	 */
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (mapView != null)
+			mapView.onPause();
+		deactivate();
+	}
+
+	/**
+	 * 方法必须重写 map的生命周期方法
+	 */
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if (mapView != null)
+			mapView.onSaveInstanceState(outState);
+	}
+
+	/**
+	 * 方法必须重写 map的生命周期方法
+	 */
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		try {
+			EventBus.getDefault().unregister(this);
+		} catch (Exception e) {
+		}
+		if (mapView != null)
+			mapView.onDestroy();
+	}
+
+	// 激活定位
+	@Override
+	public void activate(OnLocationChangedListener listener) {
+		mListener = listener;
+		if (mlocationClient == null) {
+			mlocationClient = new AMapLocationClient(getActivity());
+			mLocationOption = new AMapLocationClientOption();
+			// 设置定位监听
+			mlocationClient.setLocationListener(this);
+			mLocationOption.setOnceLocation(true);
+			// 设置为高精度定位模式
+			mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
+			// 设置定位参数
+			mlocationClient.setLocationOption(mLocationOption);
+			// 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
+			// 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
+			// 在定位结束后，在合适的生命周期调用onDestroy()方法
+			// 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
+			mlocationClient.startLocation();
+		}
+	}
+
+	// 停止定位
+	@Override
+	public void deactivate() {
+		mListener = null;
+		if (mlocationClient != null) {
+			mlocationClient.stopLocation();
+			mlocationClient.onDestroy();
+		}
+		mlocationClient = null;
+	}
+
+	@Override
+	public void onCameraChange(CameraPosition arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@SuppressLint("NewApi")
+	@Override
+	public void onCameraChangeFinish(CameraPosition arg0) {
+		// TODO Auto-generated method stub
+		if (aMap != null && aMap.getCameraPosition() != null) {
+			VisibleRegion visibleRegion = aMap.getProjection().getVisibleRegion();
+			float mZoom = aMap.getCameraPosition().zoom;
+			if (mZoom >= 12) {
+				if (ZhaoFangFragment.map == null)
+					ZhaoFangFragment.map = new HashMap<String, String>();
+				Map<String, String> DiTuMap = new HashMap<String, String>();
+				DiTuMap.putAll(ZhaoFangFragment.map);
+				LatLng latLngSouthwest = visibleRegion.latLngBounds.southwest;
+				LatLng latLngNortheast = visibleRegion.latLngBounds.northeast;
+				DiTuMap.put(Const.PARAM_LONGITUDE, arg0.target.longitude + "");
+				DiTuMap.put(Const.PARAM_LATITUDE, arg0.target.latitude + "");
+				DiTuMap.put(Const.PARAM_LONGITUDESPAN,
+						Math.abs(latLngSouthwest.longitude - latLngNortheast.longitude) + "");
+				DiTuMap.put(Const.PARAM_LATITUDESPAN,
+						Math.abs(latLngSouthwest.latitude - latLngNortheast.latitude) + "");
+				if (ZhaoFangFragment.isSelect) {
+					getLouPanXin(Const.URL_NAME_OF_HOUSES, DiTuMap, true);
+				} else {
+					DiTuMap.remove("areaId");
+					getLouPanXin(Const.URL_NAME_OF_HOUSES, DiTuMap, false);
+				}
+				ZhaoFangFragment.isSelect = false;
+			} else {
+				ZhaoFangFragment.isSelect = false;
+				// ((ZhaoFangFragment) getParentFragment()).getLouPanArea();
+//				 EventBus.getDefault().post(new EmptyContent());
+				getLouPanArea();
+			}
+			// }
+			judgeShowAreaOrDetail();
+		}
+	}
+
+	public void judgeShowAreaOrDetail() {
+		try {
+			if (aMap != null && aMap.getCameraPosition() != null) {
+				float mZoom = aMap.getCameraPosition().zoom;
+				if (mZoom >= 12) {
+					// 0.356532
+					// 0.323639
+
+					List<Marker> marker = aMap.getMapScreenMarkers();
+					for (Marker marker1 : marker) {
+						// if(marker1.getTitle()!=null){
+						// if (("qu").equals(marker1.getTitle())) {
+						if (marker1.getObject() != null) {
+							if (("qu").equals(marker1.getObject().toString())) {
+								marker1.setVisible(false);
+							} else if (marker1.getObject().toString().contains("loupan")) {
+								marker1.setVisible(true);
+							}
+						}
+					}
+				} else if (mZoom < 12) {
+
+					List<Marker> marker = aMap.getMapScreenMarkers();
+					for (Marker marker2 : marker) {
+						// if(marker1.getTitle()!=null){
+						// if (("qu").equals(marker1.getTitle())) {
+						if (marker2.getObject() != null) {
+							if (("qu").equals(marker2.getObject().toString())) {
+								marker2.setVisible(true);
+							} else if (marker2.getObject().toString().contains("loupan")) {
+								marker2.setVisible(false);
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+		}
+	}
+
+	public float getMapZoom() {
+		float mZoom = aMap.getCameraPosition().zoom;
+		return mZoom;
+
+	}
+
+	@Override
+	public boolean onMarkerClick(Marker marker) {
+		// 设置中心点和缩放比例
+		// 获取当前地图的缩放级别
+
+		// if (marker.getTitle().contains("qu")) {
+		if (marker.getObject().toString().contains("qu")) {
+			float mZoom = aMap.getCameraPosition().zoom;
+			aMap.moveCamera(CameraUpdateFactory.changeLatLng(marker.getPosition()));
+			aMap.moveCamera(CameraUpdateFactory.zoomTo(12));
+		}
+		// if (marker.getTitle().contains("loupan")) {
+		if (marker.getObject().toString().contains("loupan")) {
+			for (int i = 0; i < ZhaoFangFragment.loupanList.size(); i++) {
+				// if(marker.getTitle()!=null)
+				// if
+				// (marker.getTitle().contains(loupanList.get(i).getBuildingName()))
+				// {
+				if (marker.getObject().toString().contains(ZhaoFangFragment.loupanList.get(i).getBuildingName())) {
+					if (popupwindow != null) {
+						popupwindow.dismiss();
+					}
+					chageHeightPlus();
+					initPopuWindow(mParent, ZhaoFangFragment.loupanList.get(i));
+					MainActivity.INSTANCE.isShowBottomNavigation(false);
+					if ("0".equals(preferenceUtils.getIsFirstZhaoFangLouPanIsData())) {
+						initPopuWindowzhidaoLouPan();
+						preferenceUtils.setIsFirstZhaoFangLouPanIsData("1");
+					}
+					break;
+				}
+			}
+		}
+		return false;
+	}
+
+	private int marginBottomDp = 205;
+
+	private void chageHeightPlus() {
+		LayoutParams lp_iv_company = iv_company.getLayoutParams();
+		lp_iv_company.height = lp_iv_company.height + Utils.dip2px(mActivity, marginBottomDp);
+		LayoutParams lp_iv_home = iv_home.getLayoutParams();
+		lp_iv_home.height = lp_iv_home.height + Utils.dip2px(mActivity, marginBottomDp);
+		LayoutParams lp_iv_plus = iv_plus.getLayoutParams();
+		lp_iv_plus.height = lp_iv_plus.height + Utils.dip2px(mActivity, marginBottomDp);
+		LayoutParams lp_iv_subtract = iv_subtract.getLayoutParams();
+		lp_iv_subtract.height = lp_iv_subtract.height + Utils.dip2px(mActivity, marginBottomDp);
+		LayoutParams lp_iv_location = iv_location.getLayoutParams();
+		lp_iv_location.height = lp_iv_location.height + Utils.dip2px(mActivity, marginBottomDp);
+
+	}
+
+	private void chageHeightSubtract() {
+		LayoutParams lp_iv_company = iv_company.getLayoutParams();
+		lp_iv_company.height = lp_iv_company.height - Utils.dip2px(mActivity, marginBottomDp);
+		LayoutParams lp_iv_home = iv_home.getLayoutParams();
+		lp_iv_home.height = lp_iv_home.height - Utils.dip2px(mActivity, marginBottomDp);
+		LayoutParams lp_iv_plus = iv_plus.getLayoutParams();
+		lp_iv_plus.height = lp_iv_plus.height - Utils.dip2px(mActivity, marginBottomDp);
+		LayoutParams lp_iv_subtract = iv_subtract.getLayoutParams();
+		lp_iv_subtract.height = lp_iv_subtract.height - Utils.dip2px(mActivity, marginBottomDp);
+		LayoutParams lp_iv_location = iv_location.getLayoutParams();
+		lp_iv_location.height = lp_iv_location.height - Utils.dip2px(mActivity, marginBottomDp);
+
+	}
+
+	private PopupWindow popuWindowZhiDaoLouPan = null;
+	private View contentViewZhiDaoLouPan;
+
+	// 第一次显示底部楼盘
+	public void initPopuWindowzhidaoLouPan() {
+		if (popuWindowZhiDaoLouPan == null) {
+			contentViewZhiDaoLouPan = mLayoutInflater.inflate(R.layout.popuwindow_course_setzhaofang_loupan, null);
+			popuWindowZhiDaoLouPan = new PopupWindow(getActivity());
+			popuWindowZhiDaoLouPan.setContentView(contentViewZhiDaoLouPan);
+			popuWindowZhiDaoLouPan.setWidth(Utils.getDeviceWidth(getActivity()));
+			popuWindowZhiDaoLouPan.setHeight(Utils.getDeviceHeight(getActivity()));
+			ImageView close = (ImageView) contentViewZhiDaoLouPan.findViewById(R.id.close);
+			close.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					popuWindowZhiDaoLouPan.dismiss();
+				}
+			});
+		}
+		ColorDrawable cd = new ColorDrawable(0x000000);
+		popuWindowZhiDaoLouPan.setBackgroundDrawable(cd);
+		// 产生背景变暗效果
+		popuWindowZhiDaoLouPan.setOutsideTouchable(true);
+		popuWindowZhiDaoLouPan.setFocusable(true);
+		popuWindowZhiDaoLouPan.showAtLocation(parentView, Gravity.NO_GRAVITY, 0, 0);
+	}
+
+	@Override
+	public void onLocationChanged(AMapLocation aMapLocation) {
+		if (aMapLocation != null) {
+			if (aMapLocation.getErrorCode() == 0) {
+				// List<Marker> markers = aMap.getMapScreenMarkers();
+				// for (Marker marker2 : markers) {
+				// // if(marker1.getTitle()!=null){
+				// // if (("qu").equals(marker1.getTitle())) {
+				// if (marker2.getObject() != null) {
+				// if (("location").equals(marker2.getObject().toString())) {
+				// marker2.destroy();
+				// }
+				// }
+				// }
+				addZiDingYiLocationMarker(aMapLocation.getLatitude(), aMapLocation.getLongitude());
+				// mListener.onLocationChanged(aMapLocation);// 显示系统小蓝点
+				// mMapController.setCenter(point); //设置地图中心点
+				// mMapController.animateTo(point);
+				// super.onLocationChanged(location);
+				// 获取位置信息
+				geoLat = aMapLocation.getLatitude();
+				geoLng = aMapLocation.getLongitude();
+				if (isLocation) {
+					LatLng marker = new LatLng(geoLat, geoLng);
+					aMap.moveCamera(CameraUpdateFactory.changeLatLng(marker));
+					aMap.moveCamera(CameraUpdateFactory.zoomTo(14));
+					isLocation = false;
+				}
+
+			} else {
+				String errText = "定位失败," + aMapLocation.getErrorCode() + ": " + aMapLocation.getErrorInfo();
+				Log.e("AmapErr", errText);
+			}
+			deactivate();
+		}
+	}
+
+	public void MoveMap(String url, Map<String, String> paramsContent) {
+		if (cityOfHousesRequest != null)
+			cityOfHousesRequest.cancel();
+		if (requestLouPanXin != null)
+			requestLouPanXin.cancel();
+		requestLouPanXin = HttpRequest.get(activity, url, getRequestTag(), paramsContent, Utils.getHeaderParamsOnly(),
+				new RequestListener() {
+					@Override
+					public void onSuccess(String url, String responseResult) {
+						NameOfHousesResponse mNameOfHousesResponse = new Gson().fromJson(responseResult,
+								NameOfHousesResponse.class);
+						if (mNameOfHousesResponse.getAreaLongitude() != null
+								&& mNameOfHousesResponse.getAreaLatitude() != null) {
+							longitude = Float.parseFloat(mNameOfHousesResponse.getAreaLongitude().trim());
+							latitude = Float.parseFloat(mNameOfHousesResponse.getAreaLatitude().trim());
+							LatLng marker1 = new LatLng(latitude, longitude);
+							aMap.moveCamera(CameraUpdateFactory.changeLatLng(marker1));
+							aMap.moveCamera(CameraUpdateFactory.zoomTo(14));
+						}
+					}
+
+					@Override
+					public void onFailure(String url, String errorInfo) {
+					}
+
+					@Override
+					public void onError(String url, String responseResult) {
+					}
+				});
+	}
+
+	public void SettingLatLng(LatLng marker) {
+		aMap.moveCamera(CameraUpdateFactory.changeLatLng(marker));
+		aMap.moveCamera(CameraUpdateFactory.zoomTo(14));
+	}
+
+	public void getLouPanXin(String url, Map<String, String> paramsContent, final boolean isMove) {
+		Map<String, String> DiTuMap = new HashMap<String, String>();
+		DiTuMap.putAll(paramsContent);
+		if (cityOfHousesRequest != null)
+			cityOfHousesRequest.cancel();
+		if (requestLouPanXin != null)
+			requestLouPanXin.cancel();
+		requestLouPanXin = HttpRequest.get(activity, url, getRequestTag(), DiTuMap, Utils.getHeaderParamsOnly(),
+				new RequestListener() {
+					@Override
+					public void onSuccess(String url, String responseResult) {
+						NameOfHousesResponse mNameOfHousesResponse = new Gson().fromJson(responseResult,
+								NameOfHousesResponse.class);
+						ZhaoFangFragment.loupanList = mNameOfHousesResponse.getDataList();
+						if (aMap.getMapScreenMarkers() != null && aMap.getMapScreenMarkers().size() > 0) {
+							List<Marker> marker = aMap.getMapScreenMarkers();
+							for (Marker marker1 : marker) {
+								if (marker1.getObject() != null)
+									if (marker1.getObject().toString().contains("loupan")) {
+										marker1.remove();
+										marker1.destroy();
+									}
+								aMap.invalidate();
+							}
+						}
+						if (ZhaoFangFragment.loupanList != null && ZhaoFangFragment.loupanList.size() > 0) {
+							try {
+								for (int i = 0; i < ZhaoFangFragment.loupanList.size(); i++) {
+									if (null != ZhaoFangFragment.loupanList.get(i).getBuildingName()
+											&& null != ZhaoFangFragment.loupanList.get(i).getLatitude()
+											&& null != ZhaoFangFragment.loupanList.get(i).getLongitude()) {
+										try {
+											addZiDingYiMarkersToMapV(
+													ZhaoFangFragment.loupanList.get(i).getBuildingName(),
+													Double.parseDouble(
+															ZhaoFangFragment.loupanList.get(i).getLatitude()),
+													Double.parseDouble(
+															ZhaoFangFragment.loupanList.get(i).getLongitude()),
+													ZhaoFangFragment.loupanList.get(i).getHasEnvelope());
+										} catch (Exception e) {
+										}
+									}
+								}
+
+								// if (ZhaoFangFragment.loupanList.size() > 0)
+								// ToastUtil.show(activity, "搜索到" +
+								// ZhaoFangFragment.loupanList.size() +
+								// "个楼盘信息!");
+								// else
+								// ToastUtil.show(activity, "没有搜索到楼盘信息!");
+
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+						if (!isMove) {
+							ZhaoFangFragment.isDiTu = true;
+							ZhaoFangFragment.changeQuYU(Integer.parseInt(mNameOfHousesResponse.getAreaId()));
+						}
+						closeBar();
+						judgeShowAreaOrDetail();
+					}
+
+					@Override
+					public void onFailure(String url, String errorInfo) {
+						closeBar();
+						judgeShowAreaOrDetail();
+					}
+
+					@Override
+					public void onError(String url, String responseResult) {
+						closeBar();
+						judgeShowAreaOrDetail();
+					}
+				});
+	}
+
+	// 添加自定义定位图标
+	public void addZiDingYiLocationMarker(double latitude, double longtitude) {
+		if (markerIcons == null) {
+			markerIcons = BitmapDescriptorFactory.fromResource(R.drawable.location_marker);
+			markerOptions.position(new LatLng(latitude, longtitude)).icon(markerIcons)
+					// .title("loupan"+name)
+					.draggable(true);
+			// 添加到地图上
+			myMarker = aMap.addMarker(markerOptions);
+			myMarker.setObject("location");
+		}
+	}
+
+	// 楼盘名称标记
+	public void addZiDingYiMarkersToMapV(String name, double latitude, double longtitude, String isShowRedBag) {
+		// 位置信息
+		// 显示的内容
+		try {
+			View view = mLayoutInflater.inflate(R.layout.loupan_name_show, null);
+			TextView districtName = (TextView) view.findViewById(R.id.loupan_name);
+			ImageView iv = (ImageView) view.findViewById(R.id.loupan_num);
+			if (Boolean.parseBoolean(isShowRedBag)) {
+				iv.setVisibility(View.VISIBLE);
+			}
+			districtName.setText(name);
+			BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromView(view);
+			// 通过View获取BitmapDescriptor对象
+			markerOptions.position(new LatLng(latitude, longtitude)).icon(markerIcon)
+					// .title("loupan"+name)
+					.draggable(true);
+			// 添加到地图上
+			myMarker = aMap.addMarker(markerOptions);
+			myMarker.setObject("loupan" + name);
+			float mZoom = aMap.getCameraPosition().zoom;
+			if (mZoom < 12) {
+				myMarker.setVisible(false);
+			}
+		} catch (Exception e) {
+		}
+	}
+
+	public void addPlans(final DataList dataList) {
+		showBar();
+		AddPlansRequest request = new AddPlansRequest(new Listener<HttpResponse>() {
+			@Override
+			public void onResponse(HttpResponse arg0) {
+				closeBar();
+				if (arg0 != null && arg0.getStatus().equals("1")) {
+					PreferenceUtils.getInstance().addUnappointplancount();
+					UnPlan unPlan = new UnPlan();
+					unPlan.setBuildingId(dataList.getBuildingId());
+					EventBus.getDefault().post(unPlan);
+					Utils.makeToastAndShow(getActivity(), "添加计划成功", Toast.LENGTH_SHORT);
+					JiHuaFragment.isNullData = false;
+				} else {
+					if (ValidatorUtil.isValidString(arg0.getMsg())) {
+						ToastUtil.show(activity, arg0.getMsg());
+						if (arg0.getMsg().contains("已经加入")) {
+							UnPlan unPlan = new UnPlan();
+							unPlan.setBuildingId(dataList.getBuildingId());
+							EventBus.getDefault().post(unPlan);
+						}
+					}
+				}
+			}
+		}, this);
+		request.setBuildingId(dataList.getBuildingId());
+		request.setToken(PreferenceUtils.getInstance(getActivity()).getSettingUserToken());
+		request.setAppagent(PreferenceUtils.getInstance(getActivity()).getSettingUserAppAgent());
+		request.setOsver(PreferenceUtils.getInstance(getActivity()).getSettingUserOSVer());
+		request.setTransid(PreferenceUtils.getInstance(getActivity()).getSettingUserTransId());
+		WebUtils.doPost(request);
+	}
+
+	// 楼盘详情信息显示
+	private void initPopuWindow(View parent, final DataList dataList) {
+		final String loupanName = dataList.getBuildingName();
+		final String loupanJiaqian = dataList.getAveragePrice();
+		final String UserPic = dataList.getSmallBanner();
+		final String phone = dataList.getPhone();
+		final String buildingId = dataList.getBuildingId();
+		final String lat = dataList.getLatitude();
+		final String lon = dataList.getLongitude();
+		final String loupanDizhi = dataList.getPosition();
+		final boolean isPlan = Const.YES.equals(dataList.getIsPlan());
+		contentView = mLayoutInflater.inflate(R.layout.popview_loupan_item, null);
+		LinearLayout xunwen = (LinearLayout) contentView.findViewById(R.id.xunwen);
+		xunwen.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (ValidatorUtil.isValidString(phone)) {
+					Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
+					// Intent intent=new
+					// Intent(Intent.ACTION_CALL,Uri.parse("tel:"+phone));
+					activity.startActivity(intent);
+				} else
+					ToastUtil.show(getString(R.string.hint_no_phone_building));
+			}
+		});
+		LinearLayout daohang = (LinearLayout) contentView.findViewById(R.id.daohang);
+		daohang.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				String uri = "http://m.amap.com/?from=" + geoLat + "," + geoLng + "(from)&to=" + lat + "," + lon
+						+ "(to)";
+				Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+				activity.startActivity(it);
+			}
+		});
+		jihua = (LinearLayout) contentView.findViewById(R.id.jihua);
+		image_jihua = (ImageView) contentView.findViewById(R.id.image_jihua);
+		text_jihua = (TextView) contentView.findViewById(R.id.text_jihua);
+		if (!isPlan) {
+			// jihua.setEnabled(true);
+			jihua.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					if (!isLogin()) {
+						getAlert().showLogin();
+					} else {
+						addPlans(dataList);
+					}
+				}
+			});
+		} else {
+			jihua.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+				}
+			});
+			image_jihua.setVisibility(View.GONE);
+			text_jihua.setText("已加入计划");
+			text_jihua.setTextColor(getResources().getColor(R.color.txt_color_disable));
+		}
+
+		RelativeLayout up_layout = (RelativeLayout) contentView.findViewById(R.id.up_layout);
+		up_layout.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				data.putSerializable(DataList.class.getSimpleName(), dataList);
+				Utils.moveTo(activity, BuildingDetailInfoActivity.class, false, data);
+			}
+		});
+		CircleImageViewWithBorder loupan_icon = (CircleImageViewWithBorder) contentView.findViewById(R.id.loupan_icon);
+		ImageLoader.getInstance().displayImage(UserPic, loupan_icon);
+		TextView loupan_name = (TextView) contentView.findViewById(R.id.loupan_name);
+		TextViewWriterUtil.writeValue(loupan_name, loupanName);
+		TextView loupan_jiaqian = (TextView) contentView.findViewById(R.id.loupan_jiaqian);
+		if (ValidatorUtil.isValidString(loupanJiaqian))
+			loupan_jiaqian.setText(loupanJiaqian + "元/平");
+		TextView loupan_dizhi = (TextView) contentView.findViewById(R.id.loupan_dizhi);
+		TextViewWriterUtil.writeValue(loupan_dizhi, loupanDizhi);
+		popupwindow = new PopupWindow(contentView, ViewGroup.LayoutParams.MATCH_PARENT,
+				ViewGroup.LayoutParams.WRAP_CONTENT);
+		// }
+
+		ColorDrawable cd = new ColorDrawable(0x000000);
+		popupwindow.setBackgroundDrawable(cd);
+
+		popupwindow.setOutsideTouchable(false);
+		popupwindow.setFocusable(true);
+		popupwindow.showAtLocation((View) parent.getParent(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0,
+				DensityUtil.dip2px(7));
+
+		// popupwindow.update();
+		popupwindow.setOnDismissListener(new OnDismissListener() {
+
+			// 在dismiss中恢复透明度
+			public void onDismiss() {
+				WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
+				lp.alpha = 1f;
+				getActivity().getWindow().setAttributes(lp);
+				MainActivity.INSTANCE.isShowBottomNavigation(true);
+				chageHeightSubtract();
+			}
+		});
+	}
+
+	public boolean isLogin() {
+		PreferenceUtils preferenceUtils = PreferenceUtils.getInstance(activity);
+		String token = preferenceUtils.getSettingUserToken();
+		if (token == null || StringUtils.isEmpty(token)) {
+			return false;
+		}
+		return true;
+	}
+
+	// 添加区标记
+	public void addDistrictMarker(String name, String num, double latitude, double longtitude) {
+		View view = LayoutInflater.from(XWApplication.getInstance()).inflate(R.layout.district_name_shsow, null);
+		TextView districtName = (TextView) view.findViewById(R.id.district_name);
+		TextView districtNum = (TextView) view.findViewById(R.id.district_num);
+		districtName.setText(name);
+		districtNum.setText(num);
+		BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromView(view);
+		markerOptions.position(new LatLng(latitude, longtitude)).icon(markerIcon)
+				// .title("qu")
+				.draggable(true);
+		// 添加到地图上
+		myMarker = aMap.addMarker(markerOptions);
+		myMarker.setObject("qu");
+
+	}
+
+	public void markerInit() {
+		try {
+			if (aMap.getMapScreenMarkers() != null && aMap.getMapScreenMarkers().size() > 0) {
+				List<Marker> marker = aMap.getMapScreenMarkers();
+				for (Marker marker1 : marker) {
+					// if(marker1.getTitle()!=null)
+					// if(marker1.getTitle().contains("loupan")) {
+					// marker1.destroy();
+					// }
+					if (marker1.getObject() != null)
+						if (("qu").equals(marker1.getObject().toString())) {
+							marker1.remove();
+							marker1.destroy();
+						}
+					aMap.invalidate();
+				}
+			}
+		} catch (Exception e) {
+		}
+	}
+
+	@Override
+	public void onErrorResponse(VolleyError arg0) {
+		closeBar();
+	}
+
+	// @Override
+	public void onHiddenChanged(boolean hidden) {
+		aMap.invalidate();
+		getLouPanXin(Const.URL_NAME_OF_HOUSES, ZhaoFangFragment.map, false);
+	}
+
+	@Override
+	public void onClick(View view) {
+		switch (view.getId()) {
+
+		case R.id.plus:
+			float mZoom = aMap.getCameraPosition().zoom;
+			aMap.moveCamera(CameraUpdateFactory.zoomTo(mZoom + 1));
+			break;
+		case R.id.subtract:
+			float mZooms = aMap.getCameraPosition().zoom;
+			aMap.moveCamera(CameraUpdateFactory.zoomTo(mZooms - 1));
+			break;
+		case R.id.location:
+			isLocation = true;
+			activate(mListener);
+			break;
+		case R.id.company:
+			String companylat = PreferenceUtils.getInstance(getActivity()).getSettingUserCompanyLatitude();
+			String companylon = PreferenceUtils.getInstance(getActivity()).getSettingUserCompanyLongitude();
+			if (!StringUtils.isEmpty(companylat) && !StringUtils.isEmpty(companylon)) {
+				LatLng marker1 = new LatLng(Double.parseDouble(companylat), Double.parseDouble(companylon));
+				// 设置中心点和缩放比例
+				aMap.moveCamera(CameraUpdateFactory.changeLatLng(marker1));
+				aMap.moveCamera(CameraUpdateFactory.zoomTo(13));
+			} else {
+				Utils.moveTo(activity, ChangeAddressWordActivity.class);
+			}
+			break;
+		case R.id.home:
+			String homelat = PreferenceUtils.getInstance(getActivity()).getSettingUserHomeLatitude();
+			String homelon = PreferenceUtils.getInstance(getActivity()).getSettingUserHomeLongitude();
+			if (!StringUtils.isEmpty(homelat) && !StringUtils.isEmpty(homelon)) {
+				LatLng marker1 = new LatLng(Double.parseDouble(homelat), Double.parseDouble(homelon));
+				// 设置中心点和缩放比例
+				aMap.moveCamera(CameraUpdateFactory.changeLatLng(marker1));
+				aMap.moveCamera(CameraUpdateFactory.zoomTo(13));
+			} else {
+				Utils.moveTo(activity, ChangeAddressWordActivity.class);
+			}
+			break;
+		}
+	}
+
+}

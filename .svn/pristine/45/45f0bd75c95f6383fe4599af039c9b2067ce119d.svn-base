@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        style="@style/match"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            style="@style/match"
+            android:orientation="vertical" >
+
+            <ImageView
+                style="@style/cut_line"
+                android:layout_marginTop="@dimen/margin_normal" />
+
+            <!-- <RelativeLayout
+                android:id="@+id/lltMsgNotify"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/title_height"
+                android:background="@drawable/bg_ctrl_item"
+                android:clickable="false"
+                android:orientation="horizontal"
+                android:padding="@dimen/margin_normal" >
+
+                <TextView
+                    style="@style/txt_ctrl_item"
+                    android:layout_centerVertical="true"
+                    android:text="@string/txt_msg_notify" />
+
+                <com.xinwei.kanfangshenqi.view.SwitchButton
+                    android:id="@+id/switchBtn"
+                    android:layout_width="@dimen/switch_btn_width"
+                    android:layout_height="@dimen/switch_btn_height"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    app:offDrawable="@drawable/no_choose_the_stroke"
+                    app:onDrawable="@drawable/choose_the_stroke"
+                    app:thumbColorFilterOff="@color/thumb_color_off"
+                    app:thumbColorFilterOn="@color/thumb_color_on"
+                    app:thumbDrawable="@drawable/switch_thumb_notify"
+                    app:thumb_height="@dimen/thumb_size"
+                    app:thumb_margin="@dimen/switch_padding"
+                    app:thumb_width="@dimen/thumb_size" />
+            </RelativeLayout>
+
+            <ImageView
+                style="@style/cut_line"
+                android:layout_marginBottom="@dimen/margin_normal" /> -->
+
+            <!-- <ImageView style="@style/cut_line" /> -->
+
+            <RelativeLayout
+                android:id="@+id/rltClearCache"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/title_height"
+                android:background="@drawable/bg_ctrl_item"
+                android:clickable="true"
+                android:orientation="horizontal"
+                android:padding="@dimen/margin_normal" >
+
+                <TextView
+                    style="@style/txt_ctrl_item"
+                    android:layout_centerVertical="true"
+                    android:text="@string/txt_clear_cache" />
+
+                <TextView
+                    android:id="@+id/txtCache"
+                    style="@style/txt_ctrl_item"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/light_gray" />
+            </RelativeLayout>
+
+            <ImageView
+                style="@style/cut_line"
+                android:layout_marginBottom="@dimen/margin_normal" />
+
+            <ImageView style="@style/cut_line" />
+
+            <LinearLayout
+                android:id="@+id/lltAboutUs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/title_height"
+                android:background="@drawable/bg_ctrl_item"
+                android:clickable="true"
+                android:orientation="horizontal"
+                android:padding="@dimen/margin_normal" >
+
+                <TextView
+                    style="@style/txt_ctrl_item"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/txt_about_us" />
+            </LinearLayout>
+
+            <ImageView style="@style/cut_line" />
+            
+        </LinearLayout>
+        
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnQuit"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/margin_normal"
+        android:background="@drawable/btn_orange"
+        android:text="退出登录"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/txt_size_big" />
+
+</RelativeLayout>

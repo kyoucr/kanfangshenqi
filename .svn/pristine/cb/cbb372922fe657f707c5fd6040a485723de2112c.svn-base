@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/floating_red_circlessss" />
+    <TextView 
+        android:id="@+id/district_name"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/txt_size_small"
+        android:gravity="center"
+        />
+    <TextView 
+        android:id="@+id/district_num"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/txt_size_small"
+        android:textColor="@color/white"
+        android:layout_below="@+id/district_name"
+        android:gravity="center"
+        android:layout_marginTop="15dp"
+        />
+
+</RelativeLayout>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/rltRedPacket"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_ctrl_item"
+            android:clickable="true"
+            android:gravity="left" >
+
+            <ImageView
+                android:id="@+id/image_hongbao"
+                style="@style/img_ctrl_item"
+                android:layout_centerVertical="true"
+                android:src="@drawable/red_packet_icon" />
+
+            <TextView
+                style="@style/txt_ctrl_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/image_hongbao"
+                android:paddingLeft="@dimen/margin_small"
+                android:text="@string/cash_redpacket" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@color/main_divider_line"
+            android:paddingTop="@dimen/margin_normal" />
+
+        <RelativeLayout
+            android:id="@+id/rltPublishGift"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_ctrl_item"
+            android:clickable="true"
+            android:gravity="left" >
+
+            <ImageView
+                android:id="@+id/image_fabiaoyouli"
+                style="@style/img_ctrl_item"
+                android:layout_centerVertical="true"
+                android:src="@drawable/talk_icon" />
+
+            <TextView
+                style="@style/txt_ctrl_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/image_fabiaoyouli"
+                android:paddingLeft="@dimen/margin_small"
+                android:text="@string/title_publish_gift" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@color/main_divider_line"
+            android:paddingTop="@dimen/margin_normal" />
+
+        <RelativeLayout
+            android:id="@+id/suggestionFeedback"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_ctrl_item"
+            android:clickable="true"
+            android:gravity="left" >
+
+            <ImageView
+                android:id="@+id/image_fankui"
+                style="@style/img_ctrl_item"
+                android:layout_centerVertical="true"
+                android:src="@drawable/pencil_icon" />
+
+            <TextView
+                style="@style/txt_ctrl_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/image_fankui"
+                android:paddingLeft="@dimen/margin_small"
+                android:text="我的反馈" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@color/main_divider_line"
+            android:paddingTop="5dip" />
+
+        <RelativeLayout
+            android:id="@+id/rltShare"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_ctrl_item"
+            android:clickable="true"
+            android:gravity="left" >
+
+            <ImageView
+                android:id="@+id/image_fenxiang"
+                style="@style/img_ctrl_item"
+                android:layout_centerVertical="true"
+                android:src="@drawable/share_icon" />
+
+            <TextView
+                style="@style/txt_ctrl_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/image_fenxiang"
+                android:paddingLeft="@dimen/margin_small"
+                android:text="分享给朋友" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@color/main_divider_line"
+            android:paddingTop="@dimen/margin_normal" />
+
+        <RelativeLayout
+            android:id="@+id/rltNotify"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_ctrl_item"
+            android:clickable="true"
+            android:gravity="left" >
+
+            <ImageView
+                android:id="@+id/image_tongzhi"
+                style="@style/img_ctrl_item"
+                android:layout_centerVertical="true"
+                android:src="@drawable/notice_icon" />
+
+            <TextView
+                style="@style/txt_ctrl_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/image_tongzhi"
+                android:paddingLeft="@dimen/margin_small"
+                android:text="@string/title_notify" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@color/main_divider_line"
+            android:paddingTop="@dimen/margin_normal" />
+
+        <RelativeLayout
+            android:id="@+id/rltSetting"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_ctrl_item"
+            android:clickable="true"
+            android:gravity="left" >
+
+            <ImageView
+                android:id="@+id/image_shezhi"
+                style="@style/img_ctrl_item"
+                android:layout_centerVertical="true"
+                android:src="@drawable/setting_icon" />
+
+            <TextView
+                style="@style/txt_ctrl_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/image_shezhi"
+                android:paddingLeft="@dimen/margin_small"
+                android:text="@string/title_setting" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@color/main_divider_line"
+            android:paddingTop="@dimen/margin_normal" />
+    </LinearLayout>
+
+</ScrollView>

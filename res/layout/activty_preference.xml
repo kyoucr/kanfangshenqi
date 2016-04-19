@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.xinwei.kanfangshenqi.view.ViewBySoftInput xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:id="@+id/viewBySoftInput"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/lltDesc"
+        style="@style/layout"
+        android:orientation="vertical" >
+
+            <!-- android:layout_width="150dp"
+            android:layout_height="125dp" -->
+        <ImageView
+            style="@style/item"
+            android:id="@+id/imageView1"
+            android:layout_gravity="center"
+            android:layout_marginTop="17dp"
+            android:src="@drawable/big_insert_sign" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="可以设置房源位置偏好以后方便查看哦"
+            android:textColor="@color/orange"
+            android:textSize="@dimen/txt_size_normal" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rl_company_name"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:layout_marginLeft="@dimen/margin_normal"
+        android:layout_marginRight="@dimen/margin_normal"
+        android:layout_marginTop="80dp"
+        android:orientation="horizontal" >
+
+        <com.xinwei.kanfangshenqi.view.ClearEditText
+            android:id="@+id/company_address"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="15"
+            android:background="@null"
+            android:drawableRight="@drawable/delete_selector"
+            android:hint="请输入您的公司地址"
+            android:saveEnabled="true"
+            android:singleLine="true"
+            android:textColorHint="@color/text_gray_input"
+            android:textSize="@dimen/txt_size_normal" >
+        </com.xinwei.kanfangshenqi.view.ClearEditText>
+
+        <!-- <TextView
+            android:id="@+id/tv_company_positioning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="定位"
+            android:textColor="@color/orange"
+            android:textSize="@dimen/txt_size_normal" /> -->
+
+        <ImageView
+            android:id="@+id/iv_company_positioning"
+            style="@style/item"
+            android:layout_gravity="center"
+            android:src="@drawable/location_button" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/login_input_line_height"
+        android:background="@color/line" />
+
+    <LinearLayout
+        android:id="@+id/verification_code"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:layout_marginLeft="@dimen/margin_normal"
+        android:layout_marginRight="@dimen/margin_normal" >
+
+        <com.xinwei.kanfangshenqi.view.ClearEditText
+            android:id="@+id/home_address"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_weight="15"
+            android:background="@null"
+            android:hint="请输入您的住址"
+            android:saveEnabled="true"
+            android:singleLine="true"
+            android:textColorHint="@color/text_gray_input"
+            android:textSize="16sp" />
+
+        <!-- <TextView
+            android:id="@+id/tv_home_positioning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="定位"
+            android:textColor="@color/orange"
+            android:textSize="@dimen/txt_size_normal" /> -->
+
+        <ImageView
+            android:id="@+id/iv_home_positioning"
+            style="@style/item"
+            android:layout_gravity="center"
+            android:src="@drawable/location_button" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/cutline_height"
+        android:background="@color/line" />
+
+
+    <Button
+        android:id="@+id/btnSure"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_global_group_button_height"
+        android:layout_below="@id/input_ll"
+        android:layout_marginLeft="@dimen/activity_global_group_button_margin_left"
+        android:layout_marginRight="@dimen/activity_global_group_button_margin_right"
+        android:layout_marginTop="70dp"
+        android:background="@drawable/btn_default_selector"
+        android:text="确认"
+        android:textColor="@color/white" />
+
+</com.xinwei.kanfangshenqi.view.ViewBySoftInput>

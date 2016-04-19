@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.xinwei.kanfangshenqi"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+	    android:id="@+id/pullToRefresh"
+        style="@style/list_view"
+        android:headerDividersEnabled="false"
+        android:footerDividersEnabled="false"
+        app:ptrMode="pullFromEnd"/>
+    <RelativeLayout
+        android:id="@+id/rltAddNewInterest"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_add_new_interest_height"
+        android:layout_alignParentBottom="true"
+        android:background="#B2000000"
+        android:gravity="center" >
+
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="@dimen/img_leave_words_width"
+            android:layout_height="@dimen/img_leave_words_width"
+            android:layout_centerVertical="true"
+            android:src="@drawable/btn_add" />
+
+        <TextView
+            style="@style/item"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/margin_normal"
+            android:layout_toRightOf="@id/img"
+            android:text="@string/txt_add_new_interest"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/txt_size_big" />
+    </RelativeLayout>
+
+</RelativeLayout>

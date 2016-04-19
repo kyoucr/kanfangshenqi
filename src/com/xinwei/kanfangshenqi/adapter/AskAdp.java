@@ -1,0 +1,123 @@
+package com.xinwei.kanfangshenqi.adapter;
+
+import java.util.List;
+
+import org.xutils.common.util.DensityUtil;
+
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.common.Const;
+import com.xinwei.kanfangshenqi.model.Ask;
+import com.xinwei.kanfangshenqi.util.ImageLoaderUtil;
+import com.xinwei.kanfangshenqi.util.TextViewWriterUtil;
+import com.xinwei.kanfangshenqi.util.ValidatorUtil;
+import com.xinwei.kanfangshenqi.view.CircleImageViewWithBorder;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
+/**
+ ********************
+ * 问问列表适配器
+ * @author cn
+ ********************
+ */
+public class AskAdp extends BaseAbsAdp {
+	private List<Ask> list;
+	private Context context;
+	private ImageLoaderUtil imageLoaderUtil;
+	private int lltWidth;
+	private int imgHeight;
+	private LinearLayout.LayoutParams params;
+	public AskAdp(Context context, List<Ask> list) {
+		this.context = context;
+		this.list = list;
+		imageLoaderUtil = ImageLoaderUtil.getInstance();
+		int imgWidth = (DensityUtil.getScreenWidth() - DensityUtil.dip2px(75))/3;
+		lltWidth = DensityUtil.getScreenWidth() - DensityUtil.dip2px(65);
+		imgHeight = (int)(imgWidth*Const.SCALE);
+	}
+
+	@Override
+	public List<?> onGetListData() {
+		return list;
+	}
+
+	@Override
+	public View onGetView(int position, View view) {
+		ViewHolder viewHolder;
+		if (view == null) {
+			view = LayoutInflater.from(context).inflate(R.layout.adp_ask, null);
+			viewHolder = new ViewHolder();
+			viewHolder.imgHead = (CircleImageViewWithBorder) view.findViewById(R.id.imgHead);
+			viewHolder.txtContent = (TextView) view.findViewById(R.id.txtContent);
+			viewHolder.txtTime = (TextView) view.findViewById(R.id.txtTime);
+			viewHolder.txtNum = (TextView) view.findViewById(R.id.txtNum);
+			viewHolder.img1 = (ImageView) view.findViewById(R.id.img1);
+			viewHolder.img2 = (ImageView) view.findViewById(R.id.img2);
+			viewHolder.img3 = (ImageView) view.findViewById(R.id.img3);
+			viewHolder.txtName = (TextView) view.findViewById(R.id.txtName);
+			viewHolder.lltImgs = (LinearLayout) view.findViewById(R.id.lltImgs);
+			view.setTag(viewHolder);
+		} else
+			viewHolder = (ViewHolder) view.getTag();
+		Ask ask = list.get(position);
+		if(ask!=null){
+			TextViewWriterUtil.writeValue(viewHolder.txtName, ask.getNickName());
+			if(ValidatorUtil.isValidString(ask.getContent())){
+				TextViewWriterUtil.writeValue(viewHolder.txtContent,ask.getContent());
+				viewHolder.txtContent.setVisibility(View.VISIBLE);
+			}else
+				viewHolder.txtContent.setVisibility(View.GONE);
+			TextViewWriterUtil.writeValue(viewHolder.txtTime, ask.getCreateTime());
+			TextViewWriterUtil.writeValue(viewHolder.txtNum, ask.getCommentCount());
+			imageLoaderUtil.bindHeadImg(viewHolder.imgHead, ask.getHeadPortrait());
+			if(ask.getCommentImgs()!=null&&ask.getCommentImgs().size()>0){
+				viewHolder.lltImgs.setVisibility(View.VISIBLE);
+				if(params == null){
+					params = (LayoutParams) viewHolder.lltImgs.getLayoutParams();
+					params.height = imgHeight;
+					params.width = lltWidth;
+				}
+				viewHolder.lltImgs.setLayoutParams(params);
+			}else{
+				viewHolder.lltImgs.setVisibility(View.GONE);
+			}
+			try {
+				imageLoaderUtil.bindImgCenterCrop(viewHolder.img1, ask.getCommentImgs().get(0).getCommentImgSmallPath());
+				viewHolder.img1.setVisibility(View.VISIBLE);
+			} catch (Exception e) {
+				viewHolder.img1.setVisibility(View.INVISIBLE);
+			}
+			try {
+				imageLoaderUtil.bindImgCenterCrop(viewHolder.img2, ask.getCommentImgs().get(1).getCommentImgSmallPath());
+				viewHolder.img2.setVisibility(View.VISIBLE);
+			} catch (Exception e) {
+				viewHolder.img2.setVisibility(View.INVISIBLE);
+			}
+			try {
+				imageLoaderUtil.bindImgCenterCrop(viewHolder.img3, ask.getCommentImgs().get(2).getCommentImgSmallPath());
+				viewHolder.img3.setVisibility(View.VISIBLE);
+			} catch (Exception e) {
+				viewHolder.img3.setVisibility(View.INVISIBLE);
+			}
+		}
+		
+		return view;
+	}
+
+	class ViewHolder {
+		CircleImageViewWithBorder imgHead;
+		TextView txtName;
+		TextView txtContent;
+		ImageView img1;
+		ImageView img2;
+		ImageView img3;
+		TextView txtTime;
+		TextView txtNum;
+		LinearLayout lltImgs;
+	}
+}

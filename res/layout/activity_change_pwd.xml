@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        style="@style/layout"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:gravity="center_vertical"
+            android:text="旧密码"
+            android:textColor="@color/txt_color_black"
+            android:textSize="@dimen/txt_size_big" />
+
+        <View style="@style/cut_line" />
+
+        <com.xinwei.kanfangshenqi.view.ClearEditText
+            android:id="@+id/oldPwdEdtTxt"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            android:background="@drawable/bg_ctrl_item"
+            android:drawableRight="@drawable/delete_selector"
+            android:hint="请输入旧密码"
+            android:maxLength="16"
+            android:inputType="textPassword"
+            android:paddingLeft="@dimen/margin_normal"
+            android:singleLine="true"
+            android:textColorHint="@color/text_gray_input"
+            android:textSize="@dimen/txt_size_big" >
+        </com.xinwei.kanfangshenqi.view.ClearEditText>
+
+        <View style="@style/cut_line" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:gravity="center_vertical"
+            android:text="新密码"
+            android:textColor="@color/txt_color_black"
+            android:textSize="@dimen/txt_size_big" />
+
+        <View style="@style/cut_line" />
+
+        <com.xinwei.kanfangshenqi.view.ClearEditText
+            android:id="@+id/newPwdEdtTxt"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            android:background="@drawable/bg_ctrl_item"
+            android:drawableRight="@drawable/delete_selector"
+            android:hint="请输入新密码"
+            android:paddingLeft="@dimen/margin_normal"
+            android:singleLine="true"
+            android:maxLength="16"
+            android:inputType="textPassword"
+            android:textColorHint="@color/text_gray_input"
+            android:textSize="@dimen/txt_size_big" >
+        </com.xinwei.kanfangshenqi.view.ClearEditText>
+
+        <View style="@style/cut_line" />
+
+        <com.xinwei.kanfangshenqi.view.ClearEditText
+            android:id="@+id/surePwdEdtTxt"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            android:background="@drawable/bg_ctrl_item"
+            android:inputType="textPassword"
+            android:drawableRight="@drawable/delete_selector"
+            android:hint="再次输入"
+            android:maxLength="16"
+            android:paddingLeft="@dimen/margin_normal"
+            android:singleLine="true"
+            android:textColorHint="@color/text_gray_input"
+            android:textSize="@dimen/txt_size_big" >
+        </com.xinwei.kanfangshenqi.view.ClearEditText>
+
+        <View style="@style/cut_line" />
+        <TextView android:id="@+id/txtForgetPwd"
+            style="@style/item"
+            android:layout_margin="@dimen/margin_normal"
+            android:layout_gravity="right"
+            android:text="忘记密码？"
+            android:textSize="@dimen/txt_size_normal"/>
+    </LinearLayout>
+
+</RelativeLayout>

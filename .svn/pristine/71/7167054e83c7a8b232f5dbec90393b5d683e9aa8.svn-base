@@ -1,0 +1,192 @@
+package com.xinwei.kanfangshenqi.adapter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.greenrobot.eventbus.EventBus;
+
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.app.XWApplication;
+import com.xinwei.kanfangshenqi.common.BuildingDetailInfoView;
+import com.xinwei.kanfangshenqi.model.DataList;
+import com.xinwei.kanfangshenqi.model.FeatureList;
+import com.xinwei.kanfangshenqi.util.ImageLoaderUtil;
+import com.xinwei.kanfangshenqi.util.TextViewWriterUtil;
+import com.xinwei.kanfangshenqi.util.Utils;
+import com.xinwei.kanfangshenqi.util.ValidatorUtil;
+
+import android.app.Activity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+public class LouPanAdapter extends BaseAdapter {
+
+	private List<DataList> mList;
+	private LayoutInflater inflater;
+	private Activity myActivity;
+	private boolean isFristLoad = true;
+
+	public LouPanAdapter(LayoutInflater inflater) {
+		this.inflater = inflater;
+	}
+	public LouPanAdapter(List<DataList> data) {
+		mList = data;
+		this.inflater = LayoutInflater.from(XWApplication.getInstance());
+	}
+	public LouPanAdapter(List<DataList> data, LayoutInflater inflater, Activity myActivity) {
+		mList = data;
+		this.inflater = inflater;
+		this.myActivity = myActivity;
+	}
+
+	@Override
+	public int getCount() {
+		return mList == null ? 0 : mList.size();
+	}
+
+	@Override
+	public Object getItem(int position) {
+		return mList == null ? null : mList.get(position);
+	}
+
+	@Override
+	public long getItemId(int position) {
+		return 0;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		ViewHolder holder;
+		if (convertView == null) {
+			convertView = inflater.inflate(R.layout.item_loupan, null);
+			holder = new ViewHolder(convertView);
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+		}
+		DataList item = mList.get(position);
+		if (isFristLoad) {
+			final LinearLayout llt = (LinearLayout) convertView.findViewById(R.id.lltLouPan);
+			llt.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+
+				public void onGlobalLayout() {
+					if (llt.getHeight() > 0) {
+						llt.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+						EventBus.getDefault().post(new BuildingDetailInfoView(llt.getHeight()));
+					}
+				}
+			});
+			isFristLoad = false;
+		}
+		ArrayList<FeatureList> featureList = item.getFeatureList();
+		ImageLoaderUtil.getInstance().bindImgFixXY(holder.iv_loupan_tupian, item.getSmallBanner());
+		TextViewWriterUtil.writeValue(holder.tv_loupan_name, item.getBuildingName());
+		TextViewWriterUtil.writeValue(holder.tv_loupan_mianji,
+				ValidatorUtil.isValidString(item.getSection()) ? item.getSection() + "m²" : XWApplication.getInstance().getString(R.string.hint_empty_now));
+		if(ValidatorUtil.isValidString(item.getAveragePrice())){
+//			holder.tv_loupan_jiaqian_danwei.setVisibility(View.VISIBLE);
+//			holder.tv_loupan_jiaqian.setVisibility(View.VISIBLE);
+			TextViewWriterUtil.writeValue(holder.tv_loupan_jiaqian, item.getAveragePrice());
+		}else{
+//			holder.tv_loupan_jiaqian_danwei.setVisibility(View.INVISIBLE);
+//			holder.tv_loupan_jiaqian.setVisibility(View.INVISIBLE);
+			TextViewWriterUtil.writeValue(holder.tv_loupan_jiaqian, XWApplication.getInstance().getString(R.string.hint_empty_now));
+		}
+		holder.tv_loupan_weizhi_wenzi.setText(item.getPosition());
+		holder.iv_loupan_hongbao.setVisibility(View.GONE);
+		if (featureList != null && featureList.size() >= 2) {
+			holder.txtFeature1.setVisibility(View.VISIBLE);
+			holder.txtFeature1.setBackgroundResource(R.drawable.bg_feature);
+			TextViewWriterUtil.writeValue(holder.txtFeature1, featureList.get(0).getFeatureName());
+			holder.txtFeature2.setVisibility(View.VISIBLE);
+			holder.txtFeature2.setBackgroundResource(R.drawable.bg_feature);
+			TextViewWriterUtil.writeValue(holder.txtFeature2, featureList.get(1).getFeatureName());
+			if (ValidatorUtil.isValidInt(item.getScancodePrice()) && Integer.parseInt(item.getScancodePrice()) > 0) {
+				holder.iv_loupan_hongbao.setVisibility(View.VISIBLE);
+				holder.txtFeature3.setVisibility(View.VISIBLE);
+				holder.txtFeature3.setText(Integer.parseInt(item.getScancodePrice()) + "元看房红包");
+				holder.txtFeature3.setBackgroundResource(R.drawable.bg_redpacket);
+			} else {
+				if (featureList.size() > 2) {
+					holder.txtFeature3.setVisibility(View.VISIBLE);
+					holder.txtFeature3.setBackgroundResource(R.drawable.bg_feature);
+					TextViewWriterUtil.writeValue(holder.txtFeature3, featureList.get(2).getFeatureName());
+				} else {
+					holder.txtFeature3.setVisibility(View.GONE);
+				}
+			}
+		} else if (featureList != null && featureList.size() == 1) {
+			holder.txtFeature1.setVisibility(View.VISIBLE);
+			holder.txtFeature1.setBackgroundResource(R.drawable.bg_feature);
+			TextViewWriterUtil.writeValue(holder.txtFeature1, featureList.get(0).getFeatureName());
+			if (ValidatorUtil.isValidInt(item.getScancodePrice()) && Integer.parseInt(item.getScancodePrice()) > 0) {
+				holder.iv_loupan_hongbao.setVisibility(View.VISIBLE);
+				holder.txtFeature2.setVisibility(View.VISIBLE);
+				holder.txtFeature2.setText(Integer.parseInt(item.getScancodePrice()) + "元看房红包");
+				holder.txtFeature2.setBackgroundResource(R.drawable.bg_redpacket);
+			} else {
+				holder.txtFeature2.setVisibility(View.GONE);
+				holder.txtFeature3.setVisibility(View.GONE);
+			}
+		} else {
+			if (ValidatorUtil.isValidInt(item.getScancodePrice()) && Integer.parseInt(item.getScancodePrice()) > 0) {
+				holder.iv_loupan_hongbao.setVisibility(View.VISIBLE);
+				holder.txtFeature1.setVisibility(View.VISIBLE);
+				holder.txtFeature1.setText(Integer.parseInt(item.getScancodePrice()) + "元看房红包");
+				holder.txtFeature1.setBackgroundResource(R.drawable.bg_redpacket);
+				holder.txtFeature2.setVisibility(View.GONE);
+				holder.txtFeature3.setVisibility(View.GONE);
+			} else {
+				holder.txtFeature1.setVisibility(View.GONE);
+				holder.txtFeature2.setVisibility(View.GONE);
+				holder.txtFeature3.setVisibility(View.GONE);
+			}
+		}
+		return convertView;
+	}
+
+	public List<DataList> getmList() {
+		return mList;
+	}
+
+	public void setmList(List<DataList> mList) {
+		this.mList = mList;
+	}
+
+	class ViewHolder {
+		public ImageView iv_loupan_tupian;
+		public ImageView iv_loupan_hongbao;
+		public TextView tv_loupan_name;
+		public TextView tv_loupan_mianji;
+		public TextView tv_loupan_jiaqian;
+		public TextView tv_loupan_jiaqian_danwei;
+		public TextView tv_loupan_weizhi_wenzi;
+		public LinearLayout lltFeature;
+		public TextView txtFeature1;
+		public TextView txtFeature2;
+		public TextView txtFeature3;
+
+		ViewHolder(View view) {
+			iv_loupan_tupian = (ImageView) view.findViewById(R.id.iv_loupan_tupian);
+			iv_loupan_hongbao = (ImageView) view.findViewById(R.id.iv_loupan_hongbao);
+			tv_loupan_name = (TextView) view.findViewById(R.id.tv_loupan_name);
+			tv_loupan_mianji = (TextView) view.findViewById(R.id.tv_loupan_mianji);
+			tv_loupan_jiaqian = (TextView) view.findViewById(R.id.tv_loupan_jiaqian);
+			tv_loupan_jiaqian_danwei = (TextView) view.findViewById(R.id.tv_loupan_jiaqian_danwei);
+			tv_loupan_weizhi_wenzi = (TextView) view.findViewById(R.id.tv_loupan_weizhi_wenzi);
+			lltFeature = (LinearLayout) view.findViewById(R.id.lltFeature);
+			txtFeature1 = (TextView) view.findViewById(R.id.txtFeature1);
+			txtFeature2 = (TextView) view.findViewById(R.id.txtFeature2);
+			txtFeature3 = (TextView) view.findViewById(R.id.txtFeature3);
+
+			// int position =Integer.parseInt(v.getTag().toString());
+		}
+
+	}
+}

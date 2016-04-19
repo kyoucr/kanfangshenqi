@@ -1,0 +1,291 @@
+package com.xinwei.kanfangshenqi.activity;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.xutils.view.annotation.ViewInject;
+
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationClientOption.AMapLocationMode;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.services.geocoder.GeocodeAddress;
+import com.amap.api.services.geocoder.GeocodeQuery;
+import com.amap.api.services.geocoder.GeocodeResult;
+import com.amap.api.services.geocoder.GeocodeSearch;
+import com.amap.api.services.geocoder.GeocodeSearch.OnGeocodeSearchListener;
+import com.amap.api.services.geocoder.RegeocodeResult;
+import com.xinwei.kanfangshenqi.BaseActivity;
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.common.Const;
+import com.xinwei.kanfangshenqi.request.HttpRequest;
+import com.xinwei.kanfangshenqi.request.HttpRequest.RequestListener;
+import com.xinwei.kanfangshenqi.util.PreferenceUtils;
+import com.xinwei.kanfangshenqi.util.StringUtils;
+import com.xinwei.kanfangshenqi.util.ToastUtil;
+import com.xinwei.kanfangshenqi.util.Utils;
+import com.xinwei.kanfangshenqi.view.ClearEditText;
+
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+public class ChangeAddressWordActivity extends BaseActivity implements OnClickListener,AMapLocationListener ,OnGeocodeSearchListener{
+	
+	@ViewInject(R.id.tv_company_positioning)
+	private TextView tv_company_positioning;
+	
+	@ViewInject(R.id.tv_home_positioning)
+	private TextView tv_home_positioning;
+	
+	@ViewInject(R.id.iv_company_positioning)
+	private ImageView iv_company_positioning;
+	
+	@ViewInject(R.id.iv_home_positioning)
+	private ImageView iv_home_positioning;
+	
+	@ViewInject(R.id.company_address)
+	private ClearEditText company_address;
+	
+	@ViewInject(R.id.home_address)
+	private ClearEditText home_address;
+	
+	private PreferenceUtils preferenceUtils;
+	
+	private static double latitude;
+	private static double longitude;
+	private double companyLatitude;
+	private double companyLongitude;
+	private double homeLatitude;
+	private double homeLongitude;
+	private GeocodeSearch geocoderSearch;
+	//声明AMapLocationClient类对象
+	private static AMapLocationClient locationClient = null;
+	private static AMapLocationClientOption locationOption = null;	
+	private boolean isCompanySearch = true;//是否在进行公司经纬度转换（用在保存时区分此时是转换公司经纬度还是家里）
+	private boolean isCompanyLocation = true;//是否在进行公司定位（用在点击定位时区分此时是公司定位还是家里）
+	private boolean isAutoLocation = false;//是否是系统进行的自动定位，true则是用户点击点位进行的定位
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		addChildView(R.layout.activity_change_address);
+	}
+	
+	@Override
+	public void onChildViewLoaded() {
+		setTitleTxt("我的地址");
+		setLeftTitle("个人信息");
+		setRightTxt("保存");		
+		init();
+		locationClient = new AMapLocationClient(this.getApplicationContext());
+		locationOption = new AMapLocationClientOption();
+		// 设置定位模式为低功耗模式
+		locationOption.setLocationMode(AMapLocationMode.Battery_Saving);
+		// 设置定位监听
+		locationClient.setLocationListener(this);
+		//设置为单次定位
+//		locationOption.setOnceLocation(true);
+		tv_company_positioning.setOnClickListener(this);
+		tv_home_positioning.setOnClickListener(this);
+		iv_company_positioning.setOnClickListener(this);
+		iv_home_positioning.setOnClickListener(this);
+		preferenceUtils = PreferenceUtils.getInstance(ChangeAddressWordActivity.this);
+		if(!"".equals(preferenceUtils.getSettingUserCompanyAddr()))
+			company_address.setText(preferenceUtils.getSettingUserCompanyAddr());
+		if(!"".equals(preferenceUtils.getSettingUserHomeAddr()))
+			home_address.setText(preferenceUtils.getSettingUserHomeAddr());
+		getRightTxt().setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (checkInput()) {
+					showBar();
+					isCompanySearch = true;
+					getLatlon(company_address.getText().toString());
+				}
+			}
+		});
+		locationOption.setNeedAddress(true);
+		// 设置定位参数
+		locationClient.setLocationOption(locationOption);
+		// 启动定位
+		locationClient.startLocation();
+	}
+	@Override
+	public void onReloadData() {
+		
+	}
+	@Override
+	public String getRequestTag() {
+		return ChangeAddressWordActivity.class.getSimpleName();
+	}
+	@Override
+	public void onClick(View v) {
+		showBar();
+		isAutoLocation = true;
+		switch (v.getId()) {
+		case R.id.tv_company_positioning:
+			isCompanyLocation = true;
+			break;
+		case R.id.iv_company_positioning:
+			isCompanyLocation = true;
+			break;
+		case R.id.tv_home_positioning:
+			isCompanyLocation = false;
+			break;
+		case R.id.iv_home_positioning:
+			isCompanyLocation = false;
+			break;
+		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (null != locationClient) {
+			/**
+			 * 如果AMapLocationClient是在当前Activity实例化的，
+			 * 在Activity的onDestroy中一定要执行AMapLocationClient的onDestroy
+			 */
+			locationClient.onDestroy();
+			locationClient = null;
+			locationOption = null;
+		}
+	}
+	private boolean checkInput() {
+		if (StringUtils.isEmpty(company_address.getText().toString())) {
+			Utils.makeToastAndShow(this, "请输入您的公司地址！", Toast.LENGTH_SHORT);
+			return false;
+		}
+		if (StringUtils.isEmpty(home_address.getText().toString())) {
+			Utils.makeToastAndShow(this, "请输入您的住址！", Toast.LENGTH_SHORT);
+			return false;
+		}
+		return true;
+	}
+	private void changeAddr(){
+		Map<String,String> paramsContent = new HashMap<String,String>();
+		paramsContent.put(Const.PARAM_COMPANYADDR, company_address.getText().toString());
+		paramsContent.put(Const.PARAM_COMPANYLATITUDE, String.valueOf(companyLatitude));
+		paramsContent.put(Const.PARAM_COMPANYLONGITUDE, String.valueOf(companyLongitude));
+		paramsContent.put(Const.PARAM_HOMEADDR, home_address.getText().toString());
+		paramsContent.put(Const.PARAM_HOMELATITUDE, String.valueOf(homeLatitude));
+		paramsContent.put(Const.PARAM_HOMELONGITUDE, String.valueOf(homeLongitude));
+		HttpRequest.post(this, Const.URL_USERINFO_CHANGE, getRequestTag(), paramsContent,Utils.getHeaderParamsOnly(), new RequestListener() {
+			
+			@Override
+			public void onSuccess(String url, String responseResult) {
+				Toast.makeText(ChangeAddressWordActivity.this, "地址修改成功", Toast.LENGTH_SHORT).show();
+
+				preferenceUtils.setSettingUserCompanyAddr(company_address.getText().toString());
+				preferenceUtils.setSettingUserHomeAddr(home_address.getText().toString());
+				
+				preferenceUtils.setSettingUserCompanyLongitude(companyLongitude+"");
+				preferenceUtils.setSettingUserCompanyLatitude(companyLatitude+"");
+				
+				preferenceUtils.setSettingUserHomeLongitude(homeLongitude+"");
+				preferenceUtils.setSettingUserHomeLatitude(homeLatitude+"");
+				finish();
+			}
+			
+			@Override
+			public void onFailure(String url, String errorInfo) {
+				closeBar();
+			}
+			
+			@Override
+			public void onError(String url, String responseResult) {
+				closeBar();
+			}
+		});
+	}
+	@Override
+	public void onLocationChanged(AMapLocation location) {
+		StringBuffer sb = new StringBuffer();
+		if(location.getErrorCode() == 0&&isAutoLocation){
+//			sb.append("省            : " + location.getProvince() + "\n");
+//			sb.append("市            : " + location.getCity() + "\n");
+//			sb.append("区            : " + location.getDistrict() + "\n");
+			sb.append(location.getAddress());
+			latitude = location.getLatitude(); // 经度
+			longitude = location.getLongitude(); // 纬度
+			if(isCompanyLocation){
+				Utils.logCN("CompanyLocation:"+sb.toString());
+				company_address.setText(sb.toString());
+				companyLatitude = latitude;
+				companyLongitude = longitude;
+			}else{
+				Utils.logCN("HomeLocation:"+sb.toString());
+				home_address.setText(sb.toString());
+				homeLatitude = latitude;
+				homeLongitude = longitude;
+			}
+			isAutoLocation = false;
+			closeBar();
+		}else {
+			//定位失败
+			if(isAutoLocation){
+				ToastUtil.show("定位失败，请检查是否开启网络");
+				isAutoLocation = false;
+				closeBar();
+			}
+		}
+	}
+	/**
+	 * 初始化AMap对象
+	 */
+	private void init() {
+		geocoderSearch = new GeocodeSearch(this);
+		geocoderSearch.setOnGeocodeSearchListener(this);
+
+	}
+	/**
+	 * 响应地理编码
+	 */
+	public void getLatlon(final String name) {
+		GeocodeQuery query = new GeocodeQuery(name, "024");// 第一个参数表示地址，第二个参数表示查询城市，中文或者中文全拼，citycode、adcode，
+		geocoderSearch.getFromLocationNameAsyn(query);// 设置同步地理编码请求
+	}
+
+	@Override
+	public void onGeocodeSearched(GeocodeResult result, int rCode) {
+		if (rCode == 0) {
+			if (result != null && result.getGeocodeAddressList() != null
+					&& result.getGeocodeAddressList().size() > 0) {
+				GeocodeAddress address = result.getGeocodeAddressList().get(0);
+				String[] ary = address.getLatLonPoint().toString().split(",");
+				latitude = Double.parseDouble(ary[0]); // 经度
+				longitude = Double.parseDouble(ary[1]);; // 纬度
+				if(isCompanySearch){
+					companyLongitude =longitude;
+					companyLatitude = latitude;
+					isCompanySearch = false;
+					getLatlon(home_address.getText().toString());
+				}else {
+					homeLongitude =longitude;
+					homeLatitude = latitude;
+					changeAddr();
+				}
+			} else {
+				closeBar();
+				ToastUtil.show(ChangeAddressWordActivity.this, getString(R.string.no_result));
+			}
+		} else if (rCode == 27) {
+			closeBar();
+			ToastUtil.show(ChangeAddressWordActivity.this, getString(R.string.error_network));
+		} else if (rCode == 32) {
+			closeBar();
+			ToastUtil.show(ChangeAddressWordActivity.this, getString(R.string.error_key));
+		} else {
+			closeBar();
+			ToastUtil.show(ChangeAddressWordActivity.this,
+					getString(R.string.error_other) + rCode);
+		}
+	}
+	@Override
+	public void onRegeocodeSearched(RegeocodeResult result, int rCode) {
+	}
+}

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        style="@style/cut_line"
+        android:layout_marginTop="@dimen/margin_normal"/>
+
+    <RelativeLayout
+        android:id="@+id/rv_man"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/title_height"
+        android:gravity="left"
+        android:clickable="true"
+        android:background="@drawable/bg_ctrl_item"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/margin_normal"
+            android:text="男"
+            style="@style/txt_ctrl_item" />
+		<ImageView 
+		    android:id="@+id/man_select"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:src="@drawable/right_button"
+		    android:layout_alignParentRight="true"
+		    android:layout_centerVertical="true"
+		    android:layout_marginRight="@dimen/margin_normal"
+		    android:visibility="invisible"
+		    />
+    </RelativeLayout>
+
+    <View
+        style="@style/cut_line"/>
+
+    <RelativeLayout
+        android:id="@+id/rv_women"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/title_height"
+        android:gravity="left"
+        android:clickable="true"
+        android:background="@drawable/bg_ctrl_item"
+        >
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/margin_normal"
+            android:text="女"
+            style="@style/txt_ctrl_item" />
+		<ImageView 
+		    android:id="@+id/women_select"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:src="@drawable/right_button"
+		    android:layout_alignParentRight="true"
+		    android:layout_centerVertical="true"
+		    android:layout_marginRight="@dimen/margin_normal"
+		    android:visibility="invisible"
+		    />
+    </RelativeLayout>
+    <View
+        style="@style/cut_line"/>
+
+</LinearLayout>

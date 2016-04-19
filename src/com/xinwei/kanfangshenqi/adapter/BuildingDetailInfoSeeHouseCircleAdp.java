@@ -1,0 +1,136 @@
+package com.xinwei.kanfangshenqi.adapter;
+
+import java.util.List;
+
+import org.xutils.common.util.DensityUtil;
+
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.model.BuildingDetail.Building;
+import com.xinwei.kanfangshenqi.util.ImageLoaderUtil;
+import com.xinwei.kanfangshenqi.util.TextViewWriterUtil;
+import com.xinwei.kanfangshenqi.util.Utils;
+import com.xinwei.kanfangshenqi.util.ValidatorUtil;
+import com.xinwei.kanfangshenqi.view.CircleImageViewWithBorder;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
+/**
+ ********************
+ * 问问列表适配器
+ * @author cn
+ ********************
+ */
+public class BuildingDetailInfoSeeHouseCircleAdp extends BaseAbsAdp {
+	private List<Building> list;
+	private Context context;
+	private ImageLoaderUtil imageLoaderUtil;
+//	private int lltWidth;
+	private int imgHeight;
+	private LinearLayout.LayoutParams params;
+	public BuildingDetailInfoSeeHouseCircleAdp(Context context, List<Building> list) {
+		this.context = context;
+		this.list = list;
+		imageLoaderUtil = ImageLoaderUtil.getInstance();
+		int imgWidth = (DensityUtil.getScreenWidth() - DensityUtil.dip2px(48))/4;
+//		lltWidth = DensityUtil.getScreenWidth() - DensityUtil.dip2px(65);
+//		imgHeight = (int)(imgWidth*Const.SCALE);
+		imgHeight = imgWidth;
+	}
+
+	@Override
+	public List<?> onGetListData() {
+		return list;
+	}
+
+	@Override
+	public View onGetView(int position, View view) {
+		ViewHolder viewHolder;
+		if (view == null) {
+			view = LayoutInflater.from(context).inflate(R.layout.adp_building_detail_info_see_house_circle, null);
+			viewHolder = new ViewHolder();
+			viewHolder.imgHead = (CircleImageViewWithBorder) view.findViewById(R.id.imgHead);
+			viewHolder.txtContent = (TextView) view.findViewById(R.id.txtContent);
+			viewHolder.txtTime = (TextView) view.findViewById(R.id.txtTime);
+			viewHolder.txtNum = (TextView) view.findViewById(R.id.txtNum);
+			viewHolder.img1 = (ImageView) view.findViewById(R.id.img1);
+			viewHolder.img2 = (ImageView) view.findViewById(R.id.img2);
+			viewHolder.img3 = (ImageView) view.findViewById(R.id.img3);
+			viewHolder.img4 = (ImageView) view.findViewById(R.id.img4);
+			viewHolder.txtName = (TextView) view.findViewById(R.id.txtName);
+			viewHolder.lltImgs = (LinearLayout) view.findViewById(R.id.lltImgs);
+			view.setTag(viewHolder);
+		} else
+			viewHolder = (ViewHolder) view.getTag();
+		Building building = list.get(position);
+		if(building!=null){
+			TextViewWriterUtil.writeValue(viewHolder.txtName, building.getMemberName());
+			if(ValidatorUtil.isValidString(building.getContent())){
+				TextViewWriterUtil.writeValue(viewHolder.txtContent,building.getContent());
+				viewHolder.txtContent.setVisibility(View.VISIBLE);
+			}else
+				viewHolder.txtContent.setVisibility(View.GONE);
+			TextViewWriterUtil.writeValue(viewHolder.txtTime, building.getCreateTime());
+			TextViewWriterUtil.writeValue(viewHolder.txtNum, building.getCommentCount());
+			imageLoaderUtil.bindHeadImg(viewHolder.imgHead, building.getHeadPortrait());
+			if(ValidatorUtil.isValidList(building.getCommentImgs())){
+				viewHolder.lltImgs.setVisibility(View.VISIBLE);
+				if(params == null){
+					params = (LayoutParams) viewHolder.lltImgs.getLayoutParams();
+					params.height = imgHeight;
+					params.width = LayoutParams.MATCH_PARENT;
+				}
+				viewHolder.lltImgs.setLayoutParams(params);
+				try {
+//					viewHolder.img1.getLayoutParams().width = imgHeight;
+					imageLoaderUtil.bindImgCenterCrop(viewHolder.img1, building.getCommentImgs().get(0).getCommentImgSmallPath());
+					viewHolder.img1.setVisibility(View.VISIBLE);
+				} catch (Exception e) {
+					viewHolder.img1.setVisibility(View.INVISIBLE);
+				}
+				try {
+//					viewHolder.img2.getLayoutParams().width = imgHeight;
+					imageLoaderUtil.bindImgCenterCrop(viewHolder.img2, building.getCommentImgs().get(1).getCommentImgSmallPath());
+					viewHolder.img2.setVisibility(View.VISIBLE);
+				} catch (Exception e) {
+					viewHolder.img2.setVisibility(View.INVISIBLE);
+				}
+				try {
+//					viewHolder.img3.getLayoutParams().width = imgHeight;
+					imageLoaderUtil.bindImgCenterCrop(viewHolder.img3, building.getCommentImgs().get(2).getCommentImgSmallPath());
+					viewHolder.img3.setVisibility(View.VISIBLE);
+				} catch (Exception e) {
+					viewHolder.img3.setVisibility(View.INVISIBLE);
+				}
+				try {
+//					viewHolder.img4.getLayoutParams().width = imgHeight;
+					imageLoaderUtil.bindImgCenterCrop(viewHolder.img4, building.getCommentImgs().get(3).getCommentImgSmallPath());
+					viewHolder.img4.setVisibility(View.VISIBLE);
+				} catch (Exception e) {
+					viewHolder.img4.setVisibility(View.INVISIBLE);
+				}
+			}else{
+				viewHolder.lltImgs.setVisibility(View.GONE);
+			}
+		}
+		
+		return view;
+	}
+
+	class ViewHolder {
+		CircleImageViewWithBorder imgHead;
+		TextView txtName;
+		TextView txtContent;
+		ImageView img1;
+		ImageView img2;
+		ImageView img3;
+		ImageView img4;
+		TextView txtTime;
+		TextView txtNum;
+		LinearLayout lltImgs;
+	}
+}

@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.xinwei.kanfangshenqi"
+    android:versionCode="1"
+    android:versionName="1.0.0" >
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+    <!-- Required  一些系统要求的权限，如访问网络等 -->
+    <uses-permission android:name="com.xinwei.kanfangshenqi.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!-- Optional for location -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+
+    <permission
+        android:name="com.xinwei.kanfangshenqi.permission.JPUSH_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19" />
+
+    <application
+        android:name="com.xinwei.kanfangshenqi.app.XWApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:theme="@style/ThemeActivityNoTitle"
+        android:windowBackground="@drawable/ic_welcome" >
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="eb0966bc2746dbbbe6c449520c1014cf" />
+        <activity
+            android:name=".activity.WelcomeActivity"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.MainActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- 必须注册在微博授权，分享微博时候用到 -->
+        <activity
+            android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
+        <activity
+            android:name=".activity.GuideActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.RegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.xinwei.kanfangshenqi.BaseActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ThemeActivityTranslucentNoTitle" >
+        </activity>
+        <activity
+            android:name=".activity.SeachActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.LouPanActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.FindPwdActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.GaoDeMapActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.UserInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SpeedinessLoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.EncyclopediaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.WebActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.WonderfulActivityActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AchievementActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CashRedPacketActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.TradeRecordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PickCashActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AccountActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SuggestionFeedbackActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.TradeDetailInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MyQRActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PublishGiftActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ChangeNameActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ChangeSexActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ChangePWDActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SetPassWordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ToolsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.WebBuildingInfoActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.ChangeAddressWordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ChangeAdministrationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.NotifyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.NotifyDetailInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SeeHouseCircleActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AddAttentionActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.AskDetailNewActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="1104942196" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <service android:name="com.amap.api.location.APSService" />
+
+        <activity
+            android:name="com.king.photo.activity.PublishActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.king.photo.activity.ImageGridActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.king.photo.activity.TestPicActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.king.photo.activity.PhotoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.king.photo.activity.ShowAlbumActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.king.photo.activity.ImageFile"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.king.photo.activity.ShowAllPhoto"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.king.photo.activity.GalleryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.BuildingCommentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ShowRanslationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PreferenceActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.BuildingDetailInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.RecommendBuildingsActivity"
+            android:screenOrientation="portrait" />
+        <!-- Required SDK核心功能 -->
+        <activity
+            android:name="cn.jpush.android.ui.PushActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="false"
+            android:theme="@android:style/Theme.NoTitleBar" >
+            <intent-filter>
+                <action android:name="cn.jpush.android.ui.PushActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="com.xinwei.kanfangshenqi" />
+            </intent-filter>
+        </activity>
+        <!-- Required  SDK核心功能 -->
+        <service
+            android:name="cn.jpush.android.service.DownloadService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
+
+        <!-- Required SDK 核心功能 -->
+        <!-- 可配置android:process参数将PushService放在其他进程中 -->
+        <service
+            android:name="cn.jpush.android.service.PushService"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTER" />
+                <action android:name="cn.jpush.android.intent.REPORT" />
+                <action android:name="cn.jpush.android.intent.PushService" />
+                <action android:name="cn.jpush.android.intent.PUSH_TIME" />
+            </intent-filter>
+        </service>
+
+        <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
+        <!-- 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 -->
+        <service
+            android:name="cn.jpush.android.service.DaemonService"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.DaemonService" />
+
+                <category android:name="com.xinwei.kanfangshenqi" />
+            </intent-filter>
+        </service>
+
+        <!-- Required SDK核心功能 -->
+        <receiver
+            android:name="cn.jpush.android.service.PushReceiver"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter android:priority="1000" >
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" /> <!-- Required  显示通知栏 -->
+                <category android:name="com.xinwei.kanfangshenqi" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <!-- Optional -->
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Required SDK核心功能 -->
+        <receiver
+            android:name="cn.jpush.android.service.AlarmReceiver"
+            android:exported="false" />
+
+        <!-- User defined.  For test only  用户自定义的广播接收器 -->
+        <receiver
+            android:name="com.xinwei.kanfangshenqi.receiver.JPushReceiver"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTRATION" /> <!-- Required  用户注册SDK的intent -->
+                <action android:name="cn.jpush.android.intent.UNREGISTRATION" />
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> <!-- Required  用户接收SDK消息的intent -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> <!-- Required  用户接收SDK通知栏信息的intent -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!-- Required  用户打开自定义通知栏的intent -->
+                <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK" /> <!-- Optional 用户接受Rich Push Javascript 回调函数的intent -->
+                <action android:name="cn.jpush.android.intent.CONNECTION" /> <!-- 接收网络变化 连接/断开 since 1.6.3 -->
+                <category android:name="com.xinwei.kanfangshenqi" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.xinwei.kanfangshenqi.receiver.NetworkConnectChangedReceiver"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="com.xinwei.kanfangshenqi.CRASH_ERROR" />
+                <!-- <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" /> -->
+            </intent-filter>
+        </receiver>
+
+        <!-- Required  . Enable it you can get statistics data with channel -->
+        <meta-data
+            android:name="JPUSH_CHANNEL"
+            android:value="developer-default" />
+        <meta-data
+            android:name="JPUSH_APPKEY"
+            android:value="0e64dfed29035a0371451e2d" /> <!-- </>值来自开发者平台取得的AppKey -->
+
+    </application>
+
+</manifest>

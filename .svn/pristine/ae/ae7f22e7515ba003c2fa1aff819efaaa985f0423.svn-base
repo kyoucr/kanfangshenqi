@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants"
+    android:background="@drawable/bg_transparent">
+
+    <GridView
+        android:id="@+id/gridViewShare"
+        style="@style/list_view" 
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:numColumns="3">
+    </GridView>
+
+</RelativeLayout>

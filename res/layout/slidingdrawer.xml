@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.xinwei.kanfangshenqi.view.MySlidingDrawer
+        android:id="@+id/slidingdrawer"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:content="@+id/content"
+        android:handle="@+id/handle"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@id/handle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:orientation="vertical" >
+			<RelativeLayout
+            android:id="@id/handle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/blackw_bg_new">
+            <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="这是现实月份和日期"
+                />
+            <ImageView
+                android:id="@+id/handle_image"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="30dp"
+                android:src="@drawable/pull_tab_action" />
+			</RelativeLayout>
+            <GridView
+                android:id="@+id/handle_gridview"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:numColumns="4" >
+            </GridView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@id/content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#ffffff"
+            android:orientation="vertical" >
+
+            <GridView
+                android:id="@+id/content_gridview"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:numColumns="4" >
+            </GridView>
+        </LinearLayout>
+    </com.xinwei.kanfangshenqi.view.MySlidingDrawer>
+
+</LinearLayout>

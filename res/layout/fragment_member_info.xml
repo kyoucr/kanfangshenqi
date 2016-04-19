@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <!-- 标题 -->
+
+    <!-- 头像 -->
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="110dip" >
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/wodeuser_bg" 
+                    />
+
+                <com.xinwei.kanfangshenqi.view.CircleImageView
+                    android:id="@+id/photo"
+                    android:layout_width="67dip"
+                    android:layout_height="67dip"
+                    android:layout_centerInParent="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/not_logged_in_headpic" />
+            </RelativeLayout>
+            <!-- 列表 -->
+
+            <include
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/item_member_info" />
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

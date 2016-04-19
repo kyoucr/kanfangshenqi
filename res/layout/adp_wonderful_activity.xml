@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_img_height" >
+
+        <ImageView
+            android:id="@+id/imgActivity"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/activity_img_height" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="@color/half_transparent"
+            android:layout_height="@dimen/activity_desc_height"
+            android:layout_alignParentBottom="true" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/margin_normal"
+                android:layout_toLeftOf="@+id/txtPersons"
+                android:gravity="center_vertical"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/txtTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/txt_size_normal" />
+
+                <TextView
+                    android:id="@+id/txtTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="top"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/txt_size_small" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtPersons"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="@dimen/margin_normal"
+                android:layout_marginRight="@dimen/margin_normal"
+                android:gravity="center_vertical"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/txt_size_small" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

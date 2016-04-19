@@ -1,0 +1,635 @@
+package com.xinwei.kanfangshenqi.fragment;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.maps2d.model.Marker;
+import com.amap.api.maps2d.model.MarkerOptions;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
+import com.desarrollodroide.libraryfragmenttransactionextended.FragmentTransactionExtended;
+import com.google.gson.Gson;
+import com.lidroid.xutils.view.annotation.ViewInject;
+import com.tandong.swichlayout.SwitchLayout;
+import com.xinwei.kanfangshenqi.BaseFragment2;
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.activity.CashRedPacketActivity;
+import com.xinwei.kanfangshenqi.activity.SeachActivity;
+import com.xinwei.kanfangshenqi.common.Const;
+import com.xinwei.kanfangshenqi.dropdownmenu.DropDownMenu;
+import com.xinwei.kanfangshenqi.dropdownmenu.OnMenuSelectedListener;
+import com.xinwei.kanfangshenqi.model.DataList;
+import com.xinwei.kanfangshenqi.model.PlansInfo;
+import com.xinwei.kanfangshenqi.model.PlansModel;
+import com.xinwei.kanfangshenqi.model.RemovePlan;
+import com.xinwei.kanfangshenqi.model.buildingAreaList;
+import com.xinwei.kanfangshenqi.request.CityOfHousesRequest;
+import com.xinwei.kanfangshenqi.request.HttpRequest;
+import com.xinwei.kanfangshenqi.request.HttpRequest.RequestListener;
+import com.xinwei.kanfangshenqi.request.PlansRequest;
+import com.xinwei.kanfangshenqi.response.CityOfHousesResponse;
+import com.xinwei.kanfangshenqi.response.PlansResponse;
+import com.xinwei.kanfangshenqi.util.PreferenceUtils;
+import com.xinwei.kanfangshenqi.util.Utils;
+import com.xinwei.kanfangshenqi.util.ValidatorUtil;
+import com.xinwei.kanfangshenqi.util.WebUtils;
+import com.xinwei.kanfangshenqi.util.XmlUtil;
+
+import android.annotation.SuppressLint;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.PopupWindow.OnDismissListener;
+
+/**
+ * 首页
+ * 
+ * @author jzl
+ * 
+ */
+public class ZhaoFangFragment extends BaseFragment2 implements Response.ErrorListener, OnClickListener {
+
+	private View mParent;
+
+	private FragmentActivity mActivity;
+	@ViewInject(R.id.ll_top_title)
+	private LinearLayout tv_top_title;
+	private Double geoLat;
+	private Double geoLng;
+	private PopupWindow popupwindow = null;
+	private View contentView;
+	private LayoutInflater mLayoutInflater;
+	private ArrayList<buildingAreaList> myAreaList;
+	private Marker myMarker;
+	private ImageView iv_list;
+	private ImageView iv_bao;
+	private MarkerOptions markerOptions = new MarkerOptions();
+	public static ArrayList<DataList> loupanList;
+	private boolean isListFragment = false;
+	private Bundle savedInstanceState;
+	private Bundle data = new Bundle();
+	public static Map<String, String> map = new HashMap<String, String>();
+	private ArrayList<PlansModel> plansModel;
+	private ArrayList<PlansInfo> plansInfo = new ArrayList<PlansInfo>();
+	private boolean IsHaveBuildingId = false;
+	private PopupWindow popuWindow1 = null;
+	private View contentView1;
+	private PopupWindow popuWindows = null;
+	private View contentViews;
+	private int numbers = 1;
+	private PopupWindow popuWindowZhiDaoLouPan = null;
+	private View contentViewZhiDaoLouPan;
+	private PreferenceUtils preferenceUtils;
+	public MapFragmentLayout mapFragment;
+	private ListViewFragmentLayout listviewFragment;
+
+	private static DropDownMenu mMenu;
+	private String[] quyu;
+	private String[] pirce;
+	private String[] tese;
+	final String[] strings = new String[] { "区域", "价格", "特色" };
+	private int quyu_index = 0;
+	private int pirce_index;
+	private int tese_index;
+	public static boolean isDiTu = false;
+	public static boolean isSelect = false;
+	public static boolean isChangeMeNuItem = false;
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		EventBus.getDefault().register(this);
+		map = new HashMap<String, String>();
+//		map.put("cityId", "024");
+		mParent = getView();
+		mActivity = (FragmentActivity) getActivity();
+		preferenceUtils = PreferenceUtils.getInstance(activity);
+		getLouPanArea();
+	}
+
+	/*
+	 * 楼盘计划被删除时调用
+	 */
+	@Subscribe
+	public void onRemovePlanEvent(RemovePlan removePlan) {
+		if (loupanList != null) {
+			for (DataList dataList : loupanList) {
+				if (dataList.getBuildingId().equals(removePlan.getBuildingId())) {
+					dataList.setIsPlan(Const.NO);
+					break;
+				}
+			}
+		}
+	}
+
+	private CityOfHousesRequest cityOfHousesRequest;
+	private ArrayAdapter adpterPrice;
+	private CityOfHousesResponse cityOfHousesResponse;
+
+	public void getQunChange(String url, Map<String, String> paramsContent, final boolean isMove) {
+		showBar();
+		paramsContent.put("cityId", "024");
+		if (cityOfHousesRequest != null)
+			cityOfHousesRequest.cancel();
+		if (requestLouPanXin != null)
+			requestLouPanXin.cancel();
+		requestQunChange = HttpRequest.get(activity, url, getRequestTag(), paramsContent, Utils.getHeaderParamsOnly(),
+				new RequestListener() {
+					@Override
+					public void onSuccess(String url, String responseResult) {
+						CityOfHousesResponse response = new Gson().fromJson(responseResult, CityOfHousesResponse.class);
+						myAreaList = response.getBuildingAreaList();
+						mapFragment.markerInit();
+						markerInit();
+						mapFragment.judgeShowAreaOrDetail();
+						closeBar();
+					}
+
+					@Override
+					public void onFailure(String url, String errorInfo) {
+						closeBar();
+					}
+
+					@Override
+					public void onError(String url, String responseResult) {
+						closeBar();
+					}
+				});
+	}
+
+	public void getLouPanArea() {
+		if (cityOfHousesRequest != null)
+			cityOfHousesRequest.cancel();
+		if (requestLouPanXin != null)
+			requestLouPanXin.cancel();
+		cityOfHousesRequest = new CityOfHousesRequest(new Listener<CityOfHousesResponse>() {
+
+			@Override
+			public void onResponse(final CityOfHousesResponse response) {
+				cityOfHousesResponse = response;
+				if (!(response != null && "1".equals(response.getStatus()))) {//
+					try {
+						InitMenu(response);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					mapFragment.judgeShowAreaOrDetail();
+					return;
+				}
+				myAreaList = response.getBuildingAreaList();
+				InitMenu(response);
+				// 设置区域选择
+				// mMenu.setSelectedMenuItem(1,0);
+			}
+
+		}, this);
+		WebUtils.doPost(cityOfHousesRequest);
+	}
+
+	public static void changeQuYU(int quyu) {
+		isChangeMeNuItem = true;
+		mMenu.setSelectedMenuItem(quyu, 0);
+		isSelect = false;
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
+		mLayoutInflater = inflater;
+		return parentView;
+	}
+
+	private void markerInit() {
+		for (int i = 0; i < myAreaList.size(); i++) {
+			mapFragment.addDistrictMarker(myAreaList.get(i).getAreaName(), myAreaList.get(i).getBuildingCount(),
+					Double.parseDouble(myAreaList.get(i).getLatitude()),
+					Double.parseDouble(myAreaList.get(i).getLongitude()));
+		}
+	}
+
+	@SuppressLint("NewApi")
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		addChildView(R.layout.fragment_zhaofang);
+		this.savedInstanceState = savedInstanceState;
+	}
+
+	@Override
+	public void onErrorResponse(VolleyError error) {
+	}
+
+	private Request requestLouPanXin;
+	private Request requestQunChange;
+
+	public void getLouPanQingDan() {
+		PlansRequest request = new PlansRequest(new Listener<PlansResponse>() {
+			@Override
+			public void onResponse(PlansResponse response) {
+				closeBar();
+				if (response != null && response.getStatus().equals("1")) {// success
+					if (response.getDataList() != null) {
+						plansModel = response.getDataList();
+						for (int i = 0; i < plansModel.size(); i++) {
+							for (int j = 0; j < plansModel.get(i).getData().size(); j++) {
+								plansInfo.add(plansModel.get(i).getData().get(j));
+							}
+						}
+						if (0 < plansInfo.size()) {
+							JiHuaFragment.isNullData = false;
+						}
+					}
+				}
+			}
+
+		}, this);
+		request.setToken(PreferenceUtils.getInstance(activity).getSettingUserToken());
+		request.setAppagent(PreferenceUtils.getInstance(activity).getSettingUserAppAgent());
+		request.setOsver(PreferenceUtils.getInstance(activity).getSettingUserOSVer());
+		request.setTransid(PreferenceUtils.getInstance(activity).getSettingUserTransId());
+		WebUtils.doPost(request);
+	}
+
+	@Override
+	public void onClick(View view) {
+		switch (view.getId()) {
+		/**
+		 * 
+		 */
+		case R.id.iv_list:
+			iv_list.setEnabled(false);
+			if (!isListFragment) {
+				isListFragment = true;
+				iv_list.setImageResource(R.drawable.nav_map);
+			} else {
+				isListFragment = false;
+				iv_list.setImageResource(R.drawable.nav_listicon);
+			}
+			ChangeFragment();
+			new Handler().postDelayed(new Runnable() {
+				public void run() {
+					iv_list.setEnabled(true);
+				}
+			}, 1000);
+			break;
+		case R.id.iv_bao:
+			if (null == Utils.getHeaderParamsOnly()) {
+				getAlert().showLogin();
+				return;
+			}
+			Bundle data = new Bundle();
+			data.putString(Const.WEB_LEFT_TITLE_KEY, getString(R.string.tab_bar_ic_kanfang));
+			Utils.moveTo(activity, CashRedPacketActivity.class, false, data);
+			break;
+		case R.id.ll_top_title:
+			// Utils.moveTo(getActivity(), SeachActivity.class);
+			Intent intent = new Intent();
+			intent.setClass(getActivity(), SeachActivity.class);
+			startActivityForResult(intent, 12);
+			break;
+		}
+	}
+
+	private void ChangeFragment() {
+		if (getFragmentManager().getBackStackEntryCount() == 0) {
+			android.app.FragmentManager fm = getFragmentManager();
+			android.app.FragmentTransaction fragmentTransaction = fm.beginTransaction();
+			FragmentTransactionExtended fragmentTransactionExtended = new FragmentTransactionExtended(mActivity,
+					fragmentTransaction, mapFragment, listviewFragment, R.id.change_framelayout);
+			fragmentTransactionExtended.addTransition(4);
+			fragmentTransactionExtended.commit();
+		} else {
+			getFragmentManager().popBackStack();
+		}
+	}
+
+	@Override
+	public void onChildViewLoaded() {
+		// 红包按钮
+		mapFragment = new MapFragmentLayout();
+		listviewFragment = new ListViewFragmentLayout();
+		FragmentManager fm = getFragmentManager();
+		FragmentTransaction fragmentTransaction = fm.beginTransaction();
+		fragmentTransaction.add(R.id.change_framelayout, mapFragment);
+		fragmentTransaction.commit();
+		iv_bao = (ImageView) parentView.findViewById(R.id.iv_bao);
+		// 显示切换按钮
+		iv_list = (ImageView) parentView.findViewById(R.id.iv_list);
+		// 文字筛选
+		tv_top_title = (LinearLayout) parentView.findViewById(R.id.ll_top_title);
+		iv_list.setOnClickListener(this);
+		tv_top_title.setOnClickListener(this);
+		iv_bao.setOnClickListener(this);
+		mMenu = (DropDownMenu) parentView.findViewById(R.id.menu);
+
+		if (preferenceUtils.getIsFirstShowRedBag()) {
+			initPopuWindowFirstRedPacket();
+		} else {
+			initPopuWindowzhidao();
+		}
+	}
+
+	private boolean isLoaded = false;
+
+	public void InitMenu(final CityOfHousesResponse response) {
+		if (isLoaded)
+			return;
+		isLoaded = true;
+		pirce = new String[response.getPirceList().size() + 1];
+		pirce[0] = "价格";
+		for (int i = 0; i < response.getPirceList().size(); i++) {
+			pirce[i + 1] = response.getPirceList().get(i).getPriceSection();
+		}
+		quyu = new String[response.getAreaList().size() + 1];
+		quyu[0] = "区域";
+		for (int i = 0; i < response.getAreaList().size(); i++) {
+			quyu[i + 1] = response.getAreaList().get(i).getAreaName();
+		}
+		tese = new String[response.getBuildingFeatureList().size() + 1];
+		tese[0] = "特色";
+		for (int i = 0; i < response.getBuildingFeatureList().size(); i++) {
+			tese[i + 1] = response.getBuildingFeatureList().get(i).getFeatureName();
+		}
+		mMenu.setmMenuCount(3);// Menu的个数
+		mMenu.setmShowCount(5);// Menu展开list数量太多是只显示的个数
+		mMenu.setShowCheck(true);// 是否显示展开list的选中项
+		mMenu.setmMenuTitleTextSize(14);// Menu的文字大小
+		mMenu.setmMenuTitleTextColor(Color.parseColor("#000000"));// Menu的文字颜色
+		mMenu.setmMenuListTextSize(16);// Menu展开list的文字大小
+		mMenu.setmMenuListTextColor(Color.BLACK);// Menu展开list的文字颜色
+		mMenu.setmMenuBackColor(Color.parseColor("#ccfafafa"));// Menu的背景颜色
+		// 白色80%透明度
+		mMenu.setmMenuPressedBackColor(getResources().getColor(R.color.default_menu_back));// Menu按下的背景颜色
+		mMenu.setmMenuPressedTitleTextColor(Color.BLACK);// Menu按下状态的title文字颜色
+
+		mMenu.setmCheckIcon(R.drawable.ico_make);// Menu展开list的勾选图片
+
+		mMenu.setmUpArrow(R.drawable.menu_arrow_up);// Menu默认状态的箭头
+		mMenu.setmDownArrow(R.drawable.menu_arrow_down);// Menu按下状态的箭头
+
+		mMenu.setDefaultMenuTitle(strings);// 默认未选择任何过滤的Menu title
+
+		mMenu.setShowDivider(true);// 是否显示展开list的分割线
+		mMenu.setmMenuListBackColor(getResources().getColor(R.color.white));// 展开list的背景色
+		mMenu.setmMenuListSelectorRes(R.color.white);// 展开list的listselector
+		mMenu.setmArrowMarginTitle(15);// Menu上箭头图标距title的margin
+
+		mMenu.setMenuSelectedListener(new OnMenuSelectedListener() {
+			@Override
+			public void onSelected(View listview, int RowIndex, int ColumnIndex) {
+				Log.i("MainActivity", "select " + ColumnIndex + " column and " + RowIndex + " row");
+				if (ColumnIndex == 0) {
+					if (RowIndex > 0) {
+						RowIndex = RowIndex - 1;
+						String areaId = response.getAreaList().get(RowIndex).getAreaId();
+						map.put("areaId", areaId);
+					} else {
+						map.put("areaId", RowIndex + "");
+					}
+					if (!isChangeMeNuItem) {
+						isSelect = true;
+						quyu_index = RowIndex;
+						if (!isListFragment) {
+							mapFragment.MoveMap(Const.URL_NAME_OF_HOUSES, map);
+						} else {
+							Map<String, String> params = new HashMap<String, String>();
+							params.put(Const.PARAM_AREA_ID, map.get(Const.PARAM_AREA_ID));
+							EventBus.getDefault().post(params);
+						}
+					} else {
+						isChangeMeNuItem = false;
+					}
+				} else if (ColumnIndex == 1) {
+					if (RowIndex > 0) {
+						RowIndex = RowIndex - 1;
+						String priceId = response.getPirceList().get(RowIndex).getPriceId();
+						map.put("priceId", priceId);
+					} else {
+						map.put("priceId", RowIndex + "");
+					}
+					if (!isListFragment) {
+						if (quyu_index <= 0 && mapFragment.getMapZoom() < 12) {
+							getQunChange(Const.URL_NAME_OF_QUYU_V2, map, false);
+						} else {
+							mapFragment.getLouPanXin(Const.URL_NAME_OF_HOUSES, map, true);
+						}
+					} else {
+						Map<String, String> params = new HashMap<String, String>();
+						params.put(Const.PARAM_PRICE_ID, map.get(Const.PARAM_PRICE_ID));
+						EventBus.getDefault().post(params);
+						mapFragment.getLouPanXin(Const.URL_NAME_OF_HOUSES, map, true);
+					}
+				} else {
+					if (RowIndex > 0) {
+						RowIndex = RowIndex - 1;
+						String featureId = response.getBuildingFeatureList().get(RowIndex).getFeatureId();
+						map.put("featureId", featureId);
+					} else {
+						map.put("featureId", RowIndex + "");
+					}
+					if (!isListFragment) {
+						if (quyu_index <= 0 && mapFragment.getMapZoom() < 12) {
+							getQunChange(Const.URL_NAME_OF_QUYU_V2, map, false);
+						} else {
+							mapFragment.getLouPanXin(Const.URL_NAME_OF_HOUSES, map, true);
+						}
+					} else {
+						Map<String, String> params = new HashMap<String, String>();
+						params.put(Const.PARAM_FEATURE_ID, map.get(Const.PARAM_FEATURE_ID));
+						EventBus.getDefault().post(params);
+						mapFragment.getLouPanXin(Const.URL_NAME_OF_HOUSES, map, true);
+					}
+					;
+				}
+			}
+		});
+		List<String[]> items = new ArrayList<String[]>();
+		items.add(quyu);
+		items.add(pirce);
+		items.add(tese);
+		mMenu.setmMenuItems(items);
+		mMenu.setIsDebug(false);
+	}
+
+	@Override
+	public void onReloadData() {
+
+	}
+
+	@Override
+	public boolean onBackPressed() {
+		return false;
+	}
+
+	@Override
+	public String getRequestTag() {
+		return ZhaoFangFragment.class.getSimpleName();
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == 1) {
+			if (isListFragment) {
+				Map<String, String> maps = new HashMap<String, String>();
+				maps.put("buildingName", data.getStringExtra("buildingName"));
+				EventBus.getDefault().post(maps);
+			}
+			if (null != data.getStringExtra("latitude") && null != data.getStringExtra("longitude"))
+				if (!"".equals(data.getStringExtra("latitude")) && !"".equals(data.getStringExtra("longitude"))) {
+
+					try {
+						LatLng marker1 = new LatLng(Double.parseDouble(data.getStringExtra("latitude")),
+								Double.parseDouble(data.getStringExtra("longitude")));
+						mapFragment.SettingLatLng(marker1);
+						// 设置中心点和缩放比例
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+				}
+			// }
+		}
+	}
+
+	// 留在此页
+	private void initPopuWindowFirstRedPacket() {
+		if (preferenceUtils.getIsNotFirstShowed()) {
+			return;
+		}
+		preferenceUtils.setIsNotFirstShowed(true);
+		if (popuWindow1 == null) {
+			contentView1 = mLayoutInflater.inflate(R.layout.popuwindow_redbag_show, null);
+			popuWindow1 = new PopupWindow(contentView1, ViewGroup.LayoutParams.WRAP_CONTENT,
+					ViewGroup.LayoutParams.WRAP_CONTENT);
+			// ObjectAnimator anim = ObjectAnimator.ofFloat(contentView1, "Y",
+			// -contentView1.getHeight(), contentView1.getY())
+			// .setDuration(1500);
+			popuWindow1.setAnimationStyle(R.style.popwin_anim_style);
+			ImageView close = (ImageView) contentView1.findViewById(R.id.close);
+			close.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					popuWindow1.dismiss();
+					initPopuWindowzhidao();
+				}
+			});
+			final ImageView show = (ImageView) contentView1.findViewById(R.id.show_content);
+			show.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					numbers++;
+					SwitchLayout.get3DRotateFromLeft(show, false, null);
+					show.setImageResource(R.drawable.red_envelope_popup_window_whitebg);
+					if (numbers > 2) {
+						popuWindow1.dismiss();
+						initPopuWindowzhidao();
+					}
+				}
+			});
+		}
+
+		ColorDrawable cd = new ColorDrawable(0x000000);
+		popuWindow1.setBackgroundDrawable(cd);
+		// 产生背景变暗效果
+		WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
+		lp.alpha = 0.4f;
+		getActivity().getWindow().setAttributes(lp);
+
+		popuWindow1.setOutsideTouchable(true);
+		popuWindow1.setFocusable(true);
+		popuWindow1.showAtLocation(parentView, Gravity.CENTER | Gravity.CENTER_HORIZONTAL, 0, 0);
+
+		popuWindow1.update();
+		popuWindow1.setOnDismissListener(new OnDismissListener() {
+
+			// 在dismiss中恢复透明度
+			public void onDismiss() {
+				WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
+				lp.alpha = 1f;
+				getActivity().getWindow().setAttributes(lp);
+				initPopuWindowzhidao();
+			}
+		});
+	}
+
+	// 留在此页
+	private void initPopuWindowzhidao() {
+		XmlUtil xmlUtils = new XmlUtil(Const.USER_INFO);
+		if (ValidatorUtil.isValidString(xmlUtils.get(Const.IS_FIRST_USE))) {
+			return;
+		}
+		xmlUtils.set(Const.IS_FIRST_USE, Const.YES);
+		new Handler().postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				activity.runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						if (popuWindows == null) {
+							contentViews = mLayoutInflater.inflate(R.layout.popuwindow_course_setzhaofang, null);
+							popuWindows = new PopupWindow(contentViews, ViewGroup.LayoutParams.FILL_PARENT,
+									ViewGroup.LayoutParams.FILL_PARENT);
+							ImageView close = (ImageView) contentViews.findViewById(R.id.close);
+							close.setOnClickListener(new OnClickListener() {
+
+								@Override
+								public void onClick(View v) {
+									popuWindows.dismiss();
+								}
+							});
+						}
+						ColorDrawable cd = new ColorDrawable(0x000000);
+						popuWindows.setBackgroundDrawable(cd);
+						// 产生背景变暗效果
+						popuWindows.setOutsideTouchable(true);
+						popuWindows.setFocusable(true);
+						popuWindows.showAtLocation(parentView, Gravity.TOP, 0, 0);
+					}
+				});
+			}
+		}, 200);
+
+	}
+
+	// @Override
+	public void onHiddenChanged(boolean hidden) {
+		// getLouPanXin(Const.URL_NAME_OF_HOUSES, map, false);
+	}
+
+	@Override
+	public void onDestroy() {
+		try {
+			EventBus.getDefault().unregister(this);
+		} catch (Exception e) {
+		}
+		map = null;
+		super.onDestroy();
+	}
+}

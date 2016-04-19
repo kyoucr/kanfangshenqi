@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.xinwei.kanfangshenqi"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white" >
+
+    <ImageView
+        android:id="@+id/imgTop"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:background="@drawable/wodeuser_bg" />
+
+    <com.xinwei.kanfangshenqi.view.CircleImageViewWithBorder
+        android:id="@+id/imgHead"
+        android:layout_width="@dimen/img_big_head_size"
+        android:layout_height="@dimen/img_big_head_size"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/imgTop"
+        android:layout_marginRight="@dimen/margin_normal"
+        android:layout_marginTop="-40dp"
+        app:circle_border_color="@android:color/white"
+        app:circle_border_width="@dimen/img_head_border" />
+
+    <com.xinwei.kanfangshenqi.view.ListViewWidget
+        android:id="@+id/lViInterest"
+        style="@style/list_view"
+        android:layout_below="@id/imgHead" />
+
+    <RelativeLayout
+        android:id="@+id/rltEmpty"
+        style="@style/match"
+        android:layout_below="@id/imgHead"
+        android:visibility="gone" >
+
+        <!--
+             <LinearLayout
+            style="@style/layout"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical" >
+        -->
+
+        <ImageView
+            android:id="@+id/imgEmpty"
+            style="@style/item"
+            android:layout_width="@dimen/item_img_retry_width"
+            android:layout_height="@dimen/item_img_retry_height"
+            android:layout_above="@+id/txtEmpty"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/margin_big"
+            android:src="@drawable/ic_discuss_empty" />
+
+        <TextView
+            android:id="@+id/txtEmpty"
+            style="@style/item"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/hint_building_discuss_empty"
+            android:textColor="@color/light_gray"
+            android:textSize="@dimen/txt_size_normal" />
+        <!-- </LinearLayout> -->
+    </RelativeLayout>
+
+</RelativeLayout>

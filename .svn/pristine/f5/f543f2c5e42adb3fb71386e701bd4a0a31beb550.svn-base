@@ -1,0 +1,383 @@
+package com.xinwei.kanfangshenqi.activity;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import org.greenrobot.eventbus.EventBus;
+import org.xutils.view.annotation.Event;
+import org.xutils.view.annotation.ViewInject;
+
+import com.android.volley.Request;
+import com.google.gson.Gson;
+import com.xinwei.kanfangshenqi.BaseActivity;
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.common.Const;
+import com.xinwei.kanfangshenqi.fragment.WoDeFragment;
+import com.xinwei.kanfangshenqi.model.UnPlan;
+import com.xinwei.kanfangshenqi.request.HttpRequest;
+import com.xinwei.kanfangshenqi.request.HttpRequest.RequestListener;
+import com.xinwei.kanfangshenqi.response.LoginResponse;
+import com.xinwei.kanfangshenqi.util.PreferenceUtils;
+import com.xinwei.kanfangshenqi.util.StringUtils;
+import com.xinwei.kanfangshenqi.util.ToastUtil;
+import com.xinwei.kanfangshenqi.util.Utils;
+import com.xinwei.kanfangshenqi.view.ClearEditText;
+
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.net.wifi.WifiManager;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v7.internal.widget.ViewUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+
+public class SpeedinessLoginActivity extends BaseActivity{
+	/**
+	 * 输入手机号
+	 * 
+	 */
+	@ViewInject(R.id.input_phone)
+	private EditText mEditPhone;
+	/**
+	 * 输入验证码
+	 */
+	@ViewInject(R.id.input_code)
+	private ClearEditText mEditCode;
+	/**
+	 * 获取验证码
+	 */
+	@ViewInject(R.id.reget_code)
+	private TextView mBtnGetCode;
+	@ViewInject(R.id.checkBox)
+	private CheckBox mCheckBox;
+	
+	@ViewInject(R.id.treaty)
+	private TextView treaty;
+	@ViewInject(R.id.btn_login)
+	private Button btn;
+	private String mUserAccount;
+	
+	private String mUserCode;
+
+    private Timer timer;
+
+    private static final int PERIOD = 1;
+
+    private int begin = 60;
+    private String transId;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		addChildView(R.layout.activity_login_speediness);
+	}
+
+	/**
+	 * 获取验证码
+	 * 
+	 * @param view
+	 */
+	@Event(R.id.reget_code)
+	private void doReGetCodeEvent(View view) {
+		if (Utils.checkPhoneNum(mEditPhone.getText().toString())) {
+			mBtnGetCode.setText("获取中...");
+			mBtnGetCode.setEnabled(false);
+			Map<String, String> paramsContent = new HashMap<String, String>();
+			paramsContent.put(Const.PARAM_PHONE, mEditPhone.getText().toString());
+			paramsContent.put(Const.PARAM_CODETYPE, "2");
+			HttpRequest.post(activity, Const.URL_SENDVC, getRequestTag(), paramsContent, new RequestListener() {
+				@Override
+				public void onSuccess(String url, String responseResult) {
+					beginTimer();
+					mBtnGetCode.setFocusable(true);
+					ToastUtil.show("获取成功, 请查收您的短信");
+				}
+
+				@Override
+				public void onFailure(String url, String errorInfo) {
+					mBtnGetCode.setText(getResources().getString(R.string.get_verification_code));
+					mBtnGetCode.setEnabled(true);
+				}
+
+				@Override
+				public void onError(String url, String responseResult) {
+					mBtnGetCode.setText(getResources().getString(R.string.get_verification_code));
+					mBtnGetCode.setEnabled(true);
+				}
+			});
+		} else {
+			ToastUtil.show("手机号码不合法,请重新输入");
+		}
+	}
+
+	@Event(R.id.txtAgree)
+	private void onClickEvent(View v){
+		if(mCheckBox.isChecked()){
+			mCheckBox.setChecked(false);
+			btn.setEnabled(false);
+		}else{
+			mCheckBox.setChecked(true);
+			if(mEditPhone.getText().length()>0&&mEditCode.getText().length()>0){
+				btn.setEnabled(true);
+			}else{
+				btn.setEnabled(false);
+			}
+		}
+	}
+	@Event(R.id.checkBox)
+	private void onClickCheckBoxEvent(View v){
+		if(mCheckBox.isChecked()){
+			if(mEditPhone.getText().length()>0&&mEditCode.getText().length()>0){
+				btn.setEnabled(true);
+			}else{
+				btn.setEnabled(false);
+			}
+		}else{
+				btn.setEnabled(false);
+		}
+	}
+
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case PERIOD:
+                    if(begin == 0){
+                        begin = 61;
+                        timer.cancel();
+                        mBtnGetCode.setText(getResources().getString(
+                                R.string.get_verification_code));
+                        mBtnGetCode.setEnabled(true);
+                    }else{
+                        mBtnGetCode.setText(String.valueOf(begin));
+                    }
+                    begin--;
+                    break;
+                default:
+                	int event = msg.arg1;
+    				int result = msg.arg2;
+    				Object data = msg.obj;
+    				Log.e("event", "event=" + event);
+            }
+        }
+    };
+    /**
+     * 注册
+     *
+     * @param view
+     */
+    private void beginTimer() {
+        timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                mHandler.sendEmptyMessage(PERIOD);
+            }
+        };
+        timer.schedule(task, 0, 1000);
+    }
+	/**
+	 * 登陆
+	 * 
+	 * @param view
+	 */
+	@Event(R.id.btn_login)
+	private void doLoginEvent(final View view) {
+		// 判断手机号与密码是否正确
+		if (checkInput()) {
+			Utils.hideInput(activity,null);
+			view.setEnabled(false);
+			showBar();
+			Map<String,String> paramsHead = new HashMap<String,String>();
+			transId = getRandomNum();
+			paramsHead.put(Const.PARAM_TRANSID,transId );
+			paramsHead.put(Const.PARAM_APPAGENT, getWlanMacAddress());
+			paramsHead.put(Const.PARAM_OSVER, getUserAgent());
+			Map<String,String> contentParams = new HashMap<String,String>();
+			contentParams.put(Const.PARAM_ACCOUNT, mEditPhone.getText().toString());
+			contentParams.put(Const.PARAM_CODE, mEditCode.getText().toString());
+			final Request request = HttpRequest.post(this, Const.URL_LOGIN_SPEED, getRequestTag(), contentParams,paramsHead, new RequestListener() {
+				@Override
+				public void onSuccess(String url, String responseResult) {
+					if(LoginActivity.INSTANCE!=null){
+						LoginActivity.INSTANCE.finish();
+					}
+					LoginResponse loginResponse = new Gson().fromJson(responseResult, LoginResponse.class);
+					saveUserInfo(loginResponse);
+					EventBus.getDefault().post(loginResponse);
+					if(SeeHouseCircleActivity.INSTANCE!=null)
+						SeeHouseCircleActivity.INSTANCE.setUserInfoView();
+					finish();
+				}
+				
+				@Override
+				public void onFailure(String url, String errorInfo) {
+					closeBar();
+					view.setEnabled(true);
+				}
+				
+				@Override
+				public void onError(String url, String responseResult) {
+					closeBar();
+					view.setEnabled(true);
+				}
+			});
+			setOnCancelListener(new OnCancelListener() {
+						@Override
+						public void onCancel(DialogInterface dialog) {
+							if(request!=null)
+								request.cancel();
+							view.setEnabled(true);
+						}
+					});
+		}
+	}
+    @Event(R.id.treaty)
+    private void lookTreatyEvent(View view){
+    	Bundle data = new Bundle();
+    	data.putString(Const.WEB_URL_KEY, Const.PROTOCOL_URL);
+    	data.putString(Const.WEB_TITLE_KEY,getString(R.string.user_registration_protocol));
+    	data.putString(Const.WEB_LEFT_TITLE_KEY,getString(R.string.register));
+    	Utils.moveTo(this, WebActivity.class, false, data);
+    }
+	private void saveUserInfo(LoginResponse response){
+		PreferenceUtils preferenceUtils = PreferenceUtils.getInstance(getApplicationContext());
+		preferenceUtils.setSettingUserNickName(response.getNickName());
+		preferenceUtils.setSettingUserPic(response.getHeadPortraitDisplay());
+		preferenceUtils.setSettingUserSex(response.getSex());
+		preferenceUtils.setSettingUserToken(response.getToken());
+		preferenceUtils.setSettingUserAccount(mEditPhone.getText().toString());
+		preferenceUtils.setSettingUserNickName(response.getNickName());
+		preferenceUtils.setSettingUserTransId(transId);
+		preferenceUtils.setSettingUserAppAgent(getWlanMacAddress());
+		preferenceUtils.setSettingUserOSVer(getUserAgent());
+		preferenceUtils.setSettingUserUnappointplancount(response.getUnappointPlanCount());
+		EventBus.getDefault().post(new UnPlan());
+		if(WoDeFragment.woDeFragment!=null)
+			WoDeFragment.woDeFragment.onChildViewLoaded();
+	}
+	/**
+	 * 检测表单
+	 * @return
+	 */
+	private boolean checkInput() {
+		if(StringUtils.isEmpty(mEditPhone.getText().toString())){
+			Utils.makeToastAndShow(this, "请输入正确的用户名（手机号）", Toast.LENGTH_SHORT);
+			return false;
+		}else{
+			if(Utils.isNum(mEditPhone.getText().toString())){
+				if(!Utils.checkPhoneNum(mEditPhone.getText().toString())){
+					Utils.makeToastAndShow(this, "请输入正确的用户名（手机号）", Toast.LENGTH_SHORT);
+					return false;
+				}
+			}
+		}
+		if(StringUtils.isEmpty(mEditCode.getText().toString())){
+			Utils.makeToastAndShow(this, "请输入正确的验证码", Toast.LENGTH_SHORT);
+			return false;
+		}
+		if(!mCheckBox.isChecked()){
+			Utils.makeToastAndShow(this, "请同意看房神器用户注册协议", Toast.LENGTH_SHORT);
+			return false;
+		}
+		return true;
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
+	private String getUserAgent(){
+		WebView webview;  
+		webview = new WebView(this);  
+		webview.layout(0, 0, 0, 0);  
+		WebSettings settings = webview.getSettings();  
+		String ua = settings.getUserAgentString();  
+		return ua;
+	}
+	private String getWlanMacAddress(){
+		WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE); 
+		String m_szWLANMAC = wm.getConnectionInfo().getMacAddress();
+		return m_szWLANMAC;
+	}
+	private String getRandomNum(){
+		int numcode = (int) ((Math.random() * 9 + 1) * 100000);
+		transId = "" + numcode;
+	    return transId;
+	}
+
+	@Override
+	public void onChildViewLoaded() {
+		setTitleTxt("快速登录");
+		setLeftTitle("登录");
+		mBtnGetCode.setEnabled(false);
+		btn.setEnabled(false);
+		mEditPhone.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				if(s.length()>0){
+					mBtnGetCode.setEnabled(true);
+				}else{
+					mBtnGetCode.setEnabled(false);
+				}
+				if(s.length()>0&&mEditCode.getText().length()>0&&mCheckBox.isChecked()){
+					btn.setEnabled(true);
+				}else{
+					btn.setEnabled(false);
+				}
+			}
+		});
+		mEditCode.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				if(s.length()>0&&mEditPhone.getText().length()>0&&mCheckBox.isChecked()){
+					btn.setEnabled(true);
+				}else{
+					btn.setEnabled(false);
+				}
+			}
+		});
+	}
+
+	@Override
+	public void onReloadData() {
+		
+	}
+
+	@Override
+	public String getRequestTag() {
+		return null;
+	}
+}

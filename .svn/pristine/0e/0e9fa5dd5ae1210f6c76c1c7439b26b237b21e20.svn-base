@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+	<View style="@style/cut_line"
+	    android:visibility="gone"
+	    android:id="@+id/cutLineTop"/>
+    <RelativeLayout
+        android:id="@+id/rltContent"
+        android:layout_below="@id/cutLineTop"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_list_height"
+        android:background="@drawable/bg_ctrl_item" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:layout_toLeftOf="@+id/lltRight"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/txtType"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="@color/txt_color_black"
+                android:textSize="@dimen/txt_size_big" />
+
+            <TextView
+                android:id="@+id/txtDate"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="@color/light_gray"
+                android:textSize="@dimen/txt_size_small" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lltRight"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/txtMoney"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:textColor="@color/orange"
+                android:textSize="@dimen/txt_size_big" />
+
+            <TextView
+                android:id="@+id/txtStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_gravity="right"
+                android:textColor="@color/light_gray"
+                android:textSize="@dimen/txt_little_normal" />
+        </LinearLayout>
+    </RelativeLayout>
+	
+	<View style="@style/cut_line"
+	    android:visibility="gone"
+	    android:layout_below="@id/rltContent"
+	    android:id="@+id/cutLineBottom"/>
+</RelativeLayout>

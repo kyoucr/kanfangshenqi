@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    <RelativeLayout
+        android:id="@+id/rltSubTitle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:background="@color/orange" >
+
+        <RelativeLayout
+            android:id="@+id/rltLeft"
+            style="@style/match"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/txtTitle" >
+
+            <ImageButton
+                android:id="@+id/btnLeft"
+                style="@style/item"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/margin_normal"
+                android:background="@drawable/btn_back_white" />
+
+            <TextView
+                android:id="@+id/txtLeftCustom"
+                style="@style/item"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_small"
+                android:layout_toRightOf="@id/btnLeft"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/txt_size_normal" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/txtTitle"
+            style="@style/item"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/title_cash"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/txt_size_title" />
+
+        <TextView
+            android:id="@+id/btnRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:background="@null"
+            android:text="@string/trade_record"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/txt_size_normal" />
+    </RelativeLayout>
+
+</RelativeLayout>

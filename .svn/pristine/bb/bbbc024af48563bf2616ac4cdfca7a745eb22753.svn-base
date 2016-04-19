@@ -1,0 +1,288 @@
+package com.xinwei.kanfangshenqi.view;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Scroller;
+
+import com.xinwei.kanfangshenqi.R;
+
+public class SlideView extends LinearLayout {
+
+	private static final String TAG = "SlideView";
+
+	private Context mContext;
+	private LinearLayout mViewContent;
+	private Scroller mScroller;
+	private OnSlideListener mOnSlideListener;
+
+	private int mHolderWidth = 80;
+	private RelativeLayout leftRl;
+	private RelativeLayout rightRl;
+
+	private int mLastX = 0;
+	private int mLastY = 0;
+	private static final float TAN = 1.25f;
+
+	public interface OnSlideListener {
+		public static final int SLIDE_STATUS_OFF = 0;
+		public static final int SLIDE_STATUS_START_SCROLL = 1;
+		public static final int SLIDE_STATUS_ON = 2;
+
+		/**
+		 * @param view
+		 *            current SlideView
+		 * @param status
+		 *            SLIDE_STATUS_ON or SLIDE_STATUS_OFF
+		 */
+		public void onSlide(View view, int status);
+		public void onClickLeftComponent(View view);
+		public void onClickRightComponent(View view);
+	}
+
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		measureViews(widthMeasureSpec, heightMeasureSpec);
+		// setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+	}
+
+	public void measureViews(int widthMeasureSpec, int heightMeasureSpec) {
+		try {
+			// View menuView = getChildAt(0);
+			//
+			// menuView.measure(
+			// menuView.getLayoutParams().width + menuView.getLeft() +
+			// menuView.getRight(), heightMeasureSpec);
+
+			View contentView = getChildAt(1);
+			contentView.measure(widthMeasureSpec, heightMeasureSpec);
+
+			// View menuView1 = getChildAt(2);
+			// DisplayMetrics dm = new DisplayMetrics();
+			// ((Activity)mContext).getWindowManager().getDefaultDisplay().getMetrics(dm);
+			// menuView1.measure(
+			// menuView1.getLayoutParams().width + menuView1.getLeft() +
+			// menuView1.getRight(), heightMeasureSpec);
+			// setMeasuredDimension(menuView.getLayoutParams().width +
+			// menuView1.getLayoutParams().width +
+			// widthMeasureSpec , heightMeasureSpec);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	protected void onLayout(boolean changed, int l, int t, int r, int b) {
+		int childCount = getChildCount();
+		if (childCount != 3) {
+			throw new IllegalStateException(
+					"The childCount of SlidingMenu must be 2");
+		}
+		View menuView = getChildAt(0);
+		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) menuView
+				.getLayoutParams();
+		menuView.layout(-lp.width, 0, 0, menuView.getMeasuredHeight());
+
+		View contentView = getChildAt(1);
+		contentView.layout(0, 0, contentView.getMeasuredWidth(),
+				contentView.getMeasuredHeight());
+
+		RelativeLayout view2 = (RelativeLayout) getChildAt(2);
+		ViewGroup.LayoutParams lp2 = view2.getLayoutParams();
+		view2.layout(contentView.getMeasuredWidth(), 0,
+				contentView.getMeasuredWidth() + lp2.width,
+				contentView.getMeasuredHeight());
+		
+	}
+
+	public SlideView(Context context) {
+		super(context);
+		initView();
+	}
+
+	public SlideView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		initView(context, attrs);
+	}
+	
+	private void initView() {
+		mContext = getContext();
+		mScroller = new Scroller(mContext);
+		this.setOrientation(LinearLayout.HORIZONTAL);
+		this.setBackgroundResource(R.color.transparent);
+		View.inflate(mContext, R.layout.slide_view, this);
+		mViewContent = (LinearLayout) findViewById(R.id.view_content);
+		leftRl = (RelativeLayout) findViewById(R.id.edit_rl);
+		rightRl = (RelativeLayout) findViewById(R.id.del_rl);
+		mHolderWidth = Math.round(TypedValue.applyDimension(
+				TypedValue.COMPLEX_UNIT_DIP, mHolderWidth, getResources()
+						.getDisplayMetrics()));
+		leftRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				mOnSlideListener.onClickLeftComponent(v);
+			}
+		});
+		
+		rightRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				mOnSlideListener.onClickRightComponent(v);
+			}
+		});
+	}
+	
+	private void initView(Context context, AttributeSet attrs) {
+		mContext = getContext();
+		mScroller = new Scroller(mContext);
+		this.setOrientation(LinearLayout.HORIZONTAL);
+//		this.setBackgroundColor(Color.rgb(18, 8, 6));
+//		this.setBackgroundResource(R.color.transparent);
+		mHolderWidth = Math.round(TypedValue.applyDimension(
+				TypedValue.COMPLEX_UNIT_DIP, mHolderWidth, getResources()
+				.getDisplayMetrics()));
+		/*mViewContent = (LinearLayout) findViewById(R.id.view_content);
+		leftRl = (RelativeLayout) findViewById(R.id.edit_rl);
+		rightRl = (RelativeLayout) findViewById(R.id.del_rl);
+		leftRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				mOnSlideListener.onClickLeftComponent(v);
+			}
+		});
+		
+		rightRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				mOnSlideListener.onClickRightComponent(v);
+			}
+		});*/
+	}
+
+	public void setButtonText(CharSequence text) {
+		// ((TextView)findViewById(R.id.delete)).setText(text);
+	}
+
+	public void setContentView(View view) {
+		mViewContent.addView(view);
+	}
+
+	public void setOnSlideListener(OnSlideListener onSlideListener) {
+		mOnSlideListener = onSlideListener;
+	}
+
+	public void shrink() {
+		if (getScrollX() != 0) {
+			this.smoothScrollTo(0, 0);
+		}
+	}
+	
+	public boolean onRequireTouchEvent(MotionEvent event, boolean lockLeft, boolean lockRight) {
+		boolean flag = false;
+		int x = (int) event.getX();
+		int y = (int) event.getY();
+		int scrollX = getScrollX();
+//		Log.d(TAG, "x=" + x + "  y=" + y);
+
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_DOWN: {
+			if (!mScroller.isFinished()) {
+				mScroller.abortAnimation();
+			}
+			if (mOnSlideListener != null) {
+				mOnSlideListener.onSlide(this,
+						OnSlideListener.SLIDE_STATUS_START_SCROLL);
+			}
+			break;
+		}
+		case MotionEvent.ACTION_MOVE: {
+			int deltaX = x - mLastX;
+			int deltaY = y - mLastY;
+			if (Math.abs(deltaX) < Math.abs(deltaY) * TAN) {
+				flag = false;
+				break;
+			}
+			flag = true;
+			// 左滑 deltax =-
+			int newScrollX = scrollX - deltaX;
+			/*
+			 * if (deltaX != 0) {
+			 *  if (newScrollX < 0) { newScrollX = 0; } else
+			 * if (newScrollX > mHolderWidth) { newScrollX = mHolderWidth; }
+			 * //大于0 左滑 this.scrollTo(newScrollX, 0); }
+			 */
+			if (deltaX != 0) {
+				 if (newScrollX < 0) {//右
+            		 if(lockRight){
+            			 newScrollX = 0;
+            		 }else if(Math.abs(newScrollX) > mHolderWidth){
+            			 newScrollX =  -1 * mHolderWidth;
+            		 }
+                 } else  {//左
+                	 if(lockLeft){
+                		 newScrollX = 0;
+                	 }
+                	 else if(newScrollX > mHolderWidth){
+                		 newScrollX = mHolderWidth;
+                	 }
+                 }
+				this.scrollTo(newScrollX, 0);
+			}
+			break;
+		}
+		case MotionEvent.ACTION_UP: {
+			int newScrollX = 0;
+			if (Math.abs(scrollX) - mHolderWidth * 0.75 > 0) {
+				if (scrollX < 0) {
+					newScrollX = -mHolderWidth;
+				} else {
+					newScrollX = mHolderWidth;
+				}
+			}
+			this.smoothScrollTo(newScrollX, 0);
+			if (mOnSlideListener != null) {
+				mOnSlideListener.onSlide(this,
+						newScrollX == 0 ? OnSlideListener.SLIDE_STATUS_OFF
+								: OnSlideListener.SLIDE_STATUS_ON);
+			}
+			break;
+		}
+		default:
+			break;
+		}
+
+		mLastX = x;
+		mLastY = y;
+		return flag;
+	}
+
+	private void smoothScrollTo(int destX, int destY) {
+		// 缓慢滚动到指定位置
+		int scrollX = getScrollX();
+		int delta = destX - scrollX;
+		mScroller.startScroll(scrollX, 0, delta, 0, Math.abs(delta) * 3);
+		invalidate();
+	}
+
+	@Override
+	public void computeScroll() {
+		if (mScroller.computeScrollOffset()) {
+			scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
+			postInvalidate();
+		}
+	}
+
+}

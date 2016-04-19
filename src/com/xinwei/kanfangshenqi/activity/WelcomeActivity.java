@@ -1,0 +1,88 @@
+package com.xinwei.kanfangshenqi.activity;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.android.volley.Request;
+import com.google.gson.Gson;
+import com.xinwei.kanfangshenqi.BaseActivity;
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.common.Const;
+import com.xinwei.kanfangshenqi.request.HttpRequest;
+import com.xinwei.kanfangshenqi.request.HttpRequest.RequestListener;
+import com.xinwei.kanfangshenqi.response.ShowRedBagResponse;
+import com.xinwei.kanfangshenqi.util.PreferenceUtils;
+import com.xinwei.kanfangshenqi.util.Utils;
+import com.xinwei.kanfangshenqi.util.ValidatorUtil;
+import com.xinwei.kanfangshenqi.util.XmlUtil;
+
+import android.os.Bundle;
+import android.os.Handler;
+
+public class WelcomeActivity extends BaseActivity {
+	
+	private PreferenceUtils preferenceUtils;
+	private XmlUtil xmlUtils;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_welcome);
+		xmlUtils = new XmlUtil(Const.USER_INFO);
+		isSHowRedBag();
+		new Handler().postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				if(ValidatorUtil.isValidString(xmlUtils.get(Const.IS_FIRST_USE)))
+					Utils.moveTo(WelcomeActivity.this, MainActivity.class, true, null);
+				else
+					Utils.moveTo(WelcomeActivity.this, GuideActivity.class, true, null);
+				overridePendingTransition(R.anim.right_in, R.anim.left_out);
+			}
+		}, 2000);
+	}
+
+	@Override
+	public void onChildViewLoaded() {
+	}
+
+	@Override
+	public void onReloadData() {
+
+	}
+
+	@Override
+	public String getRequestTag() {
+		return null;
+	}
+	private Request requestShowRedBag;
+	public void isSHowRedBag() {
+		preferenceUtils = PreferenceUtils.getInstance(WelcomeActivity.this);
+		if (preferenceUtils.getIsNotFirstShowed()) {
+			return;
+		}
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("cityId","024");
+		requestShowRedBag = HttpRequest.get(activity, Const.URL_IS_SHOW_RED_BAG, getRequestTag(), map, Utils.getHeaderParamsOnly(),
+				new RequestListener() {
+					@Override
+					public void onSuccess(String url, String responseResult) {
+						ShowRedBagResponse mShowRedBagResponse = new Gson().fromJson(responseResult,
+								ShowRedBagResponse.class);
+						if(mShowRedBagResponse.getIsEnable().equals("true")){
+							preferenceUtils.setIsFirstShowRedBag(true);
+						}else{
+							preferenceUtils.setIsFirstShowRedBag(false);
+						}
+					}
+
+					@Override
+					public void onFailure(String url, String errorInfo) {
+					}
+
+					@Override
+					public void onError(String url, String responseResult) {
+					}
+				});
+	}
+}

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/lltFirstLine"
+        style="@style/layout"
+        android:layout_marginLeft="29dp"
+        android:layout_marginRight="29dp"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            style="@style/item"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical"
+            android:visibility="invisible" >
+
+            <TextView
+                style="@style/item"
+                android:layout_gravity="center_vertical|right"
+                android:text="26"
+                android:textColor="#ede3e2"
+                android:textSize="24sp" />
+
+            <TextView
+                style="@style/item"
+                android:layout_gravity="center_vertical|right"
+                android:text="01月"
+                android:textColor="#ede3e2"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imgFirstLine"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/img_achievement_cutline_margin"
+            android:layout_marginRight="@dimen/img_achievement_cutline_margin"
+            android:background="@android:color/white"
+            android:minHeight="@dimen/min_img_achievement_cutline_height" />
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/layout"
+        android:layout_marginLeft="29dp"
+        android:layout_marginRight="29dp"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            style="@style/item"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/txtDate"
+                style="@style/item"
+                android:layout_gravity="center_vertical|right"
+                android:textColor="#ede3e2"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/txtMonth"
+                style="@style/item"
+                android:layout_gravity="center_vertical|right"
+                android:textColor="#ede3e2"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <ImageView
+            style="@style/item"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:background="@drawable/circle_pic" />
+
+        <TextView
+            android:id="@+id/txtDesc"
+            style="@style/item"
+            android:layout_gravity="center_vertical"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/txt_size_normal" />
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/layout"
+        android:layout_marginLeft="29dp"
+        android:layout_marginRight="29dp"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            style="@style/item"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical"
+            android:visibility="invisible" >
+
+            <TextView
+                style="@style/item"
+                android:layout_gravity="center_vertical|right"
+                android:text="26"
+                android:textColor="#ede3e2"
+                android:textSize="24sp" />
+
+            <TextView
+                style="@style/item"
+                android:layout_gravity="center_vertical|right"
+                android:text="01月"
+                android:textColor="#ede3e2"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/img_achievement_cutline_margin"
+            android:layout_marginRight="@dimen/img_achievement_cutline_margin"
+            android:background="@android:color/white"
+            android:minHeight="@dimen/min_img_achievement_cutline_height" />
+
+        <ImageView
+            android:id="@+id/imgShow"
+            android:layout_width="@dimen/img_achievement_show_width"
+            android:layout_height="@dimen/img_achievement_show_height"
+            android:layout_marginBottom="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</LinearLayout>

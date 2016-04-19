@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/lltLouPan"
+    android:background="@drawable/bg_ctrl_item"
+    android:layout_marginLeft="@dimen/margin_normal"
+    android:layout_marginRight="@dimen/margin_normal"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_normal"
+        android:layout_marginRight="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_marginBottom="@dimen/margin_normal"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/iv_loupan_tupian"
+            android:layout_width="102dp"
+            android:layout_height="76dp"
+            android:layout_gravity="center_vertical" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="76dp"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/tv_loupan_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/txt_size_normal" />
+
+                <ImageView
+                    android:id="@+id/iv_loupan_hongbao"
+                    android:layout_width="10dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/middle_red_packet" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/tv_loupan_mianji"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:textColor="@color/txt_gray_nine"
+                    android:textSize="@dimen/txt_little_normal" />
+
+                <TextView
+                    android:id="@+id/tv_loupan_jiaqian"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv_loupan_jiaqian_danwei"
+                    android:textColor="@color/orange"
+                    android:textSize="@dimen/txt_little_normal" />
+
+                <com.xinwei.kanfangshenqi.view.TextViewNoBottomPadding
+                    android:id="@+id/tv_loupan_jiaqian_danwei"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="元/平"
+                    android:textColor="@color/orange"
+                    android:textSize="9sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_marginBottom="2dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/tv_loupan_weizhi_tubiao"
+                    android:layout_width="8dp"
+                    android:layout_height="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="3dp"
+                    android:layout_alignParentLeft="true"
+                    android:background="@drawable/address_icon" />
+
+                <TextView
+                    android:id="@+id/tv_loupan_weizhi_wenzi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv_loupan_weizhi_tubiao"
+                    android:textColor="@color/txt_gray_nine"
+                    android:textSize="@dimen/txt_size_small" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/lltFeature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/txtFeature1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:padding="@dimen/margin_tiny"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/txt_size_tiny" />
+
+                <TextView
+                    android:id="@+id/txtFeature2"
+                    android:padding="@dimen/margin_tiny"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:layout_toLeftOf="@+id/tv_loupan_jiaqian_danwei"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/txt_size_tiny" />
+
+                <TextView
+                    android:id="@+id/txtFeature3"
+                    android:padding="@dimen/margin_tiny"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/txt_size_tiny" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

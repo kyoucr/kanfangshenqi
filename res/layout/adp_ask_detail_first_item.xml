@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    <RelativeLayout
+                android:id="@+id/rltTop"
+                style="@style/layout" >
+
+                <com.xinwei.kanfangshenqi.view.CircleImageViewWithBorder
+                    android:id="@+id/imgHead"
+                    android:layout_width="@dimen/see_house_circle_img_head_size"
+                    android:layout_height="@dimen/see_house_circle_img_head_size"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/margin_normal"
+                    android:background="@drawable/not_logged_in_headpic" />
+
+                <LinearLayout
+                    style="@style/layout"
+                    android:layout_marginRight="@dimen/margin_normal"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:layout_toRightOf="@id/imgHead"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/txtName"
+                        style="@style/item"
+                        android:textColor="@color/txt_color_black"
+                        android:textSize="@dimen/txt_size_big" />
+
+                    <TextView
+                        android:id="@+id/txtContent"
+                        style="@style/layout"
+                        android:layout_marginRight="@dimen/margin_small"
+                        android:layout_marginTop="@dimen/margin_normal"
+                        android:textColor="@color/txt_color_black"
+                        android:textSize="@dimen/txt_size_big" />
+
+                    <com.xinwei.kanfangshenqi.view.GridViewInScroll
+                        android:id="@+id/gridViewImg"
+                        android:layout_marginTop="@dimen/margin_normal" 
+                        android:layout_marginRight="45dp"
+                        style="@style/list_view"
+                        android:horizontalSpacing="@dimen/margin_small"
+                        android:numColumns="3"
+                        android:verticalSpacing="@dimen/margin_small" />
+
+                    <RelativeLayout
+                        style="@style/layout"
+                        android:layout_marginTop="@dimen/margin_normal" >
+
+                        <TextView
+                            android:id="@+id/txtTime"
+                            style="@style/item"
+                            android:layout_alignParentLeft="true"
+                            android:textColor="@color/light_gray"
+                            android:textSize="@dimen/txt_size_normal" />
+
+                        <LinearLayout
+                            android:id="@+id/lltCommentParent"
+                            style="@style/item"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal" >
+
+                            <ImageView
+                                android:layout_width="@dimen/img_leave_words_width"
+                                android:layout_height="@dimen/img_leave_words_height"
+                                android:background="@drawable/btn_comment" />
+
+                            <TextView
+                                android:id="@+id/txtNum"
+                                style="@style/item"
+                                android:layout_marginLeft="@dimen/margin_small"
+                                android:textColor="@color/txt_color_black"
+                                android:textSize="@dimen/txt_size_normal" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/imgArrow"
+                            style="@style/item"
+                            android:visibility="gone"
+                            android:layout_alignParentRight="true"
+                            android:layout_below="@id/lltCommentParent"
+                            android:layout_marginRight="@dimen/margin_normal"
+                            android:background="@drawable/ic_arrow_up_ask_detail" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,116 @@
+package com.xinwei.kanfangshenqi.activity;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+
+import com.lidroid.xutils.view.annotation.ViewInject;
+import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.xinwei.kanfangshenqi.BaseActivity;
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.common.Const;
+import com.xinwei.kanfangshenqi.request.HttpRequest;
+import com.xinwei.kanfangshenqi.request.HttpRequest.RequestListener;
+import com.xinwei.kanfangshenqi.util.ToastUtil;
+import com.xinwei.kanfangshenqi.util.Utils;
+import com.xinwei.kanfangshenqi.util.ValidatorUtil;
+/**
+ ********************
+ * 账户输入，提交提现申请
+ * @author cn
+ ********************
+ */
+public class AccountActivity extends BaseActivity {
+	@ViewInject(R.id.edtTxtAccount)
+	private EditText edtTxtAccount;
+	@ViewInject(R.id.edtTxtAccountName)
+	private EditText edtTxtAccountName;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		addChildView(R.layout.activity_account);
+	}
+
+	@Override
+	public void onChildViewLoaded() {
+		setTitleTxt(R.string.title_account);
+		setLeftTitle(R.string.txt_pick_cash);
+		setRightTxt(R.string.txt_submit);
+	}
+
+	@OnClick(R.id.txtRight)
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.txtRight:
+			submit();
+			break;
+		}
+	}
+
+	private void submit() {
+		String inputAccount = edtTxtAccount.getText().toString().trim();
+		String inputAccountName = edtTxtAccountName.getText().toString().trim();
+		if(!ValidatorUtil.isValidString(inputAccountName)){
+			ToastUtil.show(activity, "请输入真实姓名！");
+			edtTxtAccountName.requestFocus();
+			return;
+		}
+		if (!ValidatorUtil.isValidString(inputAccount)) {
+			ToastUtil.show(activity, "请输入账户！");
+			edtTxtAccount.requestFocus();
+			return;
+		}
+		if (!ValidatorUtil.isValidString(PickCashActivity.MONEY_PICK)) {
+			ToastUtil.show(activity, "提现金额无效，请重新操作！");
+			return;
+		}
+		txtRight.setEnabled(false);
+		Map<String, String> paramsContent = new HashMap<String, String>();
+		paramsContent.put(Const.PARAM_ACCOUNT, inputAccount);
+		paramsContent.put(Const.PARAM_PRICE, PickCashActivity.MONEY_PICK);
+		paramsContent.put(Const.PARAM_ISDEFAULT, Const.YES);
+		paramsContent.put(Const.PARAM_ACCOUNTTYPE, Const.VALUE_ZHIFUBAO);
+		paramsContent.put(Const.PARAM_ACCOUNTNAME, inputAccountName);
+		showBar();
+		setBarCancelable(false);
+		HttpRequest.post(activity, Const.URL_CASH, getRequestTag(),
+				paramsContent,Utils.getHeaderParamsOnly(), new RequestListener() {
+
+					@Override
+					public void onSuccess(String url, String responseResult) {
+						if(CashRedPacketActivity.OnCashPickedListener!=null)
+							CashRedPacketActivity.OnCashPickedListener.onCashPicked();
+						closeBar();
+						if(PickCashActivity.INSTANCE!=null)
+							PickCashActivity.INSTANCE.finish();
+						finish();
+						ToastUtil.show(activity, getString(R.string.hint_submit_cash_success));
+					}
+
+					@Override
+					public void onFailure(String url, String errorInfo) {
+						closeBar();
+						txtRight.setEnabled(true);
+					}
+
+					@Override
+					public void onError(String url, String responseResult) {
+						closeBar();
+						txtRight.setEnabled(true);
+					}
+				});
+	}
+
+	@Override
+	public void onReloadData() {
+	}
+
+	@Override
+	public String getRequestTag() {
+		return AccountActivity.class.getSimpleName();
+	}
+
+}

@@ -1,0 +1,96 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:titlebar="http://schemas.android.com/apk/res/com.xinwei.kanfangshenqi"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fafafa"
+     >
+    <LinearLayout
+        android:id="@+id/input_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/register_input_linerlayout_marginTop"
+        android:orientation="vertical" >
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/line" />
+		<RelativeLayout
+            android:id="@+id/verification_code"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            android:background="@drawable/bg_white"
+            android:layout_weight="1" >
+ 			<TextView
+                android:id="@+id/reget_code"
+                android:layout_width="80dp"
+                android:layout_height="33dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/register_text_marginRight"
+                android:background="@drawable/btn_orange_send_code"
+                android:padding="@dimen/register_text_padding"
+                android:text="@string/get_verification_code"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:gravity="center"
+                />
+            <EditText
+                android:id="@+id/input_phone"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:hint="@string/hint_input_phone_num"
+                android:maxLength="11"
+                android:inputType="number"
+                android:saveEnabled="true"
+                android:singleLine="true"
+                android:paddingLeft="10dp"
+                android:textCursorDrawable="@null"
+                android:textColorHint="@color/txt_gray"
+                android:layout_toLeftOf="@id/reget_code"
+                android:textSize="16sp" />
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/line" />
+		
+        <LinearLayout
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_height="@dimen/title_height"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_white"
+            android:paddingTop="@dimen/register_linerlayout_paddingTop" >
+            <EditText
+                android:id="@+id/input_code"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@null"
+                android:hint="@string/hint_verification_code"
+                android:inputType="number"
+                android:saveEnabled="true"
+                android:singleLine="true"
+                android:paddingLeft="10dp"
+                android:maxLength="6"
+                android:textCursorDrawable="@null"
+                android:textColorHint="@color/txt_gray"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/line" />
+
+    </LinearLayout>
+    
+    
+
+
+</RelativeLayout>

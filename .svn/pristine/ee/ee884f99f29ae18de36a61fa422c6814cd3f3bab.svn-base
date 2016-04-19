@@ -1,0 +1,334 @@
+package com.xinwei.kanfangshenqi.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.greenrobot.eventbus.EventBus;
+
+import com.google.gson.Gson;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.lidroid.xutils.view.annotation.ViewInject;
+import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.lidroid.xutils.view.annotation.event.OnItemClick;
+import com.xinwei.kanfangshenqi.BaseActivity;
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.adapter.CommentNewAdp;
+import com.xinwei.kanfangshenqi.common.Const;
+import com.xinwei.kanfangshenqi.model.Ask;
+import com.xinwei.kanfangshenqi.model.ReplyComment;
+import com.xinwei.kanfangshenqi.request.HttpRequest;
+import com.xinwei.kanfangshenqi.request.HttpRequest.RequestListener;
+import com.xinwei.kanfangshenqi.util.ToastUtil;
+import com.xinwei.kanfangshenqi.util.Utils;
+import com.xinwei.kanfangshenqi.util.ValidatorUtil;
+import com.xinwei.kanfangshenqi.view.ImgDetailPop;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.view.Gravity;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+
+public class AskDetailNewActivity extends BaseActivity implements OnRefreshListener2 {
+	private String commentId;
+	private Ask askResponse;
+	@ViewInject(R.id.lViComment)
+	private PullToRefreshListView lViComment;
+	@ViewInject(R.id.edtTxtComment)
+	private EditText edtTxtComment;
+	@ViewInject(R.id.btnComment)
+	private Button btnComment;
+	private CommentNewAdp commentAdp;
+	private String replyId = null;
+	private ImgDetailPop pop;
+	private String url;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		addChildView(R.layout.activity_ask_detail_new);
+	}
+
+	@Override
+	public void onChildViewLoaded() {
+		lViComment.setOnRefreshListener(this);
+		commentId = getIntent().getStringExtra(AskDetailNewActivity.class.getSimpleName());
+		if (commentId == null) {
+			finish();
+			return;
+		}
+		if (getIntent().getBooleanExtra(Const.URL_BUILDING_COMMENT_DETAIL, false))
+			url = Const.URL_BUILDING_COMMENT_DETAIL;
+		else
+			url = Const.URL_CHATCOMMENT_DETAIL;
+		onReloadData();
+	}
+
+	private void initView() {
+		String title = getIntent().getStringExtra(Const.WEB_TITLE_KEY);
+		if(ValidatorUtil.isValidString(title))
+			setTitleTxt(title);
+		String leftTitle = getIntent().getStringExtra(Const.WEB_LEFT_TITLE_KEY);
+		if (leftTitle != null)
+			setLeftTitle(leftTitle);
+		else
+			setLeftTitle(R.string.see_house_circle);
+		if (askResponse != null) {
+			commentAdp = new CommentNewAdp(activity, askResponse);
+			lViComment.setAdapter(commentAdp);
+		}
+	}
+
+	@Override
+	public void onReloadData() {
+		showBar();
+		List<Map<String, String>> paramsContent = new ArrayList<Map<String, String>>();
+		Map<String, String> paramsMap1 = new HashMap<String, String>();
+		paramsMap1.put(Const.PARAM_COMMENTID, commentId);
+		Map<String, String> paramsMap2 = new HashMap<String, String>();
+		paramsMap2.put(Const.PARAM_cURPAGE, String.valueOf(mBeginPage));
+		paramsContent.add(paramsMap1);
+		paramsContent.add(paramsMap2);
+		HttpRequest.rest(activity, url, getRequestTag(), paramsContent, Utils.getHeaderParamsOnly(), new RequestListener() {
+
+			@Override
+			public void onSuccess(String url, String responseResult) {
+				closeBar();
+				askResponse = new Gson().fromJson(responseResult, Ask.class);
+				initView();
+				Utils.judgePullRefreshStatus(lViComment, mBeginPage, askResponse.getReplayPageCount());
+				isShowContent(true);
+				refreshAskReplyNumStatus();
+			}
+
+			@Override
+			public void onFailure(String url, String errorInfo) {
+				isShowError(true);
+			}
+
+			@Override
+			public void onError(String url, String responseResult) {
+				isShowError(true);
+			}
+		});
+	}
+
+	private void refreshAskReplyNumStatus() {
+		if (askResponse != null) {
+			Ask ask = new Ask();
+			ask.setCommentId(askResponse.getCommentId());
+			ask.setReplayDataCount(askResponse.getReplayDataCount());
+			EventBus.getDefault().post(ask);
+		}
+	}
+
+	public void loadDataAfterComment() {
+		showBar();
+		List<Map<String, String>> paramsContent = new ArrayList<Map<String, String>>();
+		Map<String, String> paramsMap1 = new HashMap<String, String>();
+		paramsMap1.put(Const.PARAM_COMMENTID, commentId);
+		Map<String, String> paramsMap2 = new HashMap<String, String>();
+		paramsMap2.put(Const.PARAM_cURPAGE, String.valueOf(mBeginPage));
+		paramsContent.add(paramsMap1);
+		paramsContent.add(paramsMap2);
+		HttpRequest.rest(activity, url, getRequestTag(), paramsContent, Utils.getHeaderParamsOnly(), new RequestListener() {
+
+			@Override
+			public void onSuccess(String url, String responseResult) {
+				closeBar();
+				askResponse = new Gson().fromJson(responseResult, Ask.class);
+				initView();
+				Utils.judgePullRefreshStatus(lViComment, mBeginPage, askResponse.getReplayPageCount());
+				refreshAskReplyNumStatus();
+			}
+
+			@Override
+			public void onFailure(String url, String errorInfo) {
+				closeBar();
+			}
+
+			@Override
+			public void onError(String url, String responseResult) {
+				closeBar();
+			}
+		});
+	}
+
+	public void showPop(int position) {
+		List<String> listImg = new ArrayList<String>();
+		for (int i = 0; i < askResponse.getCommentImgs().size(); i++) {
+			listImg.add(askResponse.getCommentImgs().get(i).getCommentImgPath());
+		}
+		pop = new ImgDetailPop(activity, listImg, position);
+		pop.showAtLocation(lViComment, Gravity.NO_GRAVITY, 0, 0);
+		Utils.hideInput(edtTxtComment);
+	}
+
+	@OnItemClick(R.id.lViComment)
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+		try {
+			ReplyComment replayComment = (ReplyComment) arg0.getAdapter().getItem(position);
+			if (replayComment.getReplyMemberName() != null) {
+				replyId = replayComment.getReplycommentId();
+				edtTxtComment.setHint(getString(R.string.txt_reply, replayComment.getReplyMemberName()));
+				edtTxtComment.requestFocus();
+				Utils.showInput(edtTxtComment);
+			}
+		} catch (Exception e) {
+		}
+	}
+
+	@OnClick(R.id.btnComment)
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.btnComment:
+			sendComment();
+			break;
+		}
+	}
+
+	public void setReply2Owner() {
+		replyId = null;
+		edtTxtComment.setHint(getString(R.string.txt_discuss));
+		Utils.showInput(edtTxtComment);
+		edtTxtComment.requestFocus();
+	}
+
+	private void sendComment() {
+		Utils.hideKeyboard(activity);
+		showBar();
+		String comment = edtTxtComment.getText().toString().trim();
+		if (!ValidatorUtil.isValidString(comment)) {
+			ToastUtil.show(activity, getString(R.string.hint_can_not_send_empty_msg));
+			closeBar();
+			return;
+		}
+		Map<String, String> paramsContent = new HashMap<String, String>();
+		paramsContent.put(Const.PARAM_CONTENT, comment);
+		paramsContent.put(Const.PARAM_PARENT_COMMENTID, askResponse.getCommentId());
+		if (replyId != null)
+			paramsContent.put(Const.PARAM_REPLYCOMMENTID, replyId);
+		// public static final String PARAM_PARENT_COMMENTID =
+		// "parentCommentId";//上级评论编号
+		// public static final String PARAM_REPLYCOMMENTID =
+		// "replyCommentId";//二级评论编号
+		String urlComment;
+		if (getIntent().getBooleanExtra(Const.URL_BUILDING_COMMENT_DETAIL, false)) {
+			urlComment = Const.URL_BUILDING_COMMENT;
+		} else {
+			urlComment = Const.URL_CHATCOMMENT;
+		}
+		HttpRequest.post(activity, urlComment, getRequestTag(), paramsContent, Utils.getHeaderParamsOnly(), new RequestListener() {
+			@Override
+			public void onSuccess(String url, String responseResult) {
+				edtTxtComment.setText("");
+				closeBar();
+				try {
+					askResponse.setReplayPageCount(askResponse.getReplayDataCount()+1);
+					commentAdp.notifyDataSetChanged();
+					refreshAskReplyNumStatus();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				loadDataAfterComment();
+			}
+
+			@Override
+			public void onFailure(String url, String errorInfo) {
+				closeBar();
+
+			}
+
+			@Override
+			public void onError(String url, String responseResult) {
+				closeBar();
+			}
+		});
+
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (pop != null && pop.isShowing()) {
+			pop.dismiss();
+		} else{
+			super.onBackPressed();
+		}
+	}
+
+	@Override
+	public void onPullDownToRefresh(PullToRefreshBase refreshView, final int mBeginPage) {
+		List<Map<String, String>> paramsContent = new ArrayList<Map<String, String>>();
+		Map<String, String> paramsMap1 = new HashMap<String, String>();
+		paramsMap1.put(Const.PARAM_COMMENTID, commentId);
+		Map<String, String> paramsMap2 = new HashMap<String, String>();
+		paramsMap2.put(Const.PARAM_cURPAGE, String.valueOf(mBeginPage));
+		paramsContent.add(paramsMap1);
+		paramsContent.add(paramsMap2);
+		HttpRequest.rest(activity, url, getRequestTag(), paramsContent, Utils.getHeaderParamsOnly(), new RequestListener() {
+
+			@Override
+			public void onSuccess(String url, String responseResult) {
+				askResponse = new Gson().fromJson(responseResult, Ask.class);
+				initView();
+				Utils.judgePullRefreshStatus(lViComment, mBeginPage, askResponse.getReplayPageCount());
+			}
+
+			@Override
+			public void onFailure(String url, String errorInfo) {
+				lViComment.onRefreshComplete(false);
+			}
+
+			@Override
+			public void onError(String url, String responseResult) {
+				lViComment.onRefreshComplete(false);
+			}
+		});
+	}
+
+	@Override
+	public void onPullUpToLoad(PullToRefreshBase refreshView, final int mNextPage) {
+		List<Map<String, String>> paramsContent = new ArrayList<Map<String, String>>();
+		Map<String, String> paramsMap1 = new HashMap<String, String>();
+		paramsMap1.put(Const.PARAM_COMMENTID, commentId);
+		Map<String, String> paramsMap2 = new HashMap<String, String>();
+		paramsMap2.put(Const.PARAM_cURPAGE, String.valueOf(mNextPage));
+		paramsContent.add(paramsMap1);
+		paramsContent.add(paramsMap2);
+		HttpRequest.rest(activity, url, getRequestTag(), paramsContent, Utils.getHeaderParamsOnly(), new RequestListener() {
+
+			@Override
+			public void onSuccess(String url, String responseResult) {
+				Ask askResponseTemp = new Gson().fromJson(responseResult, Ask.class);
+				Utils.judgePullRefreshStatus(lViComment, mNextPage, askResponse.getReplayPageCount());
+				if (ValidatorUtil.isValidList(askResponseTemp.getReplayComments()))
+					commentAdp.replyList.addAll(askResponseTemp.getReplayComments());
+				commentAdp.notifyDataSetChanged();
+				// Utils.setListViewHeightBasedOnChildren(lViComment,
+				// DensityUtil.dip2px(margin));
+			}
+
+			@Override
+			public void onFailure(String url, String errorInfo) {
+				lViComment.onRefreshComplete(false);
+			}
+
+			@Override
+			public void onError(String url, String responseResult) {
+				lViComment.onRefreshComplete(false);
+			}
+		});
+	}
+	@Override
+	public String getRequestTag() {
+		return AskDetailNewActivity.class.getSimpleName();
+	}
+}

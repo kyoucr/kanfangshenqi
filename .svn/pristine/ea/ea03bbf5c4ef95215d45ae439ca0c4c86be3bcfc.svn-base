@@ -1,0 +1,237 @@
+package com.xinwei.kanfangshenqi.activity;
+
+import java.util.List;
+import java.util.Map;
+
+import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.lidroid.xutils.view.annotation.ViewInject;
+import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.xinwei.kanfangshenqi.BaseActivity;
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.adapter.IncomeAdp;
+import com.xinwei.kanfangshenqi.common.Const;
+import com.xinwei.kanfangshenqi.model.CashRedPacket;
+import com.xinwei.kanfangshenqi.model.Income;
+import com.xinwei.kanfangshenqi.request.HttpRequest;
+import com.xinwei.kanfangshenqi.request.HttpRequest.RequestListener;
+import com.xinwei.kanfangshenqi.util.TextViewWriterUtil;
+import com.xinwei.kanfangshenqi.util.ToastUtil;
+import com.xinwei.kanfangshenqi.util.Utils;
+import com.xinwei.kanfangshenqi.util.ValidatorUtil;
+import com.xinwei.kanfangshenqi.view.ListViewWidget;
+import com.xinwei.kanfangshenqi.view.ListViewWidget.ListViewWidgetListener;
+import com.xinwei.kanfangshenqi.view.RiseNumberTextView;
+
+/**
+ *******************
+ * 现金红包
+ * 
+ * @author cn
+ *
+ *******************
+ */
+public class CashRedPacketActivity extends BaseActivity implements ListViewWidgetListener {
+	@ViewInject(R.id.lViIncome)
+	private ListViewWidget lViIncome;
+	private int beginPage = 1;
+	private List<Income> listIncomeData;
+	@ViewInject(R.id.txtCash)
+	private RiseNumberTextView txtCash;
+	// @ViewInject(R.id.txtCashNone)
+	// private TextView txtCashNone;
+	@ViewInject(R.id.rltEmpty)
+	private RelativeLayout rltEmpty;
+	@ViewInject(R.id.txtLeftCustom)
+	private TextView txtLeftCustom;
+	@ViewInject(R.id.txtWait)
+	private RiseNumberTextView txtWait;
+	@ViewInject(R.id.txtAccumulative)
+	private RiseNumberTextView txtAccumulative;
+	private IncomeAdp incomeAdp;
+	private CashRedPacket cash;
+	public static OnCashPickedListener OnCashPickedListener;
+	private OnCashPickedListener onCashPickedListener = new OnCashPickedListener() {
+		@Override
+		public void onCashPicked() {
+			onReloadData();
+		}
+	};
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		addChildView(R.layout.activity_cash_red_packet);
+		addCustomTitle(R.layout.title_cash_red_packet);
+	}
+
+	@Override
+	public void onChildViewLoaded() {
+		String leftTitle = getIntent().getStringExtra(Const.WEB_LEFT_TITLE_KEY);
+		if (ValidatorUtil.isValidString(leftTitle)) {
+			TextViewWriterUtil.writeValue(txtLeftCustom, leftTitle);
+		}
+		lViIncome.setListViewWidgetListener(this);
+		onReloadData();
+	}
+
+	@Override
+	public void onReloadData() {
+		showBar();
+		setBarCancelable(false);
+		HttpRequest.get(this, Const.URL_ENVELOPERECEIVE + String.valueOf(beginPage), getRequestTag(), null, Utils.getHeaderParamsOnly(),
+				new RequestListener() {
+
+					@Override
+					public void onSuccess(String url, String responseResult) {
+						cash = new Gson().fromJson(responseResult, CashRedPacket.class);
+						Utils.judgeListViewStatus(lViIncome, beginPage, cash.getIncomeList().getPageCount());
+						listIncomeData = cash.getIncomeList().getDataList();
+						if (!ValidatorUtil.isValidList(listIncomeData) || Integer.parseInt(cash.getCashAmount()) == 0) {
+							rltEmpty.setVisibility(View.VISIBLE);
+							lViIncome.setVisibility(View.GONE);
+							showEmptyMoney();
+						} else {
+							rltEmpty.setVisibility(View.GONE);
+							lViIncome.setVisibility(View.VISIBLE);
+							showIncomeMoney();
+							incomeAdp = new IncomeAdp(activity, listIncomeData);
+							lViIncome.setAdapter(incomeAdp);
+						}
+						txtWait.withNumber(Integer.parseInt(cash.getNotActivation()));
+						txtWait.start();
+						txtAccumulative.withNumber(Integer.parseInt(cash.getGain()));
+						txtAccumulative.start();
+						isShowContent(true);
+					}
+
+					@Override
+					public void onFailure(String url, String errorInfo) {
+						isShowError(true);
+					}
+
+					@Override
+					public void onError(String url, String responseResult) {
+						isShowError(true);
+					}
+				}, true);
+	}
+
+	@Override
+	public String getRequestTag() {
+		return CashRedPacketActivity.class.getSimpleName();
+	}
+
+	@OnClick({ R.id.rltSubTitle, R.id.btnRecord, R.id.btnPick })
+	public void finish(View v) {
+		switch (v.getId()) {
+		case R.id.rltSubTitle:
+			finish();
+			break;
+		case R.id.btnRecord:
+			Utils.moveTo(activity, TradeRecordActivity.class, false, null);
+			break;
+		case R.id.btnPick:
+			if (Integer.parseInt(cash.getCashAmount()) <= 0) {
+				ToastUtil.show(activity, getString(R.string.hint_red_packet_empty_title));
+				return;
+			}
+			Bundle data = new Bundle();
+			data.putSerializable(CashRedPacket.class.getSimpleName(), cash);
+			Utils.moveTo(activity, PickCashActivity.class, false, data);
+			OnCashPickedListener = onCashPickedListener;
+			break;
+		}
+	}
+
+	private void showEmptyMoney() {
+		txtCash.setText(getString(R.string.hint_red_packet_empty_title));
+		txtCash.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.txt_cash_none_size));
+	}
+
+	private void showIncomeMoney() {
+		txtCash.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.txt_cash_size));
+		txtCash.withNumber(Integer.parseInt(cash.getCashAmount()));
+		txtCash.start();
+	}
+
+	@Override
+	public void onRefresh() {
+		HttpRequest.get(this, Const.URL_ENVELOPERECEIVE + String.valueOf(beginPage), getRequestTag(), null, Utils.getHeaderParamsOnly(),
+				new RequestListener() {
+
+					@Override
+					public void onSuccess(String url, String responseResult) {
+						cash = new Gson().fromJson(responseResult, CashRedPacket.class);
+						Utils.judgeListViewStatus(lViIncome, beginPage, cash.getIncomeList().getPageCount());
+						listIncomeData = cash.getIncomeList().getDataList();
+						if (!ValidatorUtil.isValidList(listIncomeData) || Integer.parseInt(cash.getCashAmount()) == 0) {
+							rltEmpty.setVisibility(View.VISIBLE);
+							lViIncome.setVisibility(View.GONE);
+							showEmptyMoney();
+						} else {
+							rltEmpty.setVisibility(View.GONE);
+							lViIncome.setVisibility(View.VISIBLE);
+							showIncomeMoney();
+							incomeAdp = new IncomeAdp(activity, listIncomeData);
+							lViIncome.setAdapter(incomeAdp);
+						}
+						txtWait.withNumber(Integer.parseInt(cash.getNotActivation()));
+						txtWait.start();
+						txtAccumulative.withNumber(Integer.parseInt(cash.getGain()));
+						txtAccumulative.start();
+					}
+
+					@Override
+					public void onFailure(String url, String errorInfo) {
+						lViIncome.stopRefresh(false);
+					}
+
+					@Override
+					public void onError(String url, String responseResult) {
+						lViIncome.stopRefresh(false);
+					}
+				}, true);
+	}
+
+	@Override
+	public void onLoadMore(final int nextPage) {
+		HttpRequest.get(this, Const.URL_ENVELOPERECEIVE + String.valueOf(nextPage), getRequestTag(), null, Utils.getHeaderParamsOnly(),
+				new RequestListener() {
+
+					@Override
+					public void onSuccess(String url, String responseResult) {
+						cash = new Gson().fromJson(responseResult, CashRedPacket.class);
+						Utils.judgeListViewStatus(lViIncome, nextPage, cash.getIncomeList().getPageCount());
+						listIncomeData.addAll(cash.getIncomeList().getDataList());
+						incomeAdp.notifyDataSetChanged();
+						lViIncome.stopLoadMore(true);
+					}
+
+					@Override
+					public void onFailure(String url, String errorInfo) {
+						lViIncome.stopLoadMore(false);
+					}
+
+					@Override
+					public void onError(String url, String responseResult) {
+						lViIncome.stopLoadMore(false);
+					}
+				}, true);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		OnCashPickedListener = null;
+	}
+
+	public interface OnCashPickedListener {
+		public void onCashPicked();
+	}
+}

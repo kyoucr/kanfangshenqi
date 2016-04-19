@@ -1,0 +1,152 @@
+package com.xinwei.kanfangshenqi.adapter;
+
+import java.util.List;
+
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.activity.ChangeAddressWordActivity;
+import com.xinwei.kanfangshenqi.model.PlansInfo;
+import com.xinwei.kanfangshenqi.util.GetLatLon;
+import com.xinwei.kanfangshenqi.util.PreferenceUtils;
+import com.xinwei.kanfangshenqi.util.ToastUtil;
+import com.xinwei.kanfangshenqi.util.ValidatorUtil;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.sax.StartElementListener;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+public class PlansAdapter extends BaseAdapter {
+
+	private List<PlansInfo> mList;
+	private LayoutInflater inflater;
+	private Activity activity;
+	private GetLatLon getLatLon;
+	public PlansAdapter(LayoutInflater inflater,Activity activity) {
+		this.inflater = inflater;
+		this.activity =activity;
+		this.getLatLon =new GetLatLon(activity);
+	}
+
+	public PlansAdapter(List<PlansInfo> data, LayoutInflater inflater,Activity activity) {
+		mList = data;
+		this.inflater = inflater;
+		this.activity =activity;
+		this.getLatLon =new GetLatLon(activity);
+	}
+
+	@Override
+	public int getCount() {
+		return mList == null ? 0 : mList.size();
+	}
+
+	@Override
+	public Object getItem(int position) {
+		return mList == null ? null : mList.get(position);
+	}
+
+	@Override
+	public long getItemId(int position) {
+		return 0;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		ViewHolder holder;
+		if (convertView == null) {
+			convertView = inflater.inflate(R.layout.item_kanfangjihua_list, null);
+			holder = new ViewHolder(convertView);
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+		}
+		if(position==0){
+			holder.line.setVisibility(View.VISIBLE);
+		}else{
+			holder.line.setVisibility(View.INVISIBLE);
+		}
+		PlansInfo item = mList.get(position);
+		if(Integer.parseInt(item.getStatus()) > 0){
+			holder.look_over.setVisibility(View.VISIBLE);
+		}
+		holder.loupan_name.setText(item.getBuildingName());
+		holder.loupan_jiaqian.setText(item.getAveragePrice());
+		holder.loupan_dizhi.setText(item.getPosition());
+//		holder.phone = item.getBuildingPhone();
+//		holder.longitude=item.getLongitude();
+//		holder.latitude=item.getLatitude();
+		holder.daohang.setTag(position);
+		holder.iv_phone.setTag(position);
+		return convertView;
+	}
+
+	public List<PlansInfo> getmList() {
+		return mList;
+	}
+
+	public void setmList(List<PlansInfo> mList) {
+		this.mList = mList;
+	}
+
+	class ViewHolder {
+		public TextView loupan_name;
+		public TextView loupan_jiaqian;
+		public TextView loupan_dizhi;
+		public ImageView daohang;
+		public ImageView iv_phone;
+		public String phone;
+		public String longitude;
+		public String latitude;
+		public ImageView look_over;
+		public View line;
+
+		ViewHolder(View view) {
+			line = (View)view.findViewById(R.id.header_line);
+			loupan_name = (TextView) view.findViewById(R.id.loupan_name);
+			loupan_jiaqian = (TextView) view.findViewById(R.id.loupan_jiaqian);
+			loupan_dizhi = (TextView) view.findViewById(R.id.loupan_dizhi);
+			daohang = (ImageView) view.findViewById(R.id.daohang);
+			iv_phone = (ImageView) view.findViewById(R.id.phone);
+			look_over = (ImageView) view.findViewById(R.id.lookover);
+			daohang.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					int position =Integer.parseInt(v.getTag().toString());
+					latitude = mList.get(position).getLatitude();
+					longitude= mList.get(position).getLongitude();
+					// to=lat,lon 
+					String uri ="http://m.amap.com/?from="+getLatLon.getLatitude()+","+getLatLon.getLongitude()+"(from)&to="+latitude+","+longitude+"(to)";
+					Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+//					it.setClassName("com.android.browser", "com.android.browser.BrowserActivity");
+					activity.startActivity(it);
+				}
+			});
+			iv_phone.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					int position =Integer.parseInt(v.getTag().toString());
+					phone = mList.get(position).getBuildingPhone();
+					if(!ValidatorUtil.isValidString(phone)){
+						ToastUtil.show(activity.getString(R.string.hint_no_phone_building));
+						return;
+					}
+//					Intent intent=new Intent(Intent.ACTION_CALL,Uri.parse("tel:"+phone));
+					Intent intent=new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+phone));
+					activity.startActivity(intent);
+				}
+			});
+		}
+
+	}
+}

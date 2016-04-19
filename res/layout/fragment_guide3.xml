@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FF6F6F" >
+
+    <ImageView
+        android:id="@+id/imgDialog1"
+        android:layout_width="87dp"
+        android:layout_height="22dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/page3_dialog1"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/imgDialog3"
+        android:layout_width="94dp"
+        android:layout_height="22dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="60dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/page3_dialog3"
+        android:visibility="invisible" />
+
+    <RelativeLayout
+        android:id="@+id/rltTop"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp" >
+
+        <ImageView
+            android:id="@+id/imgPhone"
+            android:layout_width="120dp"
+            android:layout_height="237dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_big"
+            android:background="@drawable/page3_phone1" />
+
+        <ImageView
+            android:id="@+id/imgBg"
+            android:layout_width="300dp"
+            android:layout_height="310dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/page3_bg" />
+
+        <ImageView
+            android:id="@+id/imgDialog2"
+            android:layout_width="79dp"
+            android:layout_height="22dp"
+            android:layout_alignLeft="@+id/imgBg"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/page3_dialog2"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:id="@+id/imgDialog4"
+            android:layout_width="84dp"
+            android:layout_height="22dp"
+            android:layout_alignRight="@+id/imgBg"
+            android:layout_below="@+id/imgDialog2"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/page3_dialog4"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/imgDesc"
+        android:layout_width="175dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/rltTop"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_big"
+        android:background="@drawable/page3_text" />
+
+    <Button
+        android:id="@+id/btnExperience"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/imgDesc"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_big"
+        android:background="@drawable/bg_experience"
+        android:text="立即体验"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/txt_size_normal" />
+
+</RelativeLayout>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_transparent" >
+
+    <RelativeLayout
+        android:id="@+id/rltPop"
+        style="@style/layout"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/margin_big" >
+
+        <Button
+            android:id="@+id/btnTakePicture"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/img_head_pop_item_height"
+            android:background="@drawable/btn_white_top_10"
+            android:text="@string/txt_take_picture"
+            android:textColor="@android:color/black" />
+
+        <View
+            android:id="@+id/cutLine"
+            style="@style/cut_line"
+            android:layout_below="@id/btnTakePicture" />
+
+        <Button
+            android:id="@+id/btnFromAlbum"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/img_head_pop_item_height"
+            android:layout_below="@id/cutLine"
+            android:background="@drawable/btn_white_bottom_10"
+            android:text="@string/txt_from_album"
+            android:textColor="@android:color/black" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/img_head_pop_item_height"
+            android:layout_below="@id/btnFromAlbum"
+            android:layout_marginBottom="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:background="@drawable/btn_white_10"
+            android:text="@string/txt_cancel"
+            android:textColor="@android:color/black" />
+    </RelativeLayout>
+
+</RelativeLayout>

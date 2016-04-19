@@ -1,0 +1,711 @@
+package com.xinwei.kanfangshenqi.util;
+
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Bitmap.CompressFormat;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.NetworkInfo.State;
+import android.net.Uri;
+import android.net.wifi.SupplicantState;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Looper;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.View;
+import android.view.View.MeasureSpec;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.VolleyLog;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
+import com.xinwei.kanfangshenqi.R;
+import com.xinwei.kanfangshenqi.activity.LoginActivity;
+import com.xinwei.kanfangshenqi.app.XWApplication;
+import com.xinwei.kanfangshenqi.common.Const;
+import com.xinwei.kanfangshenqi.view.ListViewWidget;
+
+public class Utils {
+
+	private static AlertDialog mDialog;
+
+	private static int deviceWidth;
+
+	private static int deviceHeight;
+
+	private static long lastShowTime;
+
+	public static int getDeviceWidth(Activity activity) {
+		DisplayMetrics dm = new DisplayMetrics();
+		activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+		deviceWidth = dm.widthPixels;// 宽度
+		return deviceWidth;
+	}
+
+	public static int getDeviceHeight(Activity activity) {
+		DisplayMetrics dm = new DisplayMetrics();
+		activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+		deviceHeight = dm.heightPixels;// 高度
+		return deviceHeight;
+	}
+
+	public static void moveTo(Context context, Class<? extends Activity> cls) {
+		Intent intent = new Intent();
+		intent.setClass(context, cls);
+		context.startActivity(intent);
+	}
+
+	public static void moveTo(Context activity, Class<? extends Activity> cls, boolean isFinish, Bundle data) {
+		Intent intent = new Intent();
+		intent.setClass(activity, cls);
+		if (data != null)
+			intent.putExtras(data);
+		activity.startActivity(intent);
+		if (isFinish && activity != null && activity instanceof Activity)
+			((Activity) activity).finish();
+	}
+
+	public static void makeToastAndShow(Context context, String text, int length) {
+		if (new Date().getTime() - lastShowTime > 2000) {
+			Toast.makeText(context, text, length).show();
+			lastShowTime = new Date().getTime();
+		}
+	}
+
+	public static int dip2px(Context context, float dipValue) {
+		final float scale = context.getResources().getDisplayMetrics().density;
+		return (int) (dipValue * scale + 0.5f);
+	}
+
+	public static void closeDialog() {
+		try {
+			if (mDialog != null && mDialog.isShowing()) {
+				mDialog.dismiss();
+				mDialog.cancel();
+				mDialog = null;
+			}
+		} catch (Exception e) {
+			mDialog = null;
+		}
+
+	}
+
+	public static Dialog showProgressDialog(Context context) {
+		if (mDialog == null || !mDialog.isShowing()) {
+			mDialog = new ProgressDialog(context);
+			mDialog.setMessage(context.getResources().getString(R.string.loading));
+			mDialog.setCancelable(true);
+			mDialog.show();
+		}
+		return mDialog;
+	}
+
+	public static Dialog showProgressDialog(Context context, String message) {
+		if (mDialog == null || !mDialog.isShowing()) {
+			mDialog = new ProgressDialog(context);
+			mDialog.setMessage(message);
+			mDialog.setCancelable(false);
+			mDialog.show();
+		}
+		return mDialog;
+	}
+
+	public static boolean isShowing(Context context) {
+		boolean flag = false;
+		if (mDialog.isShowing()) {
+			flag = true;
+		}
+		return flag;
+	}
+
+	/**
+	 * 检测Sdcard是否存在
+	 * 
+	 * @return
+	 */
+	public static boolean isExitsSdcard() {
+		if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+			return true;
+		else
+			return false;
+	}
+
+	/**
+	 * 检测手机号码是否合法
+	 * 
+	 * @return
+	 */
+	public static boolean checkPhoneNum(String value) {
+		Pattern p = Pattern.compile("^((13[0-9])|(15[0-9])|(18[0-9])|(17[6-8])|145|147)\\d{8}$");
+		Matcher m = p.matcher(value);
+		// matches() 是拿整个输入的字符串和定义的正则模式匹配;
+		// find() 是包含匹配, 整个输入的字符串包含定义的正则模式.
+		return m.matches();
+	}
+
+	/**
+	 * 检测固话号码是否合法
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static boolean checkTelPhoneNum(String value) {
+		// String regExp =
+		// "(^([0][0-9]{2})([0-9]{8})$)|(^([0][0-9]{3})([0-9]{7})$)|(^([0][0-9]{2})([0-9]{8})([0-9]+)$)|(^([0][0-9]{3})([0-9]{7})([0-9]+)$)";
+		String regExp = "(^(0\\d{2})(\\d{8})$)|(^(0\\d{3})(\\d{7})$)|(^(0\\d{3})(\\d{8})$)";
+		Pattern p = Pattern.compile(regExp);
+		Matcher m = p.matcher(value);
+		return m.find();
+	}
+
+	/**
+	 * 检测密码是否合法
+	 * 
+	 * @param pwd
+	 * @return
+	 */
+	public static boolean checkPwd(String pwd) {
+		String regExp = "^[a-zA-Z0-9]+$";
+		Pattern p = Pattern.compile(regExp);
+		Matcher m = p.matcher(pwd);
+		boolean temp = m.find();
+		if (temp && (pwd.length() > 5 && pwd.length() < 17)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static boolean checkComponentEmpty(TextView... views) {
+		for (TextView textView : views) {
+			if (StringUtils.isEmpty(textView.getText().toString())) {
+				textView.requestFocus();
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static int getCurrentHour() {
+		int hour = 0;
+		Calendar now = Calendar.getInstance();
+		hour = now.get(Calendar.HOUR_OF_DAY);
+		return hour;
+	}
+
+	/**
+	 * 检测邮箱地址是否合法
+	 * 
+	 * @param email
+	 * @return true合法 false不合法
+	 */
+	public static boolean isEmail(String email) {
+		if (null == email || "".equals(email))
+			return false;
+		// Pattern p = Pattern.compile("\\w+@(\\w+.)+[a-z]{2,3}"); //简单匹配
+		Pattern p = Pattern.compile("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");// 复杂匹配
+		Matcher m = p.matcher(email);
+		return m.matches();
+	}
+
+	/**
+	 * 检测是否全数字
+	 * 
+	 * @param num
+	 * @return true合法 false不合法
+	 */
+	public static boolean isNum(String num) {
+		if (null == num || "".equals(num))
+			return false;
+		Pattern p = Pattern.compile("[0-9]{1,}");// 复杂匹配
+		Matcher m = p.matcher(num);
+		return m.matches();
+	}
+
+	public static void setListViewHeightBasedOnChildren(ListView listView, int... margin) {
+		int margins = 0;
+		for (int marginIn : margin) {
+			margins += marginIn;
+		}
+		if (listView == null)
+			return;
+		ListAdapter listAdapter = listView.getAdapter();
+		if (listAdapter == null) {
+			return;
+		}
+
+		int totalHeight = 0;
+		for (int i = 0; i < listAdapter.getCount(); i++) {
+			View listItem = listAdapter.getView(i, null, listView);
+			// listItem.measure(0, 0);
+			listItem.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+					MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+			totalHeight += listItem.getMeasuredHeight();
+		}
+
+		ViewGroup.LayoutParams params = listView.getLayoutParams();
+		params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)) + margins;
+		listView.setLayoutParams(params);
+	}
+
+	public static void logCN(String msg) {
+		if (VolleyLog.DEBUG)
+			Log.v("CN", msg);
+	}
+
+	/**
+	 ******************* 
+	 * 判断ListView状态， 并作出是否可下拉操作
+	 * 
+	 * @param lVi
+	 *            ListViewWidget
+	 * @param currentPage
+	 *            当前页
+	 * @param pageCount
+	 *            总页
+	 ******************* 
+	 */
+	public static void judgeListViewStatus(ListViewWidget lVi, int currentPage, int pageCount) {
+		if (lVi == null)
+			return;
+		lVi.stopRefreshAndLoad(true);
+		if (currentPage >= pageCount)
+			lVi.setPullLoadEnable(false);
+		else
+			lVi.setPullLoadEnable(true);
+	}
+
+	/**
+	 *******************
+	 * 判断下拉，上拉可用状态
+	 * 
+	 * @param pullToRefresh
+	 * @param currentPage
+	 * @param pageCount
+	 *******************
+	 */
+	public static void judgePullRefreshStatus(PullToRefreshBase pullToRefresh, int currentPage, int pageCount) {
+		if (pullToRefresh == null)
+			return;
+		pullToRefresh.onRefreshComplete(true);
+		if (currentPage >= pageCount)
+			pullToRefresh.setMode(Mode.PULL_FROM_START);
+		else
+			pullToRefresh.setMode(Mode.BOTH);
+	}
+
+	/**
+	 *******************
+	 * 判断上拉状态（不可下拉）
+	 * 
+	 * @param pullToRefresh
+	 * @param currentPage
+	 * @param pageCount
+	 *******************
+	 */
+	public static void judgePullLoadStatus(PullToRefreshBase pullToRefresh, int currentPage, int pageCount) {
+		if (pullToRefresh == null)
+			return;
+		pullToRefresh.onRefreshComplete(true);
+		if (currentPage >= pageCount)
+			pullToRefresh.setMode(Mode.DISABLED);
+	}
+
+
+	/**
+	 ******************** 
+	 * 只获取头问题，没有则返回null 不做自动登录处理
+	 * 
+	 * @param context
+	 * @return
+	 ******************** 
+	 */
+	public static Map<String, String> getHeaderParamsOnly() {
+		PreferenceUtils preferenceUtils = PreferenceUtils.getInstance(XWApplication.getInstance());
+		String token = preferenceUtils.getSettingUserToken();
+		if (token == null || StringUtils.isEmpty(token)) {
+			return null;
+		}
+		Map<String, String> params = new HashMap<String, String>();
+		params.put(Const.PARAM_APPAGENT, preferenceUtils.getSettingUserAppAgent());
+		params.put(Const.PARAM_OSVER, preferenceUtils.getSettingUserOSVer());
+		params.put(Const.PARAM_TRANSID, preferenceUtils.getSettingUserTransId());
+		params.put(Const.PARAM_TOKEN, preferenceUtils.getSettingUserToken());
+		return params;
+	}
+
+	/**
+	 ******************* 
+	 * 清除登录记录
+	 * 
+	 * @param context
+	 ******************* 
+	 */
+	public static void removeLoginInfo() {
+		PreferenceUtils.getInstance(XWApplication.getInstance()).removeToken();
+	}
+
+	/**
+	 ******************** 
+	 * bitmap转byte数组
+	 * 
+	 * @param bmp
+	 * @param needRecycle
+	 * @return
+	 ******************** 
+	 */
+	public static byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		bmp.compress(CompressFormat.PNG, 100, output);
+		if (needRecycle) {
+			bmp.recycle();
+		}
+
+		byte[] result = output.toByteArray();
+		try {
+			output.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	/**
+	 ******************** 
+	 * 获取看房圈网络请求时间
+	 * 
+	 * @param context
+	 * @return
+	 ******************** 
+	 */
+	public static String getSeeHouseCircleRequestTime() {
+		XmlUtil xmlUtil = new XmlUtil(Const.REMIND_REQUEST_TIME);
+		String requestTime = xmlUtil.get(Const.REMIND_REQUEST_TIME);
+		if (StringUtils.isEmpty(requestTime)) {
+			requestTime = String.valueOf(System.currentTimeMillis() / 1000);
+		}
+		return requestTime;
+	}
+
+	/**
+	 ******************** 
+	 * 保存看房圈网络请求时间
+	 * 
+	 * @param context
+	 * @param requestTime
+	 ******************** 
+	 */
+	public static void setSeeHouseCircleRequestTime(String requestTime) {
+		XmlUtil xmlUtil = new XmlUtil(Const.REMIND_REQUEST_TIME);
+		xmlUtil.set(Const.REMIND_REQUEST_TIME, requestTime);
+	}
+
+	/**
+	 ******************** 
+	 * MD5加密
+	 * 
+	 * @param info
+	 ******************** 
+	 */
+	public static String getMD5(String info) {
+		try {
+			MessageDigest md5 = MessageDigest.getInstance("MD5");
+			md5.update(info.getBytes("UTF-8"));
+			byte[] encryption = md5.digest();
+
+			StringBuffer strBuf = new StringBuffer();
+			for (int i = 0; i < encryption.length; i++) {
+				if (Integer.toHexString(0xff & encryption[i]).length() == 1) {
+					strBuf.append("0").append(Integer.toHexString(0xff & encryption[i]));
+				} else {
+					strBuf.append(Integer.toHexString(0xff & encryption[i]));
+				}
+			}
+
+			return strBuf.toString();
+		} catch (NoSuchAlgorithmException e) {
+			return "";
+		} catch (UnsupportedEncodingException e) {
+			return "";
+		}
+	}
+
+	/**
+	 ******************** 
+	 * 隐藏输入法
+	 * 
+	 * @param activity
+	 ******************** 
+	 */
+	public static void hideInput(EditText edtTxt) {
+
+		InputMethodManager imm = (InputMethodManager) edtTxt.getContext()
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(edtTxt.getWindowToken(), 0);
+
+	}
+	public static void hideInput(Activity activity,EditText edtTxt) {
+		if(activity!=null){
+			InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+		}else if(edtTxt!=null){
+			InputMethodManager imm = (InputMethodManager) edtTxt.getContext()
+					.getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(edtTxt.getWindowToken(), 0);
+		}
+
+	}
+	public static void showInput(EditText edtTxt) {
+		edtTxt.setFocusable(true);
+		edtTxt.setFocusableInTouchMode(true);
+		edtTxt.requestFocus();
+		InputMethodManager inputManager = (InputMethodManager) edtTxt.getContext()
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		// inputManager.showSoftInput(edtTxt, 0);
+		inputManager.showSoftInput(edtTxt, InputMethodManager.SHOW_FORCED);
+	}
+
+	public static void showToast(final String toast, final Context context) {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				Looper.prepare();
+				Toast.makeText(context, toast, Toast.LENGTH_SHORT).show();
+				Looper.loop();
+			}
+		}).start();
+	}
+
+	public static boolean isConnected() {
+		ConnectivityManager conn = (ConnectivityManager) XWApplication.getInstance()
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo info = conn.getActiveNetworkInfo();
+		return (info != null && info.isConnected());
+	}
+
+	/**
+	 * 
+	 * 通过包名获取应用程序的名称。
+	 * 
+	 * @param context
+	 *            Context对象。
+	 * @param packageName
+	 *            包名。
+	 * @return 返回包名所对应的应用程序的名称。
+	 */
+
+	public static String getAppNameByPackageName(String packageName) {
+		PackageManager pm = XWApplication.getInstance().getPackageManager();
+		String name = null;
+		try {
+			name = pm.getApplicationLabel(pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA)).toString();
+		} catch (NameNotFoundException e) {
+		}
+		return name;
+	}
+
+	/**
+	 * 根据apk文件判断该apk是否已经安装
+	 * 
+	 * @param context
+	 * @param uri
+	 * @return
+	 */
+	public static boolean isAppInstalled(String appPackageName) {
+		if (appPackageName == null) {
+			return false;
+		}
+		return getAppNameByPackageName(appPackageName) == null ? false : true;
+	}
+
+	public static void shareSMS(Activity activity) {
+		if (activity == null)
+			return;
+		Uri sms = Uri.parse("smsto:");
+		Intent sendIntent = new Intent(Intent.ACTION_VIEW, sms);
+		sendIntent.putExtra("sms_body",
+				activity.getString(R.string.txt_share_desc) + "\n" + activity.getString(R.string.txt_share_url));
+		sendIntent.setType("vnd.android-dir/mms-sms");
+		activity.startActivity(sendIntent);
+	}
+
+	public static boolean isWiFiActive() {
+		ConnectivityManager connectivity = (ConnectivityManager) XWApplication.getInstance()
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (connectivity != null) {
+			NetworkInfo[] info = connectivity.getAllNetworkInfo();
+			if (info != null) {
+				for (int i = 0; i < info.length; i++) {
+					if (info[i].getTypeName().equals("WIFI") && info[i].isConnected()) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	public static boolean isWifiConnected() {
+		ConnectivityManager connectivityManager = (ConnectivityManager) XWApplication.getInstance()
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		// NetworkInfo mobNetInfo = connectivityManager
+		// .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		NetworkInfo wifiNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+		if (wifiNetInfo.isConnected()) {
+			return true;
+		}
+		// else {
+		// Utils.logCN("wifi断开连接！");
+		// }
+		// if (mobNetInfo.isConnected()) {
+		// Utils.logCN("移动网络连接成功！");
+		// } else {
+		// Utils.logCN("移动网络断开连接！");
+		// }
+		return false;
+	}
+
+	public static boolean isMobileConnected() {
+		ConnectivityManager connectivityManager = (ConnectivityManager) XWApplication.getInstance()
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo mobNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		if (mobNetInfo.isConnected()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 *******************
+	 * 设置状态栏透明并沉浸
+	 * 
+	 * @param activity
+	 * @return
+	 *******************
+	 */
+	@TargetApi(Build.VERSION_CODES.KITKAT)
+	public static boolean setTransparentStatusBar(Activity activity) {
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+			Window window = activity.getWindow();
+			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+					WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
+					WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean setMiuiStatusBarDarkMode(Activity activity, boolean darkmode) {
+		Class<? extends Window> clazz = activity.getWindow().getClass();
+		try {
+			int darkModeFlag = 0;
+			Class<?> layoutParams = Class.forName("android.view.MiuiWindowManager$LayoutParams");
+			Field field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE");
+			darkModeFlag = field.getInt(layoutParams);
+			Method extraFlagField = clazz.getMethod("setExtraFlags", int.class, int.class);
+			extraFlagField.invoke(activity.getWindow(), darkmode ? darkModeFlag : 0, darkModeFlag);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public static boolean setMeizuStatusBarDarkIcon(Activity activity, boolean dark) {
+		boolean result = false;
+		if (activity != null) {
+			try {
+				WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
+				Field darkFlag = WindowManager.LayoutParams.class.getDeclaredField("MEIZU_FLAG_DARK_STATUS_BAR_ICON");
+				Field meizuFlags = WindowManager.LayoutParams.class.getDeclaredField("meizuFlags");
+				darkFlag.setAccessible(true);
+				meizuFlags.setAccessible(true);
+				int bit = darkFlag.getInt(null);
+				int value = meizuFlags.getInt(lp);
+				if (dark) {
+					value |= bit;
+				} else {
+					value &= ~bit;
+				}
+				meizuFlags.setInt(lp, value);
+				activity.getWindow().setAttributes(lp);
+				result = true;
+			} catch (Exception e) {
+			}
+		}
+		return result;
+	}
+
+	/**
+	 *******************
+	 * 获取状态栏高度
+	 * 
+	 * @return
+	 *******************
+	 */
+	public static int getStatusBarHeight() {
+		int result = 0;
+		int resourceId = XWApplication.getInstance().getResources().getIdentifier("status_bar_height", "dimen",
+				"android");
+		if (resourceId > 0) {
+			result = XWApplication.getInstance().getResources().getDimensionPixelSize(resourceId);
+		}
+		return result;
+	}
+	/**
+	 *******************
+	 * 显示系统键盘，并且在Activity关闭时自动关闭输入法
+	 * @param activity
+	 *******************
+	 */
+	public static void showKeyboardWithAutoCloseOnActivityFinish(Activity activity){
+		if(activity!=null)
+			activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+	}
+	/**
+	 *******************
+	 * 隐藏系统键盘
+	 * @param activity
+	 *******************
+	 */
+	public static void hideKeyboard(Activity activity){
+		if(activity!=null)
+			activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+	}
+}

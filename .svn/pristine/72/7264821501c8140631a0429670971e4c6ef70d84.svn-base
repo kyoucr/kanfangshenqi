@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:background="@color/bg_all"
+    >
+
+    <RelativeLayout
+        android:id="@+id/showallphoto_headview"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/title_height"
+        android:background="@color/title_color_white" 
+        android:gravity="center_vertical"
+        >
+        <Button
+       		style="@style/title_txt"
+            android:layout_centerVertical="true"
+            android:id="@+id/showallphoto_back"
+            android:text="@string/back"
+            />
+         <TextView
+       		style="@style/title_txt"
+            android:id="@+id/showallphoto_headtitle"
+       		android:text="@string/photo"
+       		android:layout_centerInParent="true"
+       		android:singleLine="true"
+            />
+        
+        <Button
+       		style="@style/title_txt"
+      	    android:layout_alignParentRight="true" 
+      	    android:layout_centerVertical="true"
+            android:id="@+id/showallphoto_cancel"
+            android:text="@string/camera_cancel"
+            />
+        <ImageView
+            style="@style/cut_line"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/showallphoto_bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:layout_alignParentBottom="true">
+
+        <Button
+       		style="@style/title_txt"
+            android:id="@+id/showallphoto_preview"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/preview"
+            />
+        <Button
+       		style="@style/title_txt"
+            android:id="@+id/showallphoto_ok_button"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/unfinished"
+            />
+    </RelativeLayout>
+
+    <GridView
+        android:id="@+id/showallphoto_myGrid"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/showallphoto_bottom_layout"
+        android:layout_below="@id/showallphoto_headview"
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/margin_normal"
+        android:horizontalSpacing="10dp"
+        android:numColumns="3"
+        android:verticalSpacing="10dp"/>
+
+    <ProgressBar
+        android:id="@+id/showallphoto_progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+</RelativeLayout>

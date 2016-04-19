@@ -1,0 +1,132 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:titlebar="http://schemas.android.com/apk/res/com.xinwei.kanfangshenqi"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fafafa"
+     >
+
+    <com.xinwei.kanfangshenqi.view.TitleBarView
+        android:id="@+id/titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        titlebar:leftImage="@drawable/zhuce_cancel"
+        titlebar:righttext="@string/register"
+        titlebar:title="@string/user_info_title" >
+    </com.xinwei.kanfangshenqi.view.TitleBarView>
+
+    <LinearLayout
+        android:id="@+id/input_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/login_input_layout_height"
+        android:layout_below="@id/titlebar"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical" >
+		<View
+           android:layout_width="match_parent"
+           android:layout_height="@dimen/login_input_line_height"
+           android:background="@color/line" />
+        <LinearLayout
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_white"
+            android:paddingBottom="@dimen/login_input_layout_item_paddingBotom"
+            android:paddingTop="@dimen/login_input_layout_item_paddingTop"
+            android:paddingLeft="@dimen/login_input_layout_marginLeft"
+             >
+
+
+
+             <com.xinwei.kanfangshenqi.view.ClearEditText
+	       		android:id="@+id/input_name"
+	        	android:layout_width="fill_parent"
+	        	android:background="@null" 
+	        	android:hint="@string/login_name_phone_mail"
+	        	android:layout_marginRight="@dimen/login_input_layout_marginLeft"
+	        	android:saveEnabled="true"
+	        	android:inputType="number"
+	        	android:singleLine="true"
+	        	android:textCursorDrawable="@null"
+	        	android:drawableRight="@drawable/delete_selector"
+	        	android:layout_height="48dp"
+	        	android:textColorHint="@color/text_gray_input"
+	        	android:textSize="17sp">
+    		</com.xinwei.kanfangshenqi.view.ClearEditText>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/login_input_line_height"
+            android:background="@color/line" />
+
+        <RelativeLayout
+            android:id="@+id/verification_code"
+            android:layout_width="match_parent"
+            android:paddingLeft="@dimen/login_input_layout_marginLeft"
+            android:paddingRight="@dimen/login_input_layout_marginLeft"
+            android:background="@drawable/bg_white"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+            <com.xinwei.kanfangshenqi.view.ClearEditText
+                android:id="@+id/input_password"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:hint="@string/login_password"
+                android:maxLength="16"
+                android:saveEnabled="true"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:textCursorDrawable="@null"
+                android:textColorHint="@color/text_gray_input"
+                android:textSize="17sp" />
+        </RelativeLayout>
+        <View
+           android:layout_width="match_parent"
+           android:layout_height="@dimen/login_input_line_height"
+           android:background="@color/line" />
+    </LinearLayout>
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_global_group_button_height"
+        android:layout_below="@id/input_ll"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="@dimen/login_button_marginTop"
+        android:background="@drawable/btn_default_selector"
+        android:text="@string/login"
+        android:textColor="@color/white" />
+	<RelativeLayout 
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+	    android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:layout_below="@+id/btn_login"
+	    >
+        <TextView
+	        android:id="@+id/quick_login"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginRight="14dp"
+	        android:layout_marginTop="@dimen/margin_normal"
+	        android:text="@string/quick_login"
+	        android:textColor="@color/txt_gray"
+	        android:textSize="15sp" />
+		<TextView
+	        android:id="@+id/find_pwd"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight="true"
+	        android:layout_marginTop="@dimen/margin_normal"
+	        android:text="@string/forget_pwd"
+	        android:textColor="@color/txt_gray"
+	        android:textSize="15sp" />
+	</RelativeLayout>
+</RelativeLayout>
